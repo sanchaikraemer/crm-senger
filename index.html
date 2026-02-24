@@ -95,6 +95,30 @@
       color:var(--text);
     }
 
+    /* Busca com botão "x" */
+    .searchWrap{ position:relative; display:inline-flex; align-items:center; }
+    .searchWrap .input{ padding-right:38px; }
+    .clearBtn{
+      position:absolute;
+      right:10px;
+      top:50%;
+      transform:translateY(-50%);
+      border:0;
+      background:transparent;
+      cursor:pointer;
+      font-size:18px;
+      line-height:1;
+      color:var(--muted);
+      width:26px;
+      height:26px;
+      border-radius:999px;
+      display:none;
+      align-items:center;
+      justify-content:center;
+    }
+    .clearBtn:hover{ background:rgba(0,0,0,.05); }
+    .clearBtn.show{ display:inline-flex; }
+
     .hint{font-size:12px;color:var(--muted); margin-top:10px}
 
     main .wrap{
@@ -305,77 +329,87 @@
     .dot.warn{background:#ffd400}
     .dot.bad{background:#ef4444}
 
+    /* MOBILE: reduzir o topo e liberar espaço pros leads, sem mexer no desktop */
     @media(max-width:820px){
 
-  .wrap{ padding:10px 12px; }
+      header{ position:static; } /* tira o "fixo" no celular */
 
-  .titleRow{
-    display:grid;
-    grid-template-columns: 1fr 1fr;
-    gap:10px;
-    align-items:center;
-    width:100%;
-  }
+      .wrap{ padding:8px 12px; }
 
-  .title h1{
-    grid-column:1 / -1;
-    font-size:16px;
-    margin:0;
-  }
+      .titleRow{
+        display:grid;
+        grid-template-columns: 1fr 1fr;
+        gap:10px;
+        align-items:center;
+        width:100%;
+      }
 
-  .subtitleInline{
-    display:none;
-  }
+      .title h1{
+        grid-column:1 / -1;
+        font-size:16px;
+        margin:0;
+      }
 
-  .totalBox{
-    width:100%;
-    justify-content:space-between;
-    padding:10px 12px;
-  }
+      .subtitleInline{
+        display:none;
+      }
 
-  .actions{
-    width:100%;
-    display:grid;
-    grid-template-columns: 1fr 1fr;
-    gap:10px;
-    margin-top:10px;
-  }
+      .statusbar{
+        grid-column:1 / -1;
+      }
 
-  #q{
-    grid-column:1 / -1;
-    width:100%;
-    min-width:0;
-  }
+      .totalBox{
+        width:100%;
+        justify-content:space-between;
+        padding:9px 10px;
+      }
 
-  #fEmp, #fOrig, #fResp, #fPri{
-    width:100%;
-    min-width:0;
-  }
+      .actions{
+        width:100%;
+        display:grid;
+        grid-template-columns: 1fr 1fr;
+        gap:10px;
+        margin-top:10px;
+      }
 
-  .btn{
-    padding:11px 12px;
-    border-radius:14px;
-    width:100%;
-  }
+      .searchWrap{
+        grid-column:1 / -1;
+        width:100%;
+      }
+      #q{
+        width:100%;
+        min-width:0;
+      }
 
-  #new{
-    grid-column:1 / -1;
-    font-size:15px;
-    padding:12px 14px;
-  }
+      #fEmp, #fOrig, #fResp, #fPri{
+        width:100%;
+        min-width:0;
+      }
 
-  main .wrap{
-    padding-top:10px;
-    height: calc(100vh - 260px);
-  }
+      .btn{
+        padding:11px 12px;
+        border-radius:14px;
+        width:100%;
+      }
 
-  .board{
-    grid-auto-columns:minmax(240px, 0.90fr);
-  }
-}
+      #new{
+        grid-column:1 / -1;
+        font-size:15px;
+        padding:12px 14px;
+      }
 
-      .board{grid-auto-columns:minmax(210px, 0.72fr);}
-      .subtitleInline{max-width: 100%; margin-left:0;}
+      /* no celular, deixa o board ocupar a altura natural (mais área útil) */
+      main .wrap{
+        padding-top:10px;
+        height:auto;
+        min-height: calc(100vh - 10px);
+      }
+
+      .board{
+        grid-auto-columns:minmax(240px, 0.90fr);
+        height:auto;
+        min-height: calc(100vh - 10px);
+      }
     }
   </style>
 </head>
@@ -410,7 +444,12 @@
       </div>
 
       <div class="actions">
-        <input id="q" class="input" placeholder="Buscar nome/telefone..." />
+        <!-- Busca com X -->
+        <div class="searchWrap">
+          <input id="q" class="input" placeholder="Buscar nome/telefone..." />
+          <button class="clearBtn" id="clearQ" type="button" aria-label="Limpar busca">×</button>
+        </div>
+
         <select id="fEmp"></select>
         <select id="fOrig"></select>
         <select id="fResp"></select>
@@ -529,10 +568,12 @@ const LISTS = {
   etapa: ["Novo","Em atendimento","Agendou visita","Negociação","Stand by","Perdido"],
   prioridade: ["Alta","Média","Baixa"],
   atividade: ["Ligação","WhatsApp","Reunião","Visita","Proposta","Pós-venda"],
-  resultado: ["Conseguiu falar","Não respondeu","Agendou","Remarcou","Enviou proposta","Sem interesse","Outro"],
+  // ✅ alterações de texto:
+  resultado: ["Conversando","Aguardando","Agendou","Remarcou","Enviou proposta","Sem interesse","Outro"],
   origem: ["Meta","Instagram","Indicação","Corretor","Site","WhatsApp","Ligação","Presencial"],
   responsavel: ["Sanchai","Miguel","Cristian","Corretor"],
-  motivo_perda: ["Preço","Financiamento","Localização","Escolheu outro","Sumiu","Outro"]
+  // ✅ alterações de texto:
+  motivo_perda: ["Preço","Parcelamento","Permuta inviável","Vai aguardar","Sem recurso","Outro"]
 };
 
 const ETAPA_ALIASES = {
@@ -542,6 +583,18 @@ const ETAPA_ALIASES = {
   "Fechado": "Stand by" // compatibilidade com dados antigos
 };
 
+const RESULTADO_ALIASES = {
+  "Conseguiu falar": "Conversando",
+  "Não respondeu": "Aguardando"
+};
+
+const MOTIVO_PERDA_ALIASES = {
+  "Localização": "Permuta inviável",
+  "Financiamento": "Parcelamento",
+  "Escolheu outro": "Vai aguardar",
+  "Sumiu": "Sem recurso"
+};
+
 function normalizeEtapa(etapa){
   const e = (etapa || "").trim();
   if(LISTS.etapa.includes(e)) return e;
@@ -549,8 +602,23 @@ function normalizeEtapa(etapa){
   return "Em atendimento";
 }
 
+function normalizeResultado(r){
+  const v = (r || "").trim();
+  if(LISTS.resultado.includes(v)) return v;
+  if(RESULTADO_ALIASES[v]) return RESULTADO_ALIASES[v];
+  return "Conversando";
+}
+
+function normalizeMotivoPerda(m){
+  const v = (m || "").trim();
+  if(LISTS.motivo_perda.includes(v)) return v;
+  if(MOTIVO_PERDA_ALIASES[v]) return MOTIVO_PERDA_ALIASES[v];
+  return v || "";
+}
+
 const elBoard = document.querySelector("#board");
 const q = document.querySelector("#q");
+const clearQ = document.querySelector("#clearQ");
 const fEmp = document.querySelector("#fEmp");
 const fOrig = document.querySelector("#fOrig");
 const fResp = document.querySelector("#fResp");
@@ -712,10 +780,13 @@ function defaults(){
     telefone: "",
     empreendimento: "Outros",
     etapa: "Novo",
-    prioridade: "Média",
+    // ✅ (4) prioridade default = Baixa
+    prioridade: "Baixa",
     atividade: "WhatsApp",
-    resultado: "Conseguiu falar",
-    origem: "Meta",
+    // ✅ (6) resultado default = Conversando
+    resultado: "Conversando",
+    // ✅ (5) origem default = Instagram
+    origem: "Instagram",
     responsavel: "Sanchai",
     motivo_perda: "",
     observacao: "",
@@ -765,7 +836,16 @@ async function load(){
   try{
     setStatus("warn","Conectando…");
     const data = await sbFetch(`${TABLE}?select=*`);
-    ALL = Array.isArray(data) ? data : [];
+
+    // ✅ normalizações (evita valores antigos/quebrados)
+    ALL = (Array.isArray(data) ? data : []).map(l => ({
+      ...l,
+      etapa: normalizeEtapa(l.etapa),
+      resultado: normalizeResultado(l.resultado),
+      motivo_perda: normalizeMotivoPerda(l.motivo_perda),
+      ordem: Number(l.ordem) || Date.now()
+    }));
+
     online = true;
     setStatus("ok","Online • Sincronizado");
     render();
@@ -785,6 +865,8 @@ async function upsertLead(payload, {silent=false} = {}){
   }
 
   payload.etapa = normalizeEtapa(payload.etapa);
+  payload.resultado = normalizeResultado(payload.resultado);
+  payload.motivo_perda = normalizeMotivoPerda(payload.motivo_perda);
 
   if(payload.etapa !== "Perdido"){
     payload.motivo_perda = "";
@@ -912,10 +994,18 @@ function openNew(){
   form.telefone.value = "";
   form.empreendimento.value = d.empreendimento;
   form.etapa.value = d.etapa;
+
+  // ✅ (4) prioridade começa em Baixa
   form.prioridade.value = d.prioridade;
+
   form.atividade.value = d.atividade;
+
+  // ✅ (6) resultado começa em Conversando
   form.resultado.value = d.resultado;
+
+  // ✅ (5) origem começa em Instagram
   form.origem.value = d.origem;
+
   form.responsavel.value = d.responsavel;
   form.motivo_perda.value = "";
   form.observacao.value = "";
@@ -945,12 +1035,14 @@ function openEdit(id, forcePerdido=false){
   form.telefone.value = lead.telefone || "";
   form.empreendimento.value = lead.empreendimento || "Outros";
   form.etapa.value = forcePerdido ? "Perdido" : normalizeEtapa(lead.etapa || "Novo");
-  form.prioridade.value = lead.prioridade || "Média";
+  form.prioridade.value = lead.prioridade || "Baixa";
   form.atividade.value = lead.atividade || "WhatsApp";
-  form.resultado.value = lead.resultado || "Conseguiu falar";
-  form.origem.value = lead.origem || "Meta";
+
+  // ✅ garante valor novo no select
+  form.resultado.value = normalizeResultado(lead.resultado || "Conversando");
+  form.origem.value = lead.origem || "Instagram";
   form.responsavel.value = lead.responsavel || "Sanchai";
-  form.motivo_perda.value = lead.motivo_perda || "";
+  form.motivo_perda.value = normalizeMotivoPerda(lead.motivo_perda || "");
   form.observacao.value = lead.observacao || "";
   toggleMotivo();
 
@@ -978,10 +1070,10 @@ form.addEventListener("submit", async (e)=>{
     etapa: etapaEscolhida,
     prioridade: form.prioridade.value,
     atividade: form.atividade.value,
-    resultado: form.resultado.value,
+    resultado: normalizeResultado(form.resultado.value),
     origem: form.origem.value,
     responsavel: form.responsavel.value,
-    motivo_perda: (form.etapa.value === "Perdido") ? form.motivo_perda.value : "",
+    motivo_perda: (form.etapa.value === "Perdido") ? normalizeMotivoPerda(form.motivo_perda.value) : "",
     observacao: form.observacao.value.trim(),
     criado_em: editingId ? (existing?.criado_em || nowISO()) : nowISO(),
     atualizado_em: nowISO()
@@ -1185,7 +1277,9 @@ async function importCSV(text){
         etapa: "Novo",
         prioridade: "Alta",
         atividade: "WhatsApp",
-        resultado: "Conseguiu falar",
+        // ✅ (6)
+        resultado: "Conversando",
+        // ✅ (5)
         origem: platform === "ig" ? "Instagram" : "Meta",
         responsavel: "Sanchai",
         motivo_perda: "",
@@ -1207,8 +1301,16 @@ async function importCSV(text){
   alert("Formato de CSV não reconhecido.");
 }
 
+/* Ajusta altura do main (desktop). No celular deixamos automático */
 function adjustMainHeight(){
   if(!mainWrap || !headerEl) return;
+
+  const isMobile = window.matchMedia("(max-width:820px)").matches;
+  if(isMobile){
+    mainWrap.style.height = "auto";
+    return;
+  }
+
   const h = headerEl.offsetHeight || 132;
   mainWrap.style.height = `calc(100vh - ${h}px)`;
 }
@@ -1219,7 +1321,25 @@ fillSelect(fOrig, LISTS.origem, "Origem");
 fillSelect(fResp, LISTS.responsavel, "Responsável");
 fillSelect(fPri, LISTS.prioridade, "Prioridade");
 
-[q,fEmp,fOrig,fResp,fPri].forEach(el=>{
+/* Busca: botão X */
+function syncClearButton(){
+  if(!clearQ) return;
+  if((q.value || "").trim().length) clearQ.classList.add("show");
+  else clearQ.classList.remove("show");
+}
+q.addEventListener("input", ()=>{
+  syncClearButton();
+  render();
+});
+clearQ.addEventListener("click", ()=>{
+  q.value = "";
+  syncClearButton();
+  q.focus();
+  render();
+});
+syncClearButton();
+
+[fEmp,fOrig,fResp,fPri].forEach(el=>{
   el.addEventListener("input", render);
   el.addEventListener("change", render);
 });
@@ -1279,4 +1399,3 @@ load();
 </script>
 </body>
 </html>
-
