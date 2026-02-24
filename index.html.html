@@ -1,0 +1,1221 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>CRM — Leads Senger (Kanban)</title>
+  <style>
+    :root{
+      --bg:#50585a;
+      --card:#ffffff;
+      --text:#0a0a0a;
+      --muted:#5b6b7a;
+      --line:#dbe5ea;
+      --shadow:0 10px 24px rgba(10,10,10,.08);
+      --r:16px;
+
+      --teal:#0b9fb2;
+      --teal-2:#0aa3b8;
+      --teal-soft:#e6f6f7;
+      --danger:#ef4444;
+      --ok:#16a34a;
+    }
+
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      background:var(--bg);
+      color:var(--text);
+    }
+
+    header{
+      position:sticky; top:0; z-index:20;
+      background:rgba(246,247,251,.92);
+      backdrop-filter: blur(10px);
+      border-bottom:1px solid var(--line);
+    }
+
+    .wrap{max-width:1500px;margin:0 auto;padding:7px 16px}
+    .top{
+      display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;
+    }
+    .title{display:flex; flex-direction:column; gap:2px}
+
+    .titleRow{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      flex-wrap:wrap;
+      width:100%;
+    }
+    .subtitleInline{
+      margin-left:auto;
+      font-size:12px;
+      color:var(--muted);
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      max-width: 900px;
+    }
+
+    .title h1{font-size:16px;margin:0}
+    .actions{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      flex-wrap:wrap;
+    }
+
+    .btn{
+      border:1px solid var(--line);
+      background:var(--card);
+      padding:10px 12px;
+      border-radius:12px;
+      cursor:pointer;
+      font-weight:800;
+      box-shadow: 0 2px 8px rgba(10,10,10,.04);
+      color:var(--text);
+      text-decoration:none;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+    }
+    .btn.primary{background:var(--teal); color:#fff; border-color:transparent}
+    .btn.danger{background:var(--danger); color:#fff; border-color:transparent}
+
+    .input, select{
+      border:1px solid var(--line);
+      background:#fff;
+      padding:10px 12px;
+      border-radius:12px;
+      outline:none;
+      min-width:160px;
+      color:var(--text);
+    }
+
+    .hint{font-size:12px;color:var(--muted); margin-top:10px}
+
+    main .wrap{
+      padding-top:16px;
+      height: calc(100vh - 132px);
+    }
+
+    .board{
+      display:grid;
+      grid-auto-flow:column;
+      grid-auto-columns:minmax(220px, 0.72fr);
+      gap:14px;
+      overflow:auto;
+      height:100%;
+      padding-bottom:14px;
+    }
+    .col{
+      background:rgba(255,255,255,.6);
+      border:1px solid var(--line);
+      border-radius:var(--r);
+      box-shadow: 0 2px 12px rgba(10,10,10,.04);
+      min-height:280px;
+      display:flex; flex-direction:column;
+      height:100%;
+    }
+    .colHead{
+      padding:12px 12px 10px;
+      display:flex; align-items:center; justify-content:space-between;
+      border-bottom:1px solid var(--line);
+      gap:10px;
+    }
+    .colHead .name{font-weight:950;font-size:12px; letter-spacing:.2px}
+    .colHead .count{
+      font-size:11px;
+      font-weight:900;
+      color:#fff;
+      background:var(--teal);
+      padding:4px 7px;
+      border-radius:999px;
+      white-space:nowrap;
+      border:none;
+    }
+
+    .dropzone{
+      padding:12px;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      flex:1;
+      overflow-y:auto;
+    }
+    .dropzone.dragover{
+      outline:2px dashed rgba(11,159,178,.35);
+      outline-offset:-6px;
+      border-radius:14px;
+    }
+
+    .card{
+      background:var(--card);
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:10px 10px;
+      box-shadow: var(--shadow);
+      cursor:grab;
+      user-select:none;
+      position:relative;
+    }
+    .card:active{cursor:grabbing}
+
+    /* prioridade alta estilo post-it discreto */
+    .card.high-priority{
+      background:#fff8cc;
+      border:1px solid #e5d18c;
+    }
+
+    .row1{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}
+    .nm{font-weight:950;font-size:13px;line-height:1.2}
+
+    .prioText{
+      font-size:12px;
+      color:var(--muted);
+      font-weight:650;
+      white-space:nowrap;
+    }
+
+    .sub-row{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:8px;
+      font-size:12px;
+      color:var(--muted);
+      margin-top:6px;
+    }
+    .sub-row .emp{font-weight:650;}
+
+    .waDot{
+      width:20px;
+      height:20px;
+      min-width:20px;
+      border-radius:999px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      text-decoration:none;
+      background:#25D366;
+      border:1px solid rgba(0,0,0,.12);
+      box-shadow: 0 2px 6px rgba(0,0,0,.12);
+      transition:.15s ease;
+    }
+    .waDot svg{ width:12px; height:12px; }
+    .waDot:hover{ transform:scale(1.08); }
+
+    .sub-row .dt{
+      padding:4px 10px;
+      border-radius:999px;
+      white-space:nowrap;
+      font-weight:400;
+      border:1px solid transparent;
+    }
+
+    /* NOVAS CORES (dias desde atualizado_em/criado_em) */
+    .dt-green{  background:#16a34a; color:#ffffff; } /* hoje */
+    .dt-blue{   background:#0b9fb2; color:#ffffff; } /* 1-2 */
+    .dt-yellow{ background:#facc15; color:#111111; } /* 3-4 */
+    .dt-orange{ background:#f97316; color:#ffffff; } /* 5-7 */
+    .dt-red{    background:#ef4444; color:#ffffff; } /* 8+ */
+
+    dialog{
+      border:0;
+      border-radius:16px;
+      box-shadow: 0 20px 60px rgba(10,10,10,.20);
+      width:min(820px, 92vw);
+    }
+    dialog::backdrop{background:rgba(10,10,10,.45)}
+    .modal{
+      padding:16px;
+      display:grid;
+      gap:12px;
+    }
+    .modalHead{
+      display:flex; justify-content:space-between; align-items:center; gap:10px;
+    }
+    .modalHead .t{font-weight:980}
+    .grid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:10px;
+    }
+    .grid .full{grid-column:1/-1}
+    .lbl{font-size:12px;color:var(--muted);margin:0 0 6px 2px}
+    textarea{width:100%;min-height:90px;resize:vertical}
+
+    .modalFoot{display:flex;justify-content:flex-end;gap:10px;flex-wrap:wrap}
+
+    .toast{
+      position:fixed; left:50%; bottom:16px; transform:translateX(-50%);
+      background:#111827; color:#fff;
+      padding:10px 12px;
+      border-radius:12px;
+      font-size:12px;
+      box-shadow: 0 12px 34px rgba(0,0,0,.25);
+      opacity:0; pointer-events:none;
+      transition:.18s ease;
+      z-index:50;
+    }
+    .toast.show{opacity:1}
+
+    .totalBox{
+      margin-left:auto;
+      display:flex;
+      align-items:center;
+      gap:10px;
+      padding:10px 12px;
+      border-radius:14px;
+      background:#fff;
+      border:1px solid var(--line);
+      box-shadow: 0 2px 8px rgba(10,10,10,.04);
+      white-space:nowrap;
+    }
+    .totalBox .t{
+      font-size:12px;
+      color:var(--muted);
+      font-weight:850;
+    }
+    .totalBox .n{
+      font-size:18px;
+      font-weight:980;
+      color:var(--teal);
+      line-height:1;
+    }
+
+    .pill{
+      display:inline-flex; align-items:center; gap:6px;
+      padding:6px 10px; border-radius:999px;
+      background:#fff; border:1px solid var(--line);
+      white-space:nowrap;
+      font-weight:800;
+      color:var(--muted);
+      box-shadow: 0 2px 8px rgba(10,10,10,.04);
+    }
+    .dot{
+      width:8px;height:8px;border-radius:50%;
+      background:var(--muted);
+      display:inline-block;
+    }
+    .dot.ok{background:#12d16c}
+    .dot.warn{background:#ffd400}
+    .dot.bad{background:#ef4444}
+
+    @media(max-width:820px){
+      .grid{grid-template-columns:1fr}
+      .input, select{min-width:140px}
+
+      main .wrap{
+        padding-top:8px;
+        height: calc(100vh - 120px);
+      }
+
+      .board{grid-auto-columns:minmax(210px, 0.72fr);}
+      .subtitleInline{max-width: 100%; margin-left:0;}
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="top">
+      <div class="title">
+        <div class="titleRow">
+          <h1>CRM — Leads Senger</h1>
+
+          <div class="statusbar" id="statusbar">
+            <span class="pill"><span class="dot warn"></span>Conectando…</span>
+          </div>
+
+          <div class="subtitleInline">Kanban arrastável + formulário com listas. <b>Sincronizado</b> (Supabase).</div>
+
+          <div class="totalBox" id="totalBox">
+            <span class="t">Leads ativos</span>
+            <span class="n">0</span>
+          </div>
+
+          <div class="totalBox" id="lostBox" title="Clique em 'Mostrar perdidos' para visualizar">
+            <span class="t">Leads perdidos</span>
+            <span class="n">0</span>
+          </div>
+
+          <!-- ✅ Botão Novo Lead ao lado de Leads perdidos -->
+          <button class="btn primary" id="new">+ Novo Lead</button>
+        </div>
+      </div>
+
+      <div class="actions">
+        <input id="q" class="input" placeholder="Buscar nome/telefone..." />
+        <select id="fEmp"></select>
+        <select id="fOrig"></select>
+        <select id="fResp"></select>
+        <select id="fPri"></select>
+
+        <!-- botão para ocultar/mostrar a coluna Perdido -->
+        <button class="btn" id="toggleLost">Mostrar perdidos</button>
+
+        <button class="btn" id="exportCsv">Exportar CSV</button>
+        <button class="btn" id="importCsv">Importar CSV</button>
+        <button class="btn" id="reload">Atualizar</button>
+      </div>
+    </div>
+
+    <div class="hint"></div>
+    <div class="hint"></div>
+  </div>
+</header>
+
+<main>
+  <div class="wrap" id="mainWrap">
+    <div id="board" class="board"></div>
+  </div>
+</main>
+
+<div class="toast" id="toast">Salvo.</div>
+
+<dialog id="dlg">
+  <form method="dialog" class="modal" id="form">
+    <div class="modalHead">
+      <div class="t" id="dlgTitle">Novo Lead</div>
+      <button class="btn" value="cancel">Fechar</button>
+    </div>
+
+    <div class="grid">
+      <div>
+        <p class="lbl">Data início</p>
+        <input class="input" name="data_inicio" type="date" />
+      </div>
+      <div>
+        <p class="lbl">Prioridade</p>
+        <select class="input" name="prioridade"></select>
+      </div>
+
+      <div class="full">
+        <p class="lbl">Nome *</p>
+        <input class="input" name="nome" placeholder="Ex.: João Silva" required />
+      </div>
+
+      <div>
+        <p class="lbl">Telefone</p>
+        <input class="input" name="telefone" placeholder="Ex.: 54999013331" />
+      </div>
+      <div>
+        <p class="lbl">Empreendimento</p>
+        <select class="input" name="empreendimento"></select>
+      </div>
+
+      <div>
+        <p class="lbl">Etapa</p>
+        <select class="input" name="etapa"></select>
+      </div>
+      <div>
+        <p class="lbl">Atividade</p>
+        <select class="input" name="atividade"></select>
+      </div>
+
+      <div>
+        <p class="lbl">Resultado</p>
+        <select class="input" name="resultado"></select>
+      </div>
+      <div>
+        <p class="lbl">Origem</p>
+        <select class="input" name="origem"></select>
+      </div>
+
+      <div>
+        <p class="lbl">Responsável</p>
+        <select class="input" name="responsavel"></select>
+      </div>
+
+      <div>
+        <p class="lbl">Motivo de perda</p>
+        <select class="input" name="motivo_perda"></select>
+      </div>
+
+      <div class="full">
+        <p class="lbl">Observação</p>
+        <textarea class="input" name="observacao" placeholder="Notas rápidas..."></textarea>
+      </div>
+    </div>
+
+    <div class="modalFoot">
+      <button class="btn danger" id="deleteBtn" type="button" style="display:none;">Excluir</button>
+      <button class="btn" value="cancel">Cancelar</button>
+      <button class="btn primary" id="save" value="default">Salvar</button>
+    </div>
+  </form>
+</dialog>
+
+<input id="file" type="file" accept=".csv" style="display:none;" />
+
+<script>
+/* ==========
+   CONFIGURAÇÃO SUPABASE
+   ========== */
+const SUPABASE_URL = "https://lnrbpiklzymblpyrobwx.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_KXVbF3c7RGFXVTtfYmrzzg_dMK04Q9q";
+const TABLE = "leads";
+
+/* ==========
+   LISTAS
+   ========== */
+const LISTS = {
+  empreendimento: ["Personalité","Quality","Prime","Evolutti","Boulevard","Premium Office","Renaissance","NVR I–II","NVR III","Outros"],
+  etapa: ["Novo","Em atendimento","Agendou visita","Negociação","Stand by","Perdido"],
+  prioridade: ["Alta","Média","Baixa"],
+  atividade: ["Ligação","WhatsApp","Reunião","Visita","Proposta","Pós-venda"],
+  resultado: ["Conseguiu falar","Não respondeu","Agendou","Remarcou","Enviou proposta","Sem interesse","Outro"],
+  origem: ["Meta","Instagram","Indicação","Corretor","Site","WhatsApp","Ligação","Presencial"],
+  responsavel: ["Sanchai","Miguel","Cristian","Corretor"],
+  motivo_perda: ["Preço","Financiamento","Localização","Escolheu outro","Sumiu","Outro"]
+};
+
+const ETAPA_ALIASES = {
+  "Contato feito": "Em atendimento",
+  "Visitou": "Agendou visita",
+  "Proposta": "Negociação",
+  "Fechado": "Stand by" // compatibilidade com dados antigos
+};
+
+function normalizeEtapa(etapa){
+  const e = (etapa || "").trim();
+  if(LISTS.etapa.includes(e)) return e;
+  if(ETAPA_ALIASES[e]) return ETAPA_ALIASES[e];
+  return "Em atendimento";
+}
+
+const elBoard = document.querySelector("#board");
+const q = document.querySelector("#q");
+const fEmp = document.querySelector("#fEmp");
+const fOrig = document.querySelector("#fOrig");
+const fResp = document.querySelector("#fResp");
+const fPri = document.querySelector("#fPri");
+const dlg = document.querySelector("#dlg");
+const form = document.querySelector("#form");
+const dlgTitle = document.querySelector("#dlgTitle");
+const deleteBtn = document.querySelector("#deleteBtn");
+const toast = document.querySelector("#toast");
+const fileInput = document.querySelector("#file");
+const statusbar = document.querySelector("#statusbar");
+const totalBox = document.querySelector("#totalBox");
+const lostBox = document.querySelector("#lostBox");
+const mainWrap = document.querySelector("#mainWrap");
+const headerEl = document.querySelector("header");
+const toggleLostBtn = document.querySelector("#toggleLost");
+
+let ALL = [];
+let editingId = null;
+let online = false;
+
+let SHOW_LOST = false;
+
+function setStatus(type, msg){
+  const dotClass = type === "ok" ? "ok" : type === "bad" ? "bad" : "warn";
+  statusbar.innerHTML = `<span class="pill"><span class="dot ${dotClass}"></span>${msg}</span>`;
+}
+
+function showToast(msg="Salvo."){
+  toast.textContent = msg;
+  toast.classList.add("show");
+  setTimeout(()=>toast.classList.remove("show"), 1200);
+}
+
+/* data local */
+function todayISO(){
+  const d = new Date();
+  const tz = d.getTimezoneOffset() * 60000;
+  return new Date(d - tz).toISOString().slice(0,10);
+}
+function nowISO(){ return new Date().toISOString(); }
+function dayStartLocal(d){ return new Date(d.getFullYear(), d.getMonth(), d.getDate()); }
+
+function daysSinceISO(iso){
+  if(!iso) return 0;
+  const d = new Date(iso);
+  if(Number.isNaN(d.getTime())) return 0;
+
+  const today = dayStartLocal(new Date());
+  const base = dayStartLocal(d);
+
+  const diff = Math.floor((today - base) / (24*60*60*1000));
+  return diff < 0 ? 0 : diff;
+}
+
+/* ✅ NOVA REGRA DE CORES */
+function badgeInfo(lead){
+  const baseISO = lead.atualizado_em || lead.criado_em || "";
+  const days = daysSinceISO(baseISO);
+
+  if(days === 0) return { text: "hoje", cls: "dt-green" };
+  if(days <= 2) return { text: days === 1 ? "1 dia" : "2 dias", cls: "dt-blue" };
+  if(days <= 4) return { text: days + " dias", cls: "dt-yellow" };
+  if(days <= 7) return { text: days + " dias", cls: "dt-orange" };
+  return { text: days + " dias", cls: "dt-red" };
+}
+
+function normalizePhoneBR(phone){
+  const digits = String(phone||"").replace(/\D/g,"");
+  if(!digits) return "";
+  if(digits.startsWith("55")) return digits;
+  return "55" + digits;
+}
+
+function escapeHtml(str){
+  return String(str ?? "").replace(/[&<>"']/g, s => ({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
+  }[s]));
+}
+
+/* Prioridade em TEXTO */
+function priorityText(p){
+  if (p === "Alta") return "Alta";
+  if (p === "Média") return "Média";
+  return "Baixa";
+}
+
+/* Card */
+function cardHTML(l){
+  const isPerdido = normalizeEtapa(l.etapa) === "Perdido";
+
+  const emp = l.empreendimento || "—";
+  const wa = l.telefone ? `https://wa.me/${normalizePhoneBR(l.telefone)}` : "";
+  const prio = priorityText(l.prioridade || "Média");
+
+  const highPriorityClass = (l.prioridade === "Alta") ? "high-priority" : "";
+
+  if(isPerdido){
+    const motivo = l.motivo_perda ? `<div style="margin-top:6px;font-size:12px;color:var(--muted);">Motivo: <b>${escapeHtml(l.motivo_perda)}</b></div>` : "";
+    return `
+      <div class="card ${highPriorityClass}" draggable="true" data-id="${escapeHtml(l.id)}">
+        <div class="row1">
+          <div class="nm">${escapeHtml(l.nome || "")}</div>
+          <div class="prioText">${escapeHtml(prio)}</div>
+        </div>
+        <div class="sub-row">
+          <div class="emp">${escapeHtml(emp)}</div>
+
+          ${wa ? `
+<a class="waDot" href="${wa}" target="_blank" rel="noopener" aria-label="WhatsApp">
+  <svg viewBox="0 0 32 32" width="12" height="12" fill="white">
+    <path d="M19.11 17.37c-.3-.15-1.77-.87-2.04-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.65.07-.3-.15-1.27-.47-2.42-1.5-.9-.8-1.5-1.77-1.67-2.07-.17-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.07-.15-.67-1.62-.92-2.22-.24-.58-.48-.5-.67-.51h-.57c-.2 0-.52.07-.8.37-.27.3-1.05 1.02-1.05 2.5 0 1.47 1.07 2.9 1.22 3.1.15.2 2.1 3.2 5.08 4.49.71.3 1.27.48 1.7.61.71.23 1.35.2 1.86.12.57-.08 1.77-.72 2.02-1.42.25-.7.25-1.3.17-1.42-.07-.12-.27-.2-.57-.35z"/>
+    <path d="M16.04 3C9.94 3 5 7.94 5 14.04c0 2.2.64 4.25 1.75 5.98L5 29l9.21-1.7c1.67.9 3.58 1.42 5.57 1.42 6.1 0 11.04-4.94 11.04-11.04S22.14 3 16.04 3zm0 19.98c-1.82 0-3.51-.49-4.97-1.35l-.35-.21-5.47 1.01 1.04-5.34-.23-.36c-.93-1.47-1.42-3.17-1.42-4.98 0-5.17 4.21-9.38 9.38-9.38s9.38 4.21 9.38 9.38-4.21 9.38-9.38 9.38z"/>
+  </svg>
+</a>
+` : ``}
+        </div>
+        ${motivo}
+      </div>
+    `;
+  }
+
+  const b = badgeInfo(l);
+
+  return `
+    <div class="card ${highPriorityClass}" draggable="true" data-id="${escapeHtml(l.id)}">
+      <div class="row1">
+        <div class="nm">${escapeHtml(l.nome || "")}</div>
+        <div class="prioText">${escapeHtml(prio)}</div>
+      </div>
+
+      <div class="sub-row">
+        <div class="emp">${escapeHtml(emp)}</div>
+
+        ${wa ? `
+<a class="waDot" href="${wa}" target="_blank" rel="noopener" aria-label="WhatsApp">
+  <svg viewBox="0 0 32 32" width="12" height="12" fill="white">
+    <path d="M19.11 17.37c-.3-.15-1.77-.87-2.04-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.65.07-.3-.15-1.27-.47-2.42-1.5-.9-.8-1.5-1.77-1.67-2.07-.17-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.07-.15-.67-1.62-.92-2.22-.24-.58-.48-.5-.67-.51h-.57c-.2 0-.52.07-.8.37-.27.3-1.05 1.02-1.05 2.5 0 1.47 1.07 2.9 1.22 3.1.15.2 2.1 3.2 5.08 4.49.71.3 1.27.48 1.7.61.71.23 1.35.2 1.86.12.57-.08 1.77-.72 2.02-1.42.25-.7.25-1.3.17-1.42-.07-.12-.27-.2-.57-.35z"/>
+    <path d="M16.04 3C9.94 3 5 7.94 5 14.04c0 2.2.64 4.25 1.75 5.98L5 29l9.21-1.7c1.67.9 3.58 1.42 5.57 1.42 6.1 0 11.04-4.94 11.04-11.04S22.14 3 16.04 3zm0 19.98c-1.82 0-3.51-.49-4.97-1.35l-.35-.21-5.47 1.01 1.04-5.34-.23-.36c-.93-1.47-1.42-3.17-1.42-4.98 0-5.17 4.21-9.38 9.38-9.38s9.38 4.21 9.38 9.38-4.21 9.38-9.38 9.38z"/>
+  </svg>
+</a>
+` : ``}
+
+        <div class="dt ${escapeHtml(b.cls)}">${escapeHtml(b.text)}</div>
+      </div>
+    </div>
+  `;
+}
+
+/* ===== ORDEM / TOPO ===== */
+const ORDER_STEP = 1000;
+
+function defaults(){
+  return {
+    id: crypto.randomUUID(),
+    ordem: Date.now(),
+    data_inicio: todayISO(),
+    nome: "",
+    telefone: "",
+    empreendimento: "Outros",
+    etapa: "Novo",
+    prioridade: "Média",
+    atividade: "WhatsApp",
+    resultado: "Conseguiu falar",
+    origem: "Meta",
+    responsavel: "Sanchai",
+    motivo_perda: "",
+    observacao: "",
+    criado_em: nowISO(),
+    atualizado_em: nowISO()
+  };
+}
+
+function getLeadsInEtapa(etapa, excludeId=null){
+  const e = normalizeEtapa(etapa);
+  return ALL
+    .filter(x => normalizeEtapa(x.etapa) === e && x.id !== excludeId)
+    .map(x => ({...x, ordem: Number(x.ordem)}))
+    .filter(x => !Number.isNaN(x.ordem))
+    .sort((a,b)=>a.ordem-b.ordem);
+}
+
+function orderForTop(etapa, excludeId=null){
+  const arr = getLeadsInEtapa(etapa, excludeId);
+  if(!arr.length) return ORDER_STEP;
+  const min = arr[0].ordem;
+  return min - ORDER_STEP;
+}
+
+/* ========== SUPABASE (PostgREST) ========== */
+async function sbFetch(path, {method="GET", body=null, prefer="return=representation"} = {}){
+  const url = `${SUPABASE_URL}/rest/v1/${path}`;
+  const headers = {
+    "apikey": SUPABASE_ANON_KEY,
+    "Authorization": `Bearer ${SUPABASE_ANON_KEY}`,
+    "Content-Type": "application/json",
+    "Prefer": prefer
+  };
+  const res = await fetch(url, { method, headers, body: body ? JSON.stringify(body) : null });
+
+  if(!res.ok){
+    let errText = "";
+    try{ errText = await res.text(); }catch{}
+    throw new Error(`${res.status} ${res.statusText} — ${errText}`);
+  }
+
+  if(res.status === 204) return null;
+  return await res.json();
+}
+
+async function load(){
+  try{
+    setStatus("warn","Conectando…");
+    const data = await sbFetch(`${TABLE}?select=*`);
+    ALL = Array.isArray(data) ? data : [];
+    online = true;
+    setStatus("ok","Online • Sincronizado");
+    render();
+  }catch(e){
+    online = false;
+    setStatus("bad","Sem conexão (ou tabela/política não pronta)");
+    console.error(e);
+    showToast("Não conectou no Supabase. Abra via URL http/https (não file do PC).");
+    render();
+  }
+}
+
+async function upsertLead(payload, {silent=false} = {}){
+  if(!payload.nome || !payload.nome.trim()){
+    alert("Nome é obrigatório.");
+    return false;
+  }
+
+  payload.etapa = normalizeEtapa(payload.etapa);
+
+  if(payload.etapa !== "Perdido"){
+    payload.motivo_perda = "";
+  }else{
+    if(!payload.motivo_perda){
+      alert("Motivo de perda é obrigatório quando Etapa = Perdido.");
+      return false;
+    }
+  }
+
+  payload.atualizado_em = nowISO();
+
+  if(payload.ordem == null || payload.ordem === "") payload.ordem = Date.now();
+  payload.ordem = Number(payload.ordem);
+
+  const exists = ALL.some(x => x.id === payload.id);
+
+  try{
+    if(exists){
+      const updated = await sbFetch(`${TABLE}?id=eq.${encodeURIComponent(payload.id)}`, {
+        method: "PATCH",
+        body: payload
+      });
+      const u = Array.isArray(updated) ? updated[0] : payload;
+      const idx = ALL.findIndex(x=>x.id===payload.id);
+      if(idx >= 0) ALL[idx] = u;
+    }else{
+      payload.id = payload.id || crypto.randomUUID();
+      payload.criado_em = payload.criado_em || nowISO();
+      const inserted = await sbFetch(TABLE, { method:"POST", body: payload });
+      const i = Array.isArray(inserted) ? inserted[0] : payload;
+      ALL.unshift(i);
+    }
+
+    if(!silent){
+      showToast("Lead salvo.");
+      render();
+    }
+    return true;
+  }catch(e){
+    console.error(e);
+    alert("Não consegui salvar no Supabase. Provável: RLS/política ou tabela não criada.");
+    return false;
+  }
+}
+
+async function deleteLead(id){
+  const lead = ALL.find(x=>x.id===id);
+  if(!lead) return;
+  const ok = confirm(`Excluir o lead "${lead.nome}"? Isso não tem volta.`);
+  if(!ok) return;
+
+  try{
+    await sbFetch(`${TABLE}?id=eq.${encodeURIComponent(id)}`, { method:"DELETE", prefer:"return=minimal" });
+    ALL = ALL.filter(x=>x.id!==id);
+    showToast("Lead excluído.");
+    render();
+  }catch(e){
+    console.error(e);
+    alert("Não consegui excluir no Supabase. Provável: RLS/política.");
+  }
+}
+
+/* ========== UI ========== */
+function fillSelect(sel, items, firstLabel){
+  sel.innerHTML = "";
+  const opt0 = document.createElement("option");
+  opt0.value = "";
+  opt0.textContent = firstLabel || "Todos";
+  sel.appendChild(opt0);
+  items.forEach(v=>{
+    const o = document.createElement("option");
+    o.value = v; o.textContent = v;
+    sel.appendChild(o);
+  });
+}
+
+function fillFormSelect(name, items){
+  const sel = form.querySelector(`[name="${name}"]`);
+  sel.innerHTML = "";
+  items.forEach(v=>{
+    const o = document.createElement("option");
+    o.value = v; o.textContent = v;
+    sel.appendChild(o);
+  });
+}
+
+function filtered(){
+  const term = (q.value || "").toLowerCase().trim();
+  return ALL.filter(l=>{
+    const hay = `${l.nome||""} ${l.telefone||""}`.toLowerCase();
+    if (term && !hay.includes(term)) return false;
+    if (fEmp.value && l.empreendimento !== fEmp.value) return false;
+    if (fOrig.value && l.origem !== fOrig.value) return false;
+    if (fResp.value && l.responsavel !== fResp.value) return false;
+    if (fPri.value && l.prioridade !== fPri.value) return false;
+    return true;
+  });
+}
+
+function toggleMotivo(){
+  const isPerdido = form.etapa.value === "Perdido";
+  form.motivo_perda.disabled = !isPerdido;
+  form.motivo_perda.required = isPerdido;
+  if(!isPerdido) form.motivo_perda.value = "";
+}
+
+function openNew(){
+  editingId = null;
+  deleteBtn.style.display = "none";
+  dlgTitle.textContent = "Novo Lead";
+
+  fillFormSelect("prioridade", LISTS.prioridade);
+  fillFormSelect("empreendimento", LISTS.empreendimento);
+  fillFormSelect("etapa", LISTS.etapa);
+  fillFormSelect("atividade", LISTS.atividade);
+  fillFormSelect("resultado", LISTS.resultado);
+  fillFormSelect("origem", LISTS.origem);
+  fillFormSelect("responsavel", LISTS.responsavel);
+  fillFormSelect("motivo_perda", LISTS.motivo_perda);
+
+  const d = defaults();
+  form.data_inicio.value = d.data_inicio;
+  form.nome.value = "";
+  form.telefone.value = "";
+  form.empreendimento.value = d.empreendimento;
+  form.etapa.value = d.etapa;
+  form.prioridade.value = d.prioridade;
+  form.atividade.value = d.atividade;
+  form.resultado.value = d.resultado;
+  form.origem.value = d.origem;
+  form.responsavel.value = d.responsavel;
+  form.motivo_perda.value = "";
+  form.observacao.value = "";
+  toggleMotivo();
+
+  dlg.showModal();
+}
+
+function openEdit(id, forcePerdido=false){
+  const lead = ALL.find(x=>x.id===id);
+  if(!lead) return;
+  editingId = id;
+  deleteBtn.style.display = "inline-flex";
+  dlgTitle.textContent = "Editar Lead";
+
+  fillFormSelect("prioridade", LISTS.prioridade);
+  fillFormSelect("empreendimento", LISTS.empreendimento);
+  fillFormSelect("etapa", LISTS.etapa);
+  fillFormSelect("atividade", LISTS.atividade);
+  fillFormSelect("resultado", LISTS.resultado);
+  fillFormSelect("origem", LISTS.origem);
+  fillFormSelect("responsavel", LISTS.responsavel);
+  fillFormSelect("motivo_perda", LISTS.motivo_perda);
+
+  form.data_inicio.value = lead.data_inicio || todayISO();
+  form.nome.value = lead.nome || "";
+  form.telefone.value = lead.telefone || "";
+  form.empreendimento.value = lead.empreendimento || "Outros";
+  form.etapa.value = forcePerdido ? "Perdido" : normalizeEtapa(lead.etapa || "Novo");
+  form.prioridade.value = lead.prioridade || "Média";
+  form.atividade.value = lead.atividade || "WhatsApp";
+  form.resultado.value = lead.resultado || "Conseguiu falar";
+  form.origem.value = lead.origem || "Meta";
+  form.responsavel.value = lead.responsavel || "Sanchai";
+  form.motivo_perda.value = lead.motivo_perda || "";
+  form.observacao.value = lead.observacao || "";
+  toggleMotivo();
+
+  dlg.showModal();
+}
+
+form.etapa.addEventListener("change", toggleMotivo);
+
+/* Regra: salvou/editar no modal -> sobe pro TOPO da coluna (ordem) */
+form.addEventListener("submit", async (e)=>{
+  e.preventDefault();
+
+  const etapaEscolhida = normalizeEtapa(form.etapa.value);
+  const existing = editingId ? ALL.find(x=>x.id===editingId) : null;
+
+  const ordemTopo = orderForTop(etapaEscolhida, editingId || null);
+
+  const payload = {
+    id: editingId || crypto.randomUUID(),
+    ordem: ordemTopo,
+    data_inicio: form.data_inicio.value || todayISO(),
+    nome: form.nome.value.trim(),
+    telefone: form.telefone.value.trim(),
+    empreendimento: form.empreendimento.value,
+    etapa: etapaEscolhida,
+    prioridade: form.prioridade.value,
+    atividade: form.atividade.value,
+    resultado: form.resultado.value,
+    origem: form.origem.value,
+    responsavel: form.responsavel.value,
+    motivo_perda: (form.etapa.value === "Perdido") ? form.motivo_perda.value : "",
+    observacao: form.observacao.value.trim(),
+    criado_em: editingId ? (existing?.criado_em || nowISO()) : nowISO(),
+    atualizado_em: nowISO()
+  };
+
+  const ok = await upsertLead(payload);
+  if(ok) dlg.close();
+});
+
+deleteBtn.addEventListener("click", async ()=>{
+  if(!editingId) return;
+  await deleteLead(editingId);
+  dlg.close();
+});
+
+/* drag também vai pro topo (ordem) */
+async function moveLeadWithOrder(id, etapa){
+  const idx = ALL.findIndex(x=>x.id===id);
+  if(idx < 0) return;
+
+  const current = ALL[idx];
+  const etapaNorm = normalizeEtapa(etapa);
+
+  if(etapaNorm === "Perdido" && !current.motivo_perda){
+    openEdit(id, true);
+    return;
+  }
+
+  const ordemTopo = orderForTop(etapaNorm, id);
+  const next = {...current, etapa: etapaNorm, ordem: ordemTopo};
+
+  if(next.etapa !== "Perdido") next.motivo_perda = "";
+
+  await upsertLead(next);
+}
+
+function wireDnD(){
+  document.querySelectorAll(".card").forEach(card=>{
+    card.addEventListener("dragstart", (e)=>{
+      if(e.target.closest(".waDot")){ e.preventDefault(); return; }
+      e.dataTransfer.setData("text/plain", card.dataset.id);
+      e.dataTransfer.effectAllowed = "move";
+    });
+
+    card.addEventListener("click", (e)=>{
+      if(e.target.closest(".waDot")) return;
+      openEdit(card.dataset.id);
+    });
+  });
+
+  document.querySelectorAll(".dropzone").forEach(zone=>{
+    zone.addEventListener("dragover", (e)=>{
+      e.preventDefault();
+      zone.classList.add("dragover");
+    });
+
+    zone.addEventListener("dragleave", ()=>{
+      zone.classList.remove("dragover");
+    });
+
+    zone.addEventListener("drop", async (e)=>{
+      e.preventDefault();
+      zone.classList.remove("dragover");
+
+      const id = e.dataTransfer.getData("text/plain");
+      const etapa = zone.dataset.drop;
+      if(!id || !etapa) return;
+
+      try{
+        await moveLeadWithOrder(id, etapa);
+      }catch(err){
+        console.error(err);
+        showToast("Falha ao mover. Verifique conexão/RLS.");
+      }
+    });
+  });
+}
+
+/* ✅ Ordenação final na tela:
+   1) Alta sempre no topo
+   2) Dentro de cada prioridade: mais editado primeiro (atualizado_em desc)
+   3) Empate: usa ordem (para manter estabilidade)
+*/
+function priorityWeight(p){
+  if(p === "Alta") return 0;
+  if(p === "Média") return 1;
+  return 2; // Baixa
+}
+function sortByPriorityAndEditedDesc(a,b){
+  const pa = priorityWeight(a.prioridade || "Média");
+  const pb = priorityWeight(b.prioridade || "Média");
+  if(pa !== pb) return pa - pb;
+
+  const ta = new Date(a.atualizado_em || a.criado_em || 0).getTime();
+  const tb = new Date(b.atualizado_em || b.criado_em || 0).getTime();
+  if(tb !== ta) return tb - ta;
+
+  return (Number(a.ordem)||0) - (Number(b.ordem)||0);
+}
+
+function render(){
+  const leads = filtered();
+
+  const totalAtivos = leads.filter(l => normalizeEtapa(l.etapa || "Novo") !== "Perdido").length;
+  const totalPerdidos = leads.filter(l => normalizeEtapa(l.etapa || "Novo") === "Perdido").length;
+
+  const nEl = totalBox.querySelector(".n");
+  if(nEl) nEl.textContent = totalAtivos;
+
+  const n2 = lostBox.querySelector(".n");
+  if(n2) n2.textContent = totalPerdidos;
+
+  toggleLostBtn.textContent = SHOW_LOST ? "Ocultar perdidos" : "Mostrar perdidos";
+
+  elBoard.innerHTML = "";
+
+  const etapasNoBoard = LISTS.etapa.filter(etapa => {
+    if(etapa === "Perdido") return SHOW_LOST;
+    return true;
+  });
+
+  etapasNoBoard.forEach(etapa=>{
+    const col = document.createElement("section");
+    col.className = "col";
+    col.dataset.etapa = etapa;
+
+    const inCol = leads
+      .filter(l => normalizeEtapa(l.etapa || "Novo") === etapa)
+      .sort(sortByPriorityAndEditedDesc);
+
+    col.innerHTML = `
+      <div class="colHead">
+        <div class="name">${escapeHtml(etapa).toUpperCase()}</div>
+        <div class="count">${inCol.length}</div>
+      </div>
+      <div class="dropzone" data-drop="${escapeHtml(etapa)}">
+        ${inCol.map(cardHTML).join("")}
+      </div>
+    `;
+    elBoard.appendChild(col);
+  });
+
+  wireDnD();
+}
+
+/* CSV (mantido igual) */
+function toCSV(rows){
+  const headers = [
+    "id","ordem","data_inicio","nome","telefone","empreendimento","etapa","prioridade",
+    "atividade","resultado","origem","responsavel","motivo_perda","observacao",
+    "criado_em","atualizado_em"
+  ];
+  const esc = (v)=> {
+    const s = String(v ?? "");
+    if(/[",\n;]/.test(s)) return `"${s.replace(/"/g,'""')}"`;
+    return s;
+  };
+  const lines = [headers.join(",")];
+  rows.forEach(r=> lines.push(headers.map(h=>esc(r[h])).join(",")));
+  return lines.join("\n");
+}
+function download(filename, text){
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([text], {type:"text/csv;charset=utf-8"}));
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+}
+
+async function importCSV(text){
+  const isMeta = text.includes("full_name") && text.includes("created_time");
+
+  if(isMeta){
+    const rows = text.split("\n").map(r => r.split("\t")).filter(r => r.length > 1);
+
+    if(rows.length < 2){
+      alert("CSV do Meta vazio.");
+      return;
+    }
+
+    const headers = rows[0].map(h => h.trim());
+    const idx = (name) => headers.indexOf(name);
+
+    const objs = rows.slice(1).map(r => {
+      const rawPhone = r[idx("phone_number")] || "";
+      const cleanPhone = rawPhone.replace(/\D/g,"");
+
+      const rawDate = r[idx("created_time")] || "";
+      const dataISO = rawDate ? rawDate.substring(0,10) : todayISO();
+
+      const platform = r[idx("platform")] || "";
+
+      return {
+        id: crypto.randomUUID(),
+        ordem: orderForTop("Novo", null),
+        data_inicio: dataISO,
+        nome: (r[idx("full_name")] || "").replace(/^"+|"+$/g, "").trim(),
+        telefone: (cleanPhone.length >= 12 && cleanPhone.startsWith("55")) ? cleanPhone.slice(2) : (cleanPhone.length >= 10 ? cleanPhone : ""),
+        empreendimento: "Evolutti",
+        etapa: "Novo",
+        prioridade: "Alta",
+        atividade: "WhatsApp",
+        resultado: "Conseguiu falar",
+        origem: platform === "ig" ? "Instagram" : "Meta",
+        responsavel: "Sanchai",
+        motivo_perda: "",
+        observacao: "",
+        criado_em: nowISO(),
+        atualizado_em: nowISO()
+      };
+    });
+
+    for(const o of objs){
+      await upsertLead(o, {silent:true});
+    }
+
+    showToast("Leads do Meta importados.");
+    await load();
+    return;
+  }
+
+  alert("Formato de CSV não reconhecido.");
+}
+
+function adjustMainHeight(){
+  if(!mainWrap || !headerEl) return;
+  const h = headerEl.offsetHeight || 132;
+  mainWrap.style.height = `calc(100vh - ${h}px)`;
+}
+
+/* INIT filtros */
+fillSelect(fEmp, LISTS.empreendimento, "Empreendimento");
+fillSelect(fOrig, LISTS.origem, "Origem");
+fillSelect(fResp, LISTS.responsavel, "Responsável");
+fillSelect(fPri, LISTS.prioridade, "Prioridade");
+
+[q,fEmp,fOrig,fResp,fPri].forEach(el=>{
+  el.addEventListener("input", render);
+  el.addEventListener("change", render);
+});
+
+document.querySelector("#new").addEventListener("click", openNew);
+document.querySelector("#reload").addEventListener("click", load);
+
+toggleLostBtn.addEventListener("click", ()=>{
+  SHOW_LOST = !SHOW_LOST;
+  render();
+});
+lostBox.addEventListener("click", ()=>{
+  SHOW_LOST = true;
+  render();
+});
+
+document.querySelector("#exportCsv").addEventListener("click", ()=>{
+  const rows = filtered();
+  const csv = toCSV(rows);
+  download(`crm-leads-senger-${todayISO()}.csv`, csv);
+});
+
+document.querySelector("#importCsv").addEventListener("click", ()=>{
+  fileInput.value = "";
+  fileInput.click();
+});
+fileInput.addEventListener("change", async ()=>{
+  const f = fileInput.files?.[0];
+  if(!f) return;
+  const text = await f.text();
+  await importCSV(text);
+});
+
+/* Atualiza somente os badges de tempo (não mexe em Perdidos) */
+function updateBadgesOnly(){
+  document.querySelectorAll(".card").forEach(card=>{
+    const id = card.dataset.id;
+    const lead = ALL.find(x => x.id === id);
+    if(!lead) return;
+
+    if(normalizeEtapa(lead.etapa) === "Perdido") return;
+
+    const b = badgeInfo(lead);
+    const dtEl = card.querySelector(".dt");
+    if(!dtEl) return;
+
+    dtEl.className = `dt ${b.cls}`;
+    dtEl.textContent = b.text;
+  });
+}
+setInterval(updateBadgesOnly, 60 * 1000);
+
+/* start */
+adjustMainHeight();
+window.addEventListener("resize", adjustMainHeight);
+load();
+</script>
+</body>
+</html>
