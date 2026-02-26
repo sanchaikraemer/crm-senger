@@ -243,7 +243,7 @@
       line-height:1;
       flex:0 0 auto;
     }
-    .nc-blue{  background:#0b9fb2; color:#ffffff; } /* aguardando (futuro) */
+    .nc-neutral{  background:#eef1f4; color:#475569; } /* aguardando (futuro) */
     .nc-green{ background:#16a34a; color:#ffffff; } /* hoje */
     .nc-red{   background:#ef4444; color:#ffffff; } /* vencido */
 
@@ -724,7 +724,7 @@ function nextContactInfo(lead){
 
   if(diff === 0) return { text, cls:"nc-green" };   // hoje
   if(diff < 0) return { text, cls:"nc-red" };      // vencido
-  return { text, cls:"nc-blue" };                  // aguardando (futuro)
+  return { text, cls:"nc-neutral" };              // aguardando (futuro)
 }
 
 function normalizePhoneBR(phone){
