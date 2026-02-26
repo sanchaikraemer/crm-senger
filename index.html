@@ -812,7 +812,7 @@ function defaults(){
     id: crypto.randomUUID(),
     ordem: Date.now(),
     data_inicio: todayISO(),
-    proximo_contato: "",
+    proximo_contato: null,
 
     nome: "",
     telefone: "",
@@ -1095,7 +1095,9 @@ form.addEventListener("submit", async (e)=>{
     data_inicio: form.data_inicio.value || todayISO(),
 
     /* ✅ ALTERAÇÃO 2 */
-    proximo_contato: (form.proximo_contato.value || "").trim(),
+    proximo_contato: (form.proximo_contato.value && form.proximo_contato.value.trim())
+  ? form.proximo_contato.value.trim()
+  : null,
 
     nome: form.nome.value.trim(),
     telefone: form.telefone.value.trim(),
@@ -1299,7 +1301,7 @@ async function importCSV(text){
         id: crypto.randomUUID(),
         ordem: orderForTop("Novo", null),
         data_inicio: dataISO,
-        proximo_contato: "",
+        proximo_contato: null,
 
         nome: (r[idx("full_name")] || "").replace(/^"+|"+$/g, "").trim(),
         telefone: (cleanPhone.length >= 12 && cleanPhone.startsWith("55")) ? cleanPhone.slice(2) : (cleanPhone.length >= 10 ? cleanPhone : ""),
