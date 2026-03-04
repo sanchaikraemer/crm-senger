@@ -4,7 +4,6 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>CRM — Leads Senger (Kanban)</title>
-
   <style>
     :root{
       --bg:#f3f7f8;
@@ -18,12 +17,8 @@
       --teal:#0b9fb2;
       --teal-2:#0aa3b8;
       --teal-soft:#e6f6f7;
-
       --danger:#ef4444;
       --ok:#16a34a;
-
-      --warn:#f59e0b;
-      --pill:#eef2f7;
     }
 
     *{box-sizing:border-box}
@@ -41,1031 +36,1452 @@
       border-bottom:1px solid var(--line);
     }
 
-    .wrap{max-width:1500px;margin:0 auto;padding:14px 14px 10px}
+    .wrap{max-width:1500px;margin:0 auto;padding:7px 16px}
     .top{
-      display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between;
-      gap:10px;
+      display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;
     }
-    .title{
-      display:flex; align-items:center; gap:12px;
-      min-width:260px;
-    }
-    h1{font-size:18px;margin:0}
-    .statusbar{
-      display:flex; align-items:center; gap:10px; flex-wrap:wrap;
-      color:var(--muted); font-size:13px;
-    }
-    .pill{
-      display:inline-flex; align-items:center; gap:8px;
-      padding:6px 10px; border-radius:999px;
-      background:#fff; border:1px solid var(--line);
-      box-shadow:0 2px 10px rgba(10,10,10,.04);
-    }
-    .dot{width:10px;height:10px;border-radius:50%;}
-    .dot.ok{background:var(--ok)}
-    .dot.warn{background:var(--warn)}
-    .dot.bad{background:var(--danger)}
+    .title{display:flex; flex-direction:column; gap:2px}
 
-    .subline{
-      margin-top:8px;
-      display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:space-between;
+    .titleRow{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      flex-wrap:wrap;
+      width:100%;
     }
-
-    .filters{
-      display:flex; flex-wrap:wrap; gap:10px; align-items:center;
-    }
-    input[type="search"], select{
-      height:40px;
-      padding:0 12px;
-      border-radius:12px;
-      border:1px solid var(--line);
-      outline:none;
-      background:#fff;
-      min-width:220px;
-      box-shadow:0 2px 10px rgba(10,10,10,.03);
-    }
-    select{min-width:170px}
-    .btn{
-      height:40px;
-      padding:0 14px;
-      border-radius:12px;
-      border:1px solid var(--line);
-      background:#fff;
-      cursor:pointer;
-      font-weight:600;
-    }
-    .btn.primary{
-      background:var(--teal);
-      color:#fff;
-      border-color:transparent;
-    }
-    .btn.ghost{background:#fff}
-    .btn.danger{
-      background:var(--danger);
-      color:#fff;
-      border-color:transparent;
-    }
-
-    .totals{
-      display:flex; flex-wrap:wrap; gap:10px; align-items:center;
-    }
-    .totalBox{
-      background:#fff; border:1px solid var(--line);
-      border-radius:999px;
-      padding:6px 12px;
-      display:flex; gap:8px; align-items:center;
-      box-shadow:0 2px 10px rgba(10,10,10,.03);
-      font-size:13px;
+    .subtitleInline{
+      margin-left:auto;
+      font-size:12px;
       color:var(--muted);
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      max-width: 900px;
     }
-    .totalBox b{color:var(--teal)}
 
-    main{max-width:1500px;margin:0 auto;padding:12px 14px 22px}
+    .title h1{font-size:16px;margin:0}
+    .actions{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      flex-wrap:wrap;
+    }
+
+    .btn{
+      border:1px solid var(--line);
+      background:var(--card);
+      padding:10px 12px;
+      border-radius:12px;
+      cursor:pointer;
+      font-weight:800;
+      box-shadow: 0 2px 8px rgba(10,10,10,.04);
+      color:var(--text);
+      text-decoration:none;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+    }
+    .btn.primary{background:var(--teal); color:#fff; border-color:transparent}
+    .btn.danger{background:var(--danger); color:#fff; border-color:transparent}
+
+    .input, select{
+      border:1px solid var(--line);
+      background:#fff;
+      padding:10px 12px;
+      border-radius:12px;
+      outline:none;
+      min-width:160px;
+      color:var(--text);
+    }
+
+    /* Busca com botão "x" */
+    .searchWrap{ position:relative; display:inline-flex; align-items:center; }
+    .searchWrap .input{ padding-right:38px; }
+    .clearBtn{
+      position:absolute;
+      right:10px;
+      top:50%;
+      transform:translateY(-50%);
+      border:0;
+      background:transparent;
+      cursor:pointer;
+      font-size:18px;
+      line-height:1;
+      color:var(--muted);
+      width:26px;
+      height:26px;
+      border-radius:999px;
+      display:none;
+      align-items:center;
+      justify-content:center;
+    }
+    .clearBtn:hover{ background:rgba(0,0,0,.05); }
+    .clearBtn.show{ display:inline-flex; }
+
+    /* gap do header reduzido */
+    .hint{font-size:12px;color:var(--muted); margin-top:5px}
+
+    main .wrap{
+      padding-top:16px;
+      height: calc(100vh - 132px);
+    }
+
     .board{
       display:grid;
-      grid-template-columns: repeat(5, minmax(260px, 1fr));
-      gap:12px;
+      grid-auto-flow:column;
+      grid-auto-columns:minmax(220px, 0.72fr);
+      gap:14px;
       overflow:auto;
-      padding-bottom:10px;
+      height:100%;
+      padding-bottom:14px;
     }
     .col{
-      background:rgba(255,255,255,.55);
+      background:rgba(255,255,255,.6);
       border:1px solid var(--line);
-      border-radius:18px;
-      box-shadow:0 6px 16px rgba(10,10,10,.05);
-      min-height:300px;
-      display:flex;
-      flex-direction:column;
+      border-radius:var(--r);
+      box-shadow: 0 2px 12px rgba(10,10,10,.04);
+      min-height:280px;
+      display:flex; flex-direction:column;
+      height:100%;
     }
     .colHead{
       padding:12px 12px 10px;
       display:flex; align-items:center; justify-content:space-between;
+      border-bottom:1px solid var(--line);
       gap:10px;
-      border-bottom:1px solid rgba(219,229,234,.7);
-      background:rgba(255,255,255,.8);
-      border-top-left-radius:18px; border-top-right-radius:18px;
     }
-    .colTitle{
-      font-weight:800; letter-spacing:.2px; font-size:13px;
-    }
-    .colCount{
-      min-width:28px;
-      height:22px;
-      padding:0 8px;
-      border-radius:999px;
-      background:var(--teal);
+    .colHead .name{font-weight:950;font-size:12px; letter-spacing:.2px}
+    .colHead .count{
+      font-size:11px;
+      font-weight:900;
       color:#fff;
-      display:flex; align-items:center; justify-content:center;
-      font-size:12px;
+      background:var(--teal);
+      padding:4px 7px;
+      border-radius:999px;
+      white-space:nowrap;
+      border:none;
     }
-    .cards{
+
+    .dropzone{
       padding:12px;
       display:flex;
       flex-direction:column;
       gap:10px;
-      overflow:auto;
-      max-height: calc(100vh - 230px);
+      flex:1;
+      overflow-y:auto;
+    }
+    .dropzone.dragover{
+      outline:2px dashed rgba(11,159,178,.35);
+      outline-offset:-6px;
+      border-radius:14px;
     }
 
     .card{
       background:var(--card);
       border:1px solid var(--line);
-      border-radius:16px;
-      box-shadow:0 10px 22px rgba(10,10,10,.06);
-      padding:12px 12px 10px;
-      cursor:pointer;
-      user-select:none;
-    }
-    .card.dragging{opacity:.5}
-    .cardTop{
-      display:flex; align-items:flex-start; justify-content:space-between; gap:10px;
-    }
-    .cardName{font-weight:800; font-size:14px; line-height:1.2}
-    .meta{
-      margin-top:6px;
-      display:flex; align-items:center; justify-content:space-between; gap:10px;
-      color:var(--muted);
-      font-size:12px;
-    }
-    .tags{display:flex; gap:6px; flex-wrap:wrap}
-    .tag{
-      padding:4px 8px;
-      border-radius:999px;
-      background:var(--pill);
-      color:#1f2937;
-      border:1px solid rgba(219,229,234,.8);
-      font-weight:700;
-      font-size:12px;
-    }
-    .tag.date{background:var(--teal-soft); border-color:rgba(11,159,178,.25); color:#0b7280}
-    .tag.date.ok{background:#ecfdf5;border-color:rgba(22,163,74,.25);color:#15803d}
-    .tag.date.bad{background:#fef2f2;border-color:rgba(239,68,68,.25);color:#b91c1c}
-    .prio{
-      font-weight:800;
-      font-size:12px;
-      padding:4px 8px;
-      border-radius:999px;
-      border:1px solid rgba(219,229,234,.9);
-      background:#fff;
-      color:#334155;
-    }
-
-    /* ======= MODAL (sem precisar rolar até salvar) ======= */
-    dialog#dlg{
-      width:min(980px, calc(100vw - 24px));
-      border:none;
-      border-radius:22px;
-      box-shadow:0 30px 80px rgba(10,10,10,.35);
-      padding:0;
-      overflow:hidden;             /* evita scrollbar do dialog */
-      max-height:85vh;             /* controla altura */
-    }
-    dialog::backdrop{background:rgba(15,23,42,.45)}
-
-    .dlgHead{
-      padding:16px 18px;
-      border-bottom:1px solid var(--line);
-      display:flex; align-items:center; justify-content:space-between; gap:12px;
-      background:#fff;
-    }
-    .dlgTitle{font-size:20px;font-weight:900;margin:0}
-    .dlgClose{
-      height:40px; padding:0 14px;
       border-radius:14px;
-      border:1px solid var(--line);
-      background:#fff;
-      cursor:pointer;
-      font-weight:800;
+      padding:10px 10px;
+      box-shadow: var(--shadow);
+      cursor:grab;
+      user-select:none;
+      position:relative;
+    }
+    .card:active{cursor:grabbing}
+
+    .card.high-priority{
+      background:#fff8cc;
+      border:1px solid #e5d18c;
     }
 
-    /* corpo do modal vira flex: conteúdo + ações fixas */
-    form#leadForm{
-      height:calc(85vh - 74px); /* 74px ~ header do modal */
+    .row1{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}
+    .nm{font-weight:950;font-size:13px;line-height:1.2}
+
+    .prioText{
+      font-size:12px;
+      color:var(--muted);
+      font-weight:650;
+      white-space:nowrap;
+    }
+
+    .sub-row{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:8px;
+      font-size:12px;
+      color:var(--muted);
+      margin-top:6px;
+    }
+
+    .leftGroup{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      min-width:0;
+      flex:1;
+    }
+    .leftGroup .emp{
+      font-weight:650;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      min-width:0;
+    }
+
+    .nc{
+      padding:5px 10px;
+      border-radius:999px;
+      white-space:nowrap;
+      font-weight:800;
+      border:1px solid transparent;
+      font-size:12px;
+      line-height:1;
+      flex:0 0 auto;
+    }
+    .nc-neutral{ background:#eef1f4; color:#475569; }
+    .nc-green{ background:#16a34a; color:#ffffff; }
+    .nc-red{ background:#ef4444; color:#ffffff; }
+
+    .sub-row .dt{
+      padding:4px 10px;
+      border-radius:999px;
+      white-space:nowrap;
+      font-weight:700;
+      border:1px solid transparent;
+      flex:0 0 auto;
+    }
+
+    .dt-neutral{ background:#ffffff; color:#475569; border:1px solid var(--line); } /* 0 */
+    .dt-blue{ background:#0b9fb2; color:#ffffff; } /* 1-2 */
+    .dt-yellow{ background:#facc15; color:#111111; } /* 3-4 */
+    .dt-red{ background:#ef4444; color:#ffffff; } /* 5+ */
+
+    .standbyLine{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      min-width:0;
+    }
+    .standbyLine .nm{
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      min-width:0;
+    }
+    .standbyLine .sep{ opacity:.5; flex:0 0 auto; }
+    .standbyLine .empInline{
+      font-weight:700;
+      color:var(--muted);
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      min-width:0;
+      flex:1;
+    }
+
+    /* =========================
+       MODAL (AJUSTADO p/ NÃO PERDER TEMPO)
+       - Footer sempre visível (Salvar/Cancelar)
+       - Melhor aproveitamento de espaço
+       ========================= */
+    dialog{
+      border:0;
+      border-radius:16px;
+      box-shadow: 0 20px 60px rgba(10,10,10,.20);
+      width:min(860px, 92vw);
+      max-height: 88vh;
+      padding:0;
+    }
+    dialog::backdrop{background:rgba(10,10,10,.45)}
+
+    .modal{
       display:flex;
       flex-direction:column;
+      height: 88vh;
+      max-height: 88vh;
+    }
+
+    .modalHead{
+      padding:12px 14px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      border-bottom:1px solid var(--line);
       background:#fff;
+      position:sticky;
+      top:0;
+      z-index:2;
+    }
+    .modalHead .t{font-weight:980}
+
+    .modalBody{
+      padding:12px 14px;
+      overflow:auto; /* se precisar, rola o miolo */
     }
 
-    #dlgContent{
-      flex:1;
-      overflow:hidden; /* IMPORTANT: sem rolagem */
-      padding:16px 18px 10px;
-    }
-
-    .grid2{
+    .grid{
       display:grid;
       grid-template-columns: 1fr 1fr;
-      gap:14px 18px;
-      align-items:start;
+      gap:8px 12px; /* menos espaço */
+    }
+    .grid .full{grid-column:1/-1}
+
+    .lbl{
+      font-size:12px;
+      color:var(--muted);
+      margin:0 0 4px 2px; /* menor */
     }
 
-    .field{display:flex; flex-direction:column; gap:6px}
-    .field label{font-size:12px;color:var(--muted);font-weight:700}
-    .field input, .field select, .field textarea{
+    textarea{
       width:100%;
-      border:1px solid var(--line);
-      border-radius:12px;
-      padding:10px 12px;
-      font-size:14px;
-      background:#fff;
-      outline:none;
-    }
-    .field textarea{resize:none}
-
-    /* bloco inferior (obs e motivo) */
-    .bottom2{
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap:14px 18px;
-      margin-top:12px;
-    }
-    /* altura controlada para caber sem scroll */
-    #f_observacao{height:92px}
-    #f_motivo_perda{height:44px}
-
-    /* linha com 2 campos no lado direito (Empreendimento + Atividade) */
-    .row2{
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap:14px;
+      min-height:64px; /* menor pra caber sem rolagem */
+      resize:vertical;
     }
 
-    /* ações sempre visíveis */
-    #dlgActions{
-      border-top:1px solid var(--line);
-      padding:12px 18px;
+    .modalFoot{
+      padding:10px 14px;
       display:flex;
       justify-content:flex-end;
       gap:10px;
+      flex-wrap:wrap;
+      border-top:1px solid var(--line);
       background:#fff;
+      position:sticky;
+      bottom:0;
+      z-index:2; /* ✅ Salvar sempre visível */
     }
 
-    /* celular: vira 1 coluna e aí pode precisar rolar (mas botões continuam visíveis) */
-    @media (max-width: 900px){
-      .board{grid-template-columns: repeat(2, minmax(260px, 1fr));}
-      #dlgContent{overflow:auto;} /* no celular libera rolagem pra não quebrar */
-      form#leadForm{height:calc(92vh - 74px);}
-      .grid2, .bottom2{grid-template-columns:1fr}
-      .row2{grid-template-columns:1fr}
-      #f_observacao{height:110px}
+    .toast{
+      position:fixed; left:50%; bottom:16px; transform:translateX(-50%);
+      background:#111827; color:#fff;
+      padding:10px 12px;
+      border-radius:12px;
+      font-size:12px;
+      box-shadow: 0 12px 34px rgba(0,0,0,.25);
+      opacity:0; pointer-events:none;
+      transition:.18s ease;
+      z-index:50;
     }
-    @media (max-width: 560px){
-      .board{grid-template-columns: 1fr;}
-      input[type="search"], select{min-width:unset; width:100%}
-      .filters{width:100%}
+    .toast.show{opacity:1}
+
+    .totalBox{
+      margin-left:0;
+      display:flex;
+      align-items:center;
+      gap:10px;
+      padding:10px 12px;
+      border-radius:14px;
+      background:#fff;
+      border:1px solid var(--line);
+      box-shadow: 0 2px 8px rgba(10,10,10,.04);
+      white-space:nowrap;
+    }
+    .totalBox .t{font-size:12px;color:var(--muted);font-weight:850}
+    .totalBox .n{font-size:18px;font-weight:980;color:var(--teal);line-height:1}
+
+    .pill{
+      display:inline-flex; align-items:center; gap:6px;
+      padding:6px 10px; border-radius:999px;
+      background:#fff; border:1px solid var(--line);
+      white-space:nowrap;
+      font-weight:800;
+      color:var(--muted);
+      box-shadow: 0 2px 8px rgba(10,10,10,.04);
+    }
+    .dot{width:8px;height:8px;border-radius:50%;background:var(--muted);display:inline-block}
+    .dot.ok{background:#12d16c}
+    .dot.warn{background:#ffd400}
+    .dot.bad{background:#ef4444}
+
+    /* MOBILE */
+    @media(max-width:820px){
+      header{ position:static; }
+      .wrap{ padding:8px 12px; }
+
+      .titleRow{
+        display:grid;
+        grid-template-columns: 1fr 1fr;
+        gap:10px;
+        align-items:center;
+        width:100%;
+      }
+
+      .title h1{
+        grid-column:1 / -1;
+        font-size:16px;
+        margin:0;
+      }
+
+      .subtitleInline{ display:none; }
+
+      .statusbar{ grid-column:1 / -1; }
+
+      .totalBox{
+        width:100%;
+        justify-content:space-between;
+        padding:9px 10px;
+        grid-column:1 / -1;
+      }
+
+      .actions{
+        width:100%;
+        display:grid;
+        grid-template-columns: 1fr 1fr;
+        gap:10px;
+        margin-top:10px;
+      }
+
+      .searchWrap{ grid-column:1 / -1; width:100%; }
+      #q{ width:100%; min-width:0; }
+
+      #fEmp, #fOrig, #fResp, #fPri{ width:100%; min-width:0; }
+
+      .btn{ padding:11px 12px; border-radius:14px; width:100%; }
+
+      #new{
+        grid-column:1 / -1;
+        font-size:15px;
+        padding:12px 14px;
+      }
+
+      main .wrap{
+        padding-top:10px;
+        height:auto;
+        min-height: calc(100vh - 10px);
+      }
+
+      .board{
+        grid-auto-columns:minmax(240px, 0.90fr);
+        height:auto;
+        min-height: calc(100vh - 10px);
+      }
+
+      /* modal no celular */
+      dialog{
+        width: 96vw;
+        max-height: 92vh;
+      }
+      .modal{
+        height: 92vh;
+        max-height: 92vh;
+      }
+      .grid{
+        grid-template-columns: 1fr; /* 1 coluna no celular pra não apertar */
+        gap:8px;
+      }
     }
   </style>
 </head>
-
 <body>
-  <header>
-    <div class="wrap">
-      <div class="top">
-        <div class="title">
+
+<header>
+  <div class="wrap">
+    <div class="top">
+      <div class="title">
+        <div class="titleRow">
           <h1>CRM — Leads Senger</h1>
+
           <div class="statusbar" id="statusbar">
-            <span class="pill"><span class="dot warn" id="dot"></span><span id="statusText">Conectando…</span></span>
-            <span class="pill" id="syncText">Sincronizando (Supabase)…</span>
+            <span class="pill"><span class="dot warn"></span>Conectando…</span>
           </div>
-        </div>
 
-        <div class="totals">
-          <div class="totalBox" title="Leads com etapa = Perdido">
-            <span>Leads perdidos</span><b id="lostCount">0</b>
+          <div class="subtitleInline">Kanban arrastável + formulário com listas. <b>Sincronizado</b> (Supabase).</div>
+
+          <div class="totalBox" id="totalBox">
+            <span class="t">Leads ativos</span>
+            <span class="n">0</span>
           </div>
-          <div class="totalBox">
-            <span>Leads totais</span><b id="allCount">0</b>
+
+          <div class="totalBox" id="lostBox" title="Clique em 'Mostrar perdidos' para visualizar">
+            <span class="t">Leads perdidos</span>
+            <span class="n">0</span>
           </div>
-          <button class="btn primary" id="newBtn">+ Novo Lead</button>
+
+          <div class="totalBox" id="allBox">
+            <span class="t">Leads totais</span>
+            <span class="n">0</span>
+          </div>
+
+          <button class="btn primary" id="new">+ Novo Lead</button>
         </div>
       </div>
 
-      <div class="subline">
-        <div class="filters">
-          <input id="q" type="search" placeholder="Buscar nome/telefone…" />
-          <select id="fEmp">
-            <option value="">Empreendimento</option>
-          </select>
-          <select id="fOrigem">
-            <option value="">Origem</option>
-          </select>
-          <select id="fResp">
-            <option value="">Responsável</option>
-          </select>
-          <select id="fPrio">
-            <option value="">Prioridade</option>
-          </select>
+      <div class="actions">
+        <div class="searchWrap">
+          <input id="q" class="input" placeholder="Buscar nome/telefone..." />
+          <button class="clearBtn" id="clearQ" type="button" aria-label="Limpar busca">×</button>
         </div>
 
-        <div class="filters">
-          <button class="btn ghost" id="toggleLostBtn">Mostrar perdidos</button>
-          <button class="btn ghost" id="exportBtn">Exportar CSV</button>
-          <button class="btn ghost" id="importBtn">Importar CSV</button>
-          <input id="fileInp" type="file" accept=".csv,text/csv" style="display:none" />
+        <select id="fEmp"></select>
+        <select id="fOrig"></select>
+        <select id="fResp"></select>
+        <select id="fPri"></select>
+
+        <button class="btn" id="toggleLost">Mostrar perdidos</button>
+
+        <button class="btn" id="exportCsv">Exportar CSV</button>
+        <button class="btn" id="importCsv">Importar CSV</button>
+      </div>
+    </div>
+
+    <div class="hint"></div>
+  </div>
+</header>
+
+<main>
+  <div class="wrap" id="mainWrap">
+    <div id="board" class="board"></div>
+  </div>
+</main>
+
+<div class="toast" id="toast">Salvo.</div>
+
+<dialog id="dlg">
+  <form method="dialog" class="modal" id="form">
+    <div class="modalHead">
+      <div class="t" id="dlgTitle">Novo Lead</div>
+      <button class="btn" value="cancel">Fechar</button>
+    </div>
+
+    <!-- ✅ miolo do modal com rolagem (se precisar), mas Salvar fica sempre visível -->
+    <div class="modalBody">
+      <div class="grid">
+        <div>
+          <p class="lbl">Data início</p>
+          <input class="input" name="data_inicio" type="date" />
+        </div>
+
+        <div>
+          <p class="lbl">Próximo contato</p>
+          <input class="input" name="proximo_contato" type="date" />
+        </div>
+
+        <div>
+          <p class="lbl">Prioridade</p>
+          <select class="input" name="prioridade"></select>
+        </div>
+
+        <div class="full">
+          <p class="lbl">Nome *</p>
+          <input class="input" name="nome" placeholder="Ex.: João Silva" required />
+        </div>
+
+        <div>
+          <p class="lbl">Telefone</p>
+          <input class="input" name="telefone" placeholder="Ex.: 54999013331" />
+        </div>
+
+        <div>
+          <p class="lbl">Empreendimento</p>
+          <select class="input" name="empreendimento"></select>
+        </div>
+
+        <div>
+          <p class="lbl">Etapa</p>
+          <select class="input" name="etapa"></select>
+        </div>
+
+        <div>
+          <p class="lbl">Atividade</p>
+          <select class="input" name="atividade"></select>
+        </div>
+
+        <div>
+          <p class="lbl">Resultado</p>
+          <select class="input" name="resultado"></select>
+        </div>
+
+        <div>
+          <p class="lbl">Origem</p>
+          <select class="input" name="origem"></select>
+        </div>
+
+        <div>
+          <p class="lbl">Responsável</p>
+          <select class="input" name="responsavel"></select>
+        </div>
+
+        <div>
+          <p class="lbl">Motivo de perda</p>
+          <select class="input" name="motivo_perda"></select>
+        </div>
+
+        <div class="full">
+          <p class="lbl">Observação</p>
+          <textarea class="input" name="observacao" placeholder="Notas rápidas..."></textarea>
         </div>
       </div>
     </div>
-  </header>
 
-  <main>
-    <div class="board" id="board"></div>
-  </main>
-
-  <!-- MODAL -->
-  <dialog id="dlg">
-    <div class="dlgHead">
-      <h2 class="dlgTitle" id="dlgTitle">Editar Lead</h2>
-      <button class="dlgClose" id="closeDlg" type="button">Fechar</button>
+    <div class="modalFoot">
+      <button class="btn danger" id="deleteBtn" type="button" style="display:none;">Excluir</button>
+      <button class="btn" value="cancel">Cancelar</button>
+      <button class="btn primary" id="save" value="default">Salvar</button>
     </div>
+  </form>
+</dialog>
 
-    <form id="leadForm" autocomplete="off">
-      <div id="dlgContent">
-        <!-- AQUI É O LAYOUT QUE VOCÊ PEDIU (ocupando o “vazio” vermelho com Telefone/Responsável e deixando Observação embaixo) -->
-        <div class="grid2">
-          <!-- COLUNA ESQUERDA -->
-          <div>
-            <div class="field">
-              <label for="f_data_inicio">Data início</label>
-              <input id="f_data_inicio" type="date" />
-            </div>
+<input id="file" type="file" accept=".csv" style="display:none;" />
 
-            <div class="field" style="margin-top:10px">
-              <label for="f_prioridade">Prioridade</label>
-              <select id="f_prioridade"></select>
-            </div>
+<script>
+const SUPABASE_URL = "https://lnrbpiklzymblpyrobwx.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_KXVbF3c7RGFXVTtfYmrzzg_dMK04Q9q";
+const TABLE = "leads";
 
-            <div class="field" style="margin-top:10px">
-              <label for="f_nome">Nome *</label>
-              <input id="f_nome" type="text" />
-            </div>
+const SHOW_WA_ON_CARD = false;
 
-            <div class="field" style="margin-top:10px">
-              <label for="f_telefone">Telefone</label>
-              <input id="f_telefone" type="tel" placeholder="Ex.: 54999013331" />
-            </div>
+const LISTS = {
+  empreendimento: ["Personalité","Quality","Prime","Evolutti","Boulevard","Premium Office","Renaissance","NVR I–II","NVR III","Outros"],
+  etapa: ["Novo","Em atendimento","Evoluindo","Negociação","Stand by","Perdido"],
+  prioridade: ["Alta","Média","Baixa"],
+  atividade: ["Ligação","WhatsApp","Reunião","Visita","Proposta","Pós-venda"],
+  resultado: ["Conversando","Aguardando","Agendou","Remarcou","Enviou proposta","Sem interesse","Outro"],
+  origem: ["Meta","Instagram","Indicação","Corretor","Site","WhatsApp","Ligação","Presencial"],
+  responsavel: ["Sanchai","Miguel","Cristian","Corretor"],
+  motivo_perda: ["Preço","Parcelamento","Permuta inviável","Vai aguardar","Sem recurso","Outro"]
+};
 
-            <div class="field" style="margin-top:10px">
-              <label for="f_etapa">Etapa</label>
-              <select id="f_etapa"></select>
-            </div>
+const ETAPA_ALIASES = {
+  "Contato feito": "Em atendimento",
+  "Visitou": "Evoluindo",
+  "Agendou visita": "Evoluindo",
+  "Proposta": "Negociação",
+  "Fechado": "Stand by"
+};
 
-            <div class="field" style="margin-top:10px">
-              <label for="f_resultado">Resultado</label>
-              <select id="f_resultado"></select>
-            </div>
+const RESULTADO_ALIASES = {
+  "Conseguiu falar": "Conversando",
+  "Não respondeu": "Aguardando"
+};
 
-            <div class="field" style="margin-top:10px">
-              <label for="f_responsavel">Responsável</label>
-              <select id="f_responsavel"></select>
-            </div>
-          </div>
+const MOTIVO_PERDA_ALIASES = {
+  "Localização": "Permuta inviável",
+  "Financiamento": "Parcelamento",
+  "Escolheu outro": "Vai aguardar",
+  "Sumiu": "Sem recurso"
+};
 
-          <!-- COLUNA DIREITA -->
-          <div>
-            <div class="field">
-              <label for="f_proximo_contato">Próximo contato</label>
-              <input id="f_proximo_contato" type="date" />
-            </div>
+function normalizeEtapa(etapa){
+  const e = (etapa || "").trim();
+  if(LISTS.etapa.includes(e)) return e;
+  if(ETAPA_ALIASES[e]) return ETAPA_ALIASES[e];
+  return "Em atendimento";
+}
+function normalizeResultado(r){
+  const v = (r || "").trim();
+  if(LISTS.resultado.includes(v)) return v;
+  if(RESULTADO_ALIASES[v]) return RESULTADO_ALIASES[v];
+  return "Conversando";
+}
+function normalizeMotivoPerda(m){
+  const v = (m || "").trim();
+  if(LISTS.motivo_perda.includes(v)) return v;
+  if(MOTIVO_PERDA_ALIASES[v]) return MOTIVO_PERDA_ALIASES[v];
+  return v || "";
+}
 
-            <div class="field" style="margin-top:10px">
-              <label>Empreendimento / Atividade</label>
-              <div class="row2">
-                <select id="f_empreendimento"></select>
-                <select id="f_atividade"></select>
-              </div>
-            </div>
+const elBoard = document.querySelector("#board");
+const q = document.querySelector("#q");
+const clearQ = document.querySelector("#clearQ");
+const fEmp = document.querySelector("#fEmp");
+const fOrig = document.querySelector("#fOrig");
+const fResp = document.querySelector("#fResp");
+const fPri = document.querySelector("#fPri");
+const dlg = document.querySelector("#dlg");
+const form = document.querySelector("#form");
+const dlgTitle = document.querySelector("#dlgTitle");
+const deleteBtn = document.querySelector("#deleteBtn");
+const toast = document.querySelector("#toast");
+const fileInput = document.querySelector("#file");
+const statusbar = document.querySelector("#statusbar");
+const totalBox = document.querySelector("#totalBox");
+const lostBox = document.querySelector("#lostBox");
+const allBox = document.querySelector("#allBox");
+const mainWrap = document.querySelector("#mainWrap");
+const headerEl = document.querySelector("header");
+const toggleLostBtn = document.querySelector("#toggleLost");
 
-            <div class="field" style="margin-top:10px">
-              <label for="f_origem">Origem</label>
-              <select id="f_origem"></select>
-            </div>
+let ALL = [];
+let editingId = null;
+let SHOW_LOST = false;
+let isDragging = false;
 
-            <div class="field" style="margin-top:10px">
-              <label for="f_motivo_perda">Motivo de perda</label>
-              <select id="f_motivo_perda"></select>
-            </div>
-          </div>
-        </div>
+function setStatus(type, msg){
+  const dotClass = type === "ok" ? "ok" : type === "bad" ? "bad" : "warn";
+  statusbar.innerHTML = `<span class="pill"><span class="dot ${dotClass}"></span>${msg}</span>`;
+}
 
-        <!-- Observação fica embaixo, onde sempre esteve -->
-        <div class="bottom2">
-          <div class="field">
-            <label for="f_observacao">Observação</label>
-            <textarea id="f_observacao"></textarea>
-          </div>
-          <div></div>
+function showToast(msg="Salvo."){
+  toast.textContent = msg;
+  toast.classList.add("show");
+  setTimeout(()=>toast.classList.remove("show"), 1200);
+}
+
+function todayISO(){
+  const d = new Date();
+  const tz = d.getTimezoneOffset() * 60000;
+  return new Date(d - tz).toISOString().slice(0,10);
+}
+function nowISO(){ return new Date().toISOString(); }
+function dayStartLocal(d){ return new Date(d.getFullYear(), d.getMonth(), d.getDate()); }
+
+function daysSinceISO(iso){
+  if(!iso) return 0;
+  const d = new Date(iso);
+  if(Number.isNaN(d.getTime())) return 0;
+  const today = dayStartLocal(new Date());
+  const base = dayStartLocal(d);
+  const diff = Math.floor((today - base) / (24*60*60*1000));
+  return diff < 0 ? 0 : diff;
+}
+
+function badgeInfo(lead){
+  const baseISO = lead.atualizado_em || lead.criado_em || "";
+  const days = daysSinceISO(baseISO);
+
+  if(days === 0) return { text: "hoje", cls: "dt-neutral" };
+  if(days <= 2) return { text: days === 1 ? "1 dia" : "2 dias", cls: "dt-blue" };
+  if(days <= 4) return { text: days + " dias", cls: "dt-yellow" };
+  return { text: days + " dias", cls: "dt-red" };
+}
+
+function nextContactInfo(lead){
+  const iso = (lead.proximo_contato || "").trim();
+  if(!iso) return null;
+
+  const d = new Date(iso + "T00:00:00");
+  if(Number.isNaN(d.getTime())) return null;
+
+  const today = dayStartLocal(new Date());
+  const base = dayStartLocal(d);
+  const diff = Math.floor((base - today) / (24*60*60*1000));
+
+  const dias = ["dom","seg","ter","qua","qui","sex","sáb"];
+  const dow = dias[d.getDay()];
+  const dd = String(d.getDate()).padStart(2,"0");
+  const mm = String(d.getMonth()+1).padStart(2,"0");
+  const text = `${dow} ${dd}/${mm}`;
+
+  if(diff === 0) return { text, cls:"nc-green" };
+  if(diff < 0) return { text, cls:"nc-red" };
+  return { text, cls:"nc-neutral" };
+}
+
+function normalizePhoneBR(phone){
+  const digits = String(phone||"").replace(/\D/g,"");
+  if(!digits) return "";
+  if(digits.startsWith("55")) return digits;
+  return "55" + digits;
+}
+
+function escapeHtml(str){
+  return String(str ?? "").replace(/[&<>"']/g, s => ({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
+  }[s]));
+}
+
+function priorityText(p){
+  if (p === "Alta") return "Alta";
+  if (p === "Média") return "Média";
+  return "Baixa";
+}
+
+function cardHTML(l){
+  const etapaNorm = normalizeEtapa(l.etapa);
+  const isPerdido = etapaNorm === "Perdido";
+  const isStandBy = etapaNorm === "Stand by";
+
+  const emp = l.empreendimento || "—";
+  const prio = priorityText(l.prioridade || "Média");
+  const highPriorityClass = (l.prioridade === "Alta") ? "high-priority" : "";
+
+  const wa = (SHOW_WA_ON_CARD && l.telefone) ? `https://wa.me/${normalizePhoneBR(l.telefone)}` : "";
+
+  const nc = nextContactInfo(l);
+  const ncHTML = nc ? `<div class="nc ${escapeHtml(nc.cls)}">${escapeHtml(nc.text)}</div>` : "";
+
+  if(isStandBy){
+    return `
+      <div class="card" draggable="true" data-id="${escapeHtml(l.id)}">
+        <div class="standbyLine">
+          <div class="nm">${escapeHtml(l.nome || "")}</div>
+          <div class="sep">—</div>
+          <div class="empInline">${escapeHtml(emp)}</div>
         </div>
       </div>
+    `;
+  }
 
-      <div id="dlgActions">
-        <button class="btn danger" id="delBtn" type="button">Excluir</button>
-        <button class="btn" id="cancelBtn" type="button">Cancelar</button>
-        <button class="btn primary" id="saveBtn" type="submit">Salvar</button>
+  if(isPerdido){
+    const motivo = l.motivo_perda ? `<div style="margin-top:6px;font-size:12px;color:var(--muted);">Motivo: <b>${escapeHtml(l.motivo_perda)}</b></div>` : "";
+    return `
+      <div class="card ${highPriorityClass}" draggable="true" data-id="${escapeHtml(l.id)}">
+        <div class="row1">
+          <div class="nm">${escapeHtml(l.nome || "")}</div>
+          <div class="prioText">${escapeHtml(prio)}</div>
+        </div>
+        <div class="sub-row">
+          <div class="leftGroup">
+            <div class="emp">${escapeHtml(emp)}</div>
+            ${ncHTML}
+            ${wa ? `<a class="waDot" href="${wa}" target="_blank" rel="noopener" aria-label="WhatsApp">WA</a>` : ``}
+          </div>
+        </div>
+        ${motivo}
       </div>
-    </form>
-  </dialog>
+    `;
+  }
 
-  <script>
-    /***************
-     * CONFIG SUPABASE
-     * 1) Cole aqui suas credenciais (as mesmas que você já usa)
-     ***************/
-    const SUPABASE_URL = "COLE_AQUI_SUA_SUPABASE_URL";      // ex: https://xxxx.supabase.co
-    const SUPABASE_ANON_KEY = "COLE_AQUI_SUA_ANON_KEY";
-    const TABLE = "leads"; // public.leads
+  const b = badgeInfo(l);
 
-    /***************
-     * LISTAS (AJUSTE SE QUISER)
-     ***************/
-    const LISTS = {
-      etapa: ["Novo","Em atendimento","Evoluindo","Negociação","Stand by","Perdido"],
-      prioridade: ["Baixa","Média","Alta"],
-      atividade: ["WhatsApp","Ligação","Visita","E-mail"],
-      resultado: ["Conversando","Aguardando","Conseguiu falar","Não atende","Sem interesse"],
-      origem: ["Instagram","Meta","Indicação","Site","Outros"],
-      empreendimento: ["Quality","Prime","Personalité","Premium Office","Evolutti","Renaissance","Outros"],
-      responsavel: ["Sanchai","Equipe","Imobiliária","Outro"],
-      motivo_perda: ["","Sem resposta","Sem entrada","Mudou planos","Comprou outro","Valor alto","Outros"]
-    };
+  return `
+    <div class="card ${highPriorityClass}" draggable="true" data-id="${escapeHtml(l.id)}">
+      <div class="row1">
+        <div class="nm">${escapeHtml(l.nome || "")}</div>
+        <div class="prioText">${escapeHtml(prio)}</div>
+      </div>
 
-    /***************
-     * STATE
-     ***************/
-    const COLS = [
-      {key:"Novo", title:"NOVO"},
-      {key:"Em atendimento", title:"EM ATENDIMENTO"},
-      {key:"Evoluindo", title:"EVOLUINDO"},
-      {key:"Negociação", title:"NEGOCIAÇÃO"},
-      {key:"Stand by", title:"STAND BY"},
-    ];
-    let ALL = [];
-    let showLost = false;
-    let editingId = null;
+      <div class="sub-row">
+        <div class="leftGroup">
+          <div class="emp">${escapeHtml(emp)}</div>
+          ${ncHTML}
+          ${wa ? `<a class="waDot" href="${wa}" target="_blank" rel="noopener" aria-label="WhatsApp">WA</a>` : ``}
+        </div>
 
-    /***************
-     * HELPERS
-     ***************/
-    const $ = (id)=>document.getElementById(id);
+        <div class="dt ${escapeHtml(b.cls)}">${escapeHtml(b.text)}</div>
+      </div>
+    </div>
+  `;
+}
 
-    function todayISO(){
-      const d = new Date();
-      const yyyy = d.getFullYear();
-      const mm = String(d.getMonth()+1).padStart(2,"0");
-      const dd = String(d.getDate()).padStart(2,"0");
-      return `${yyyy}-${mm}-${dd}`;
+const ORDER_STEP = 1000;
+
+function defaults(){
+  return {
+    id: crypto.randomUUID(),
+    ordem: Date.now(),
+    data_inicio: todayISO(),
+    proximo_contato: null,
+
+    nome: "",
+    telefone: "",
+    empreendimento: "Outros",
+    etapa: "Novo",
+    prioridade: "Baixa",
+    atividade: "WhatsApp",
+    resultado: "Conversando",
+    origem: "Instagram",
+    responsavel: "Sanchai",
+    motivo_perda: "",
+    observacao: "",
+    criado_em: nowISO(),
+    atualizado_em: nowISO()
+  };
+}
+
+function getLeadsInEtapa(etapa, excludeId=null){
+  const e = normalizeEtapa(etapa);
+  return ALL
+    .filter(x => normalizeEtapa(x.etapa) === e && x.id !== excludeId)
+    .map(x => ({...x, ordem: Number(x.ordem)}))
+    .filter(x => !Number.isNaN(x.ordem))
+    .sort((a,b)=>a.ordem-b.ordem);
+}
+
+function orderForTop(etapa, excludeId=null){
+  const arr = getLeadsInEtapa(etapa, excludeId);
+  if(!arr.length) return ORDER_STEP;
+  const min = arr[0].ordem;
+  return min - ORDER_STEP;
+}
+
+async function sbFetch(path, {method="GET", body=null, prefer="return=representation"} = {}){
+  const url = `${SUPABASE_URL}/rest/v1/${path}`;
+  const headers = {
+    "apikey": SUPABASE_ANON_KEY,
+    "Authorization": `Bearer ${SUPABASE_ANON_KEY}`,
+    "Content-Type": "application/json",
+    "Prefer": prefer
+  };
+  const res = await fetch(url, { method, headers, body: body ? JSON.stringify(body) : null });
+
+  if(!res.ok){
+    let errText = "";
+    try{ errText = await res.text(); }catch{}
+    throw new Error(`${res.status} ${res.statusText} — ${errText}`);
+  }
+
+  if(res.status === 204) return null;
+  return await res.json();
+}
+
+async function load(){
+  try{
+    setStatus("warn","Conectando…");
+    const data = await sbFetch(`${TABLE}?select=*`);
+
+    ALL = (Array.isArray(data) ? data : []).map(l => ({
+      ...l,
+      etapa: normalizeEtapa(l.etapa),
+      resultado: normalizeResultado(l.resultado),
+      motivo_perda: normalizeMotivoPerda(l.motivo_perda),
+      ordem: Number(l.ordem) || Date.now(),
+      proximo_contato: (l.proximo_contato || "").slice(0,10)
+    }));
+
+    setStatus("ok","Online • Sincronizado");
+    render();
+  }catch(e){
+    setStatus("bad","Sem conexão (ou tabela/política não pronta)");
+    console.error(e);
+    showToast("Não conectou no Supabase. Abra via URL http/https (não file do PC).");
+    render();
+  }
+}
+
+async function upsertLead(payload, {silent=false} = {}){
+  if(!payload.nome || !payload.nome.trim()){
+    alert("Nome é obrigatório.");
+    return false;
+  }
+
+  payload.etapa = normalizeEtapa(payload.etapa);
+  payload.resultado = normalizeResultado(payload.resultado);
+  payload.motivo_perda = normalizeMotivoPerda(payload.motivo_perda);
+
+  if(payload.etapa !== "Perdido"){
+    payload.motivo_perda = "";
+  }else{
+    if(!payload.motivo_perda){
+      alert("Motivo de perda é obrigatório quando Etapa = Perdido.");
+      return false;
     }
-    function nowISO(){ return new Date().toISOString(); }
+  }
 
-    function setStatus(kind, text){
-      $("statusText").textContent = text;
-      const dot = $("dot");
-      dot.className = "dot " + (kind==="ok"?"ok":kind==="bad"?"bad":"warn");
-    }
+  payload.atualizado_em = nowISO();
 
-    function buildSelect(sel, arr, placeholder=null){
-      sel.innerHTML = "";
-      if(placeholder!==null){
-        const o=document.createElement("option");
-        o.value=""; o.textContent=placeholder;
-        sel.appendChild(o);
-      }
-      for(const v of arr){
-        const o=document.createElement("option");
-        o.value=v; o.textContent=v;
-        sel.appendChild(o);
-      }
-    }
+  if(payload.ordem == null || payload.ordem === "") payload.ordem = Date.now();
+  payload.ordem = Number(payload.ordem);
 
-    function daysBetween(aISO){
-      if(!aISO) return null;
-      const a = new Date(aISO+"T00:00:00");
-      const b = new Date();
-      const ms = a.getTime() - new Date(b.getFullYear(), b.getMonth(), b.getDate()).getTime();
-      return Math.round(ms / 86400000);
-    }
+  const exists = ALL.some(x => x.id === payload.id);
 
-    function dateBadgeClass(nextISO){
-      if(!nextISO) return "";
-      const d = daysBetween(nextISO);
-      if(d===null) return "";
-      if(d < 0) return "bad";
-      if(d <= 2) return "ok";
-      return "";
-    }
-
-    /***************
-     * SUPABASE REST
-     ***************/
-    async function sbFetch(path, opts={}){
-      if(!SUPABASE_URL || !SUPABASE_ANON_KEY || SUPABASE_URL.includes("COLE_AQUI")){
-        throw new Error("Supabase não configurado (URL/KEY).");
-      }
-      const url = SUPABASE_URL.replace(/\/$/,"") + path;
-      const headers = Object.assign({
-        "apikey": SUPABASE_ANON_KEY,
-        "Authorization": "Bearer " + SUPABASE_ANON_KEY,
-        "Content-Type": "application/json",
-        "Accept": "application/json"
-      }, opts.headers||{});
-      const res = await fetch(url, {...opts, headers});
-      const txt = await res.text();
-      let json = null;
-      try{ json = txt ? JSON.parse(txt) : null; }catch(e){}
-      if(!res.ok){
-        const msg = (json && (json.message||json.error||json.details)) ? (json.message||json.error||json.details) : txt;
-        const err = new Error(msg || ("HTTP "+res.status));
-        err.status = res.status;
-        err.raw = json || txt;
-        throw err;
-      }
-      return json;
-    }
-
-    async function loadAll(){
-      // pega tudo ordenado por etapa, empreendimento, ordem
-      const data = await sbFetch(`/rest/v1/${TABLE}?select=*&order=etapa.asc,empreendimento.asc,ordem.desc,criado_em.desc`, {
-        method:"GET"
+  try{
+    if(exists){
+      const { id, ...payloadNoId } = payload;
+      const updated = await sbFetch(`${TABLE}?id=eq.${encodeURIComponent(id)}`, {
+        method: "PATCH",
+        body: payloadNoId
       });
-      return Array.isArray(data) ? data : [];
+      const u = Array.isArray(updated) ? updated[0] : payload;
+      const idx = ALL.findIndex(x=>x.id===payload.id);
+      if(idx >= 0) ALL[idx] = u;
+    }else{
+      payload.id = payload.id || crypto.randomUUID();
+      payload.criado_em = payload.criado_em || nowISO();
+      const inserted = await sbFetch(TABLE, { method:"POST", body: payload });
+      const i = Array.isArray(inserted) ? inserted[0] : payload;
+      ALL.unshift(i);
     }
 
-    async function insertLead(payload){
-      // POST retorna linhas se prefer=representation
-      const data = await sbFetch(`/rest/v1/${TABLE}`,{
-        method:"POST",
-        headers: {"Prefer":"return=representation"},
-        body: JSON.stringify(payload)
-      });
-      return data?.[0] || null;
+    if(!silent){
+      showToast("Lead salvo.");
+      render();
     }
+    return true;
+  }catch(e){
+    console.error(e);
+    alert("Não consegui salvar no Supabase. Provável: RLS/política, tabela, ou coluna proximo_contato não criada.");
+    return false;
+  }
+}
 
-    async function patchLead(id, payload){
-      const data = await sbFetch(`/rest/v1/${TABLE}?id=eq.${encodeURIComponent(id)}`,{
-        method:"PATCH",
-        headers: {"Prefer":"return=representation"},
-        body: JSON.stringify(payload)
-      });
-      return data?.[0] || null;
-    }
+async function deleteLead(id){
+  const lead = ALL.find(x=>x.id===id);
+  if(!lead) return;
+  const ok = confirm(`Excluir o lead "${lead.nome}"? Isso não tem volta.`);
+  if(!ok) return;
 
-    async function deleteLead(id){
-      await sbFetch(`/rest/v1/${TABLE}?id=eq.${encodeURIComponent(id)}`, {method:"DELETE"});
-      return true;
-    }
+  try{
+    await sbFetch(`${TABLE}?id=eq.${encodeURIComponent(id)}`, { method:"DELETE", prefer:"return=minimal" });
+    ALL = ALL.filter(x=>x.id!==id);
+    showToast("Lead excluído.");
+    render();
+  }catch(e){
+    console.error(e);
+    alert("Não consegui excluir no Supabase. Provável: RLS/política.");
+  }
+}
 
-    /***************
-     * RENDER BOARD
-     ***************/
-    function applyFilters(list){
-      const q = $("q").value.trim().toLowerCase();
-      const emp = $("fEmp").value;
-      const ori = $("fOrigem").value;
-      const resp = $("fResp").value;
-      const prio = $("fPrio").value;
+function fillSelect(sel, items, firstLabel){
+  sel.innerHTML = "";
+  const opt0 = document.createElement("option");
+  opt0.value = "";
+  opt0.textContent = firstLabel || "Todos";
+  sel.appendChild(opt0);
+  items.forEach(v=>{
+    const o = document.createElement("option");
+    o.value = v; o.textContent = v;
+    sel.appendChild(o);
+  });
+}
 
-      return list.filter(x=>{
-        if(!showLost && x.etapa==="Perdido") return false;
-        if(q){
-          const s = `${x.nome||""} ${x.telefone||""}`.toLowerCase();
-          if(!s.includes(q)) return false;
-        }
-        if(emp && (x.empreendimento||"")!==emp) return false;
-        if(ori && (x.origem||"")!==ori) return false;
-        if(resp && (x.responsavel||"")!==resp) return false;
-        if(prio && (x.prioridade||"")!==prio) return false;
-        return true;
-      });
-    }
+function fillFormSelect(name, items){
+  const sel = form.querySelector(`[name="${name}"]`);
+  sel.innerHTML = "";
+  items.forEach(v=>{
+    const o = document.createElement("option");
+    o.value = v; o.textContent = v;
+    sel.appendChild(o);
+  });
+}
 
-    function sortStandByGrouped(arr){
-      // agrupa por empreendimento e mantém ordem desc dentro
-      return [...arr].sort((a,b)=>{
-        const ea = (a.empreendimento||"").toLowerCase();
-        const eb = (b.empreendimento||"").toLowerCase();
-        if(ea<eb) return -1;
-        if(ea>eb) return 1;
-        const oa = Number(a.ordem||0);
-        const ob = Number(b.ordem||0);
-        return ob - oa;
-      });
-    }
+function filtered(){
+  const term = (q.value || "").toLowerCase().trim();
+  return ALL.filter(l=>{
+    const hay = `${l.nome||""} ${l.telefone||""}`.toLowerCase();
+    if (term && !hay.includes(term)) return false;
+    if (fEmp.value && l.empreendimento !== fEmp.value) return false;
+    if (fOrig.value && l.origem !== fOrig.value) return false;
+    if (fResp.value && l.responsavel !== fResp.value) return false;
+    if (fPri.value && l.prioridade !== fPri.value) return false;
+    return true;
+  });
+}
 
-    function render(){
-      const list = applyFilters(ALL);
+function toggleMotivo(){
+  const isPerdido = form.etapa.value === "Perdido";
+  form.motivo_perda.disabled = !isPerdido;
+  form.motivo_perda.required = isPerdido;
+  if(!isPerdido) form.motivo_perda.value = "";
+}
 
-      const lost = ALL.filter(x=>x.etapa==="Perdido").length;
-      $("lostCount").textContent = String(lost);
-      $("allCount").textContent = String(ALL.length);
-      $("toggleLostBtn").textContent = showLost ? "Ocultar perdidos" : "Mostrar perdidos";
+function openNew(){
+  editingId = null;
+  deleteBtn.style.display = "none";
+  dlgTitle.textContent = "Novo Lead";
 
-      $("board").innerHTML = "";
-      for(const col of COLS){
-        const box = document.createElement("div");
-        box.className = "col";
-        box.dataset.etapa = col.key;
+  fillFormSelect("prioridade", LISTS.prioridade);
+  fillFormSelect("empreendimento", LISTS.empreendimento);
+  fillFormSelect("etapa", LISTS.etapa);
+  fillFormSelect("atividade", LISTS.atividade);
+  fillFormSelect("resultado", LISTS.resultado);
+  fillFormSelect("origem", LISTS.origem);
+  fillFormSelect("responsavel", LISTS.responsavel);
+  fillFormSelect("motivo_perda", LISTS.motivo_perda);
 
-        const head = document.createElement("div");
-        head.className = "colHead";
-        const t = document.createElement("div");
-        t.className = "colTitle";
-        t.textContent = col.title;
+  const d = defaults();
+  form.data_inicio.value = d.data_inicio;
+  form.proximo_contato.value = "";
 
-        const inCol = list.filter(x=>x.etapa===col.key);
-        const count = document.createElement("div");
-        count.className = "colCount";
-        count.textContent = String(inCol.length);
+  form.nome.value = "";
+  form.telefone.value = "";
+  form.empreendimento.value = d.empreendimento;
+  form.etapa.value = d.etapa;
+  form.prioridade.value = d.prioridade;
+  form.atividade.value = d.atividade;
+  form.resultado.value = d.resultado;
+  form.origem.value = d.origem;
+  form.responsavel.value = d.responsavel;
+  form.motivo_perda.value = "";
+  form.observacao.value = "";
+  toggleMotivo();
 
-        head.appendChild(t);
-        head.appendChild(count);
+  dlg.showModal();
+}
 
-        const cards = document.createElement("div");
-        cards.className = "cards";
-        cards.addEventListener("dragover", (e)=>{e.preventDefault();});
-        cards.addEventListener("drop", (e)=>onDrop(e, col.key));
+function openEdit(id, forcePerdido=false){
+  const lead = ALL.find(x=>x.id===id);
+  if(!lead) return;
+  editingId = id;
+  deleteBtn.style.display = "inline-flex";
+  dlgTitle.textContent = "Editar Lead";
 
-        const items = (col.key==="Stand by") ? sortStandByGrouped(inCol) : [...inCol].sort((a,b)=>Number(b.ordem||0)-Number(a.ordem||0));
+  fillFormSelect("prioridade", LISTS.prioridade);
+  fillFormSelect("empreendimento", LISTS.empreendimento);
+  fillFormSelect("etapa", LISTS.etapa);
+  fillFormSelect("atividade", LISTS.atividade);
+  fillFormSelect("resultado", LISTS.resultado);
+  fillFormSelect("origem", LISTS.origem);
+  fillFormSelect("responsavel", LISTS.responsavel);
+  fillFormSelect("motivo_perda", LISTS.motivo_perda);
 
-        for(const lead of items){
-          cards.appendChild(renderCard(lead));
-        }
+  form.data_inicio.value = lead.data_inicio || todayISO();
+  form.proximo_contato.value = (lead.proximo_contato || "").slice(0,10);
 
-        box.appendChild(head);
-        box.appendChild(cards);
-        $("board").appendChild(box);
-      }
-    }
+  form.nome.value = lead.nome || "";
+  form.telefone.value = lead.telefone || "";
+  form.empreendimento.value = lead.empreendimento || "Outros";
+  form.etapa.value = forcePerdido ? "Perdido" : normalizeEtapa(lead.etapa || "Novo");
+  form.prioridade.value = lead.prioridade || "Baixa";
+  form.atividade.value = lead.atividade || "WhatsApp";
+  form.resultado.value = normalizeResultado(lead.resultado || "Conversando");
+  form.origem.value = lead.origem || "Instagram";
+  form.responsavel.value = lead.responsavel || "Sanchai";
+  form.motivo_perda.value = normalizeMotivoPerda(lead.motivo_perda || "");
+  form.observacao.value = lead.observacao || "";
+  toggleMotivo();
 
-    function renderCard(lead){
-      const c = document.createElement("div");
-      c.className = "card";
-      c.draggable = true;
-      c.dataset.id = lead.id;
+  dlg.showModal();
+}
 
-      c.addEventListener("click", ()=>openEdit(lead.id));
-      c.addEventListener("dragstart", (e)=>{
-        c.classList.add("dragging");
-        e.dataTransfer.setData("text/plain", lead.id);
-      });
-      c.addEventListener("dragend", ()=>c.classList.remove("dragging"));
+form.etapa.addEventListener("change", toggleMotivo);
 
-      const top = document.createElement("div");
-      top.className = "cardTop";
+form.addEventListener("submit", async (e)=>{
+  e.preventDefault();
 
-      const left = document.createElement("div");
-      const name = document.createElement("div");
-      name.className = "cardName";
-      name.textContent = lead.nome || "(Sem nome)";
-      left.appendChild(name);
+  const etapaEscolhida = normalizeEtapa(form.etapa.value);
+  const existing = editingId ? ALL.find(x=>x.id===editingId) : null;
 
-      const pr = document.createElement("div");
-      pr.className = "prio";
-      pr.textContent = lead.prioridade || "—";
+  const ordemTopo = orderForTop(etapaEscolhida, editingId || null);
 
-      top.appendChild(left);
-      top.appendChild(pr);
+  const payload = {
+    id: editingId || crypto.randomUUID(),
+    ordem: ordemTopo,
+    data_inicio: form.data_inicio.value || todayISO(),
 
-      const meta = document.createElement("div");
-      meta.className = "meta";
+    proximo_contato: (form.proximo_contato.value && form.proximo_contato.value.trim())
+      ? form.proximo_contato.value.trim()
+      : null,
 
-      const emp = document.createElement("div");
-      emp.textContent = lead.empreendimento || "—";
+    nome: form.nome.value.trim(),
+    telefone: form.telefone.value.trim(),
+    empreendimento: form.empreendimento.value,
+    etapa: etapaEscolhida,
+    prioridade: form.prioridade.value,
+    atividade: form.atividade.value,
+    resultado: normalizeResultado(form.resultado.value),
+    origem: form.origem.value,
+    responsavel: form.responsavel.value,
+    motivo_perda: (form.etapa.value === "Perdido") ? normalizeMotivoPerda(form.motivo_perda.value) : "",
+    observacao: form.observacao.value.trim(),
+    criado_em: editingId ? (existing?.criado_em || nowISO()) : nowISO(),
+    atualizado_em: nowISO()
+  };
 
-      const tags = document.createElement("div");
-      tags.className = "tags";
-      if(lead.proximo_contato){
-        const tg = document.createElement("span");
-        tg.className = "tag date " + dateBadgeClass(lead.proximo_contato);
-        const d = daysBetween(lead.proximo_contato);
-        tg.textContent = (d===0) ? "hoje" : (d===1) ? "1 dia" : (d===-1) ? "ontem" : `${Math.abs(d)} ${Math.abs(d)===1?"dia":"dias"}`;
-        tags.appendChild(tg);
-      }
+  const ok = await upsertLead(payload);
+  if(ok) dlg.close();
+});
 
-      meta.appendChild(emp);
-      meta.appendChild(tags);
+deleteBtn.addEventListener("click", async ()=>{
+  if(!editingId) return;
+  await deleteLead(editingId);
+  dlg.close();
+});
 
-      c.appendChild(top);
-      c.appendChild(meta);
-      return c;
-    }
+async function moveLeadWithOrder(id, etapa){
+  const idx = ALL.findIndex(x=>x.id===id);
+  if(idx < 0) return;
 
-    /***************
-     * DRAG & DROP: ao mover, vai para o topo da coluna destino
-     ***************/
-    async function onDrop(e, newEtapa){
+  const current = ALL[idx];
+  const etapaNorm = normalizeEtapa(etapa);
+
+  if(etapaNorm === "Perdido" && !current.motivo_perda){
+    openEdit(id, true);
+    return;
+  }
+
+  const ordemTopo = orderForTop(etapaNorm, id);
+  const next = {...current, etapa: etapaNorm, ordem: ordemTopo};
+
+  if(next.etapa !== "Perdido") next.motivo_perda = "";
+
+  await upsertLead(next);
+}
+
+function wireDnD(){
+  document.querySelectorAll(".card").forEach(card=>{
+    card.addEventListener("dragstart", (e)=>{
+      isDragging = true;
+      e.dataTransfer.setData("text/plain", card.dataset.id);
+      e.dataTransfer.effectAllowed = "move";
+    });
+
+    card.addEventListener("dragend", ()=>{
+      setTimeout(()=>{ isDragging = false; }, 0);
+    });
+
+    card.addEventListener("click", ()=>{
+      if(isDragging) return;
+      openEdit(card.dataset.id);
+    });
+  });
+
+  document.querySelectorAll(".dropzone").forEach(zone=>{
+    zone.addEventListener("dragover", (e)=>{
       e.preventDefault();
+      zone.classList.add("dragover");
+    });
+
+    zone.addEventListener("dragleave", ()=>{
+      zone.classList.remove("dragover");
+    });
+
+    zone.addEventListener("drop", async (e)=>{
+      e.preventDefault();
+      zone.classList.remove("dragover");
+
       const id = e.dataTransfer.getData("text/plain");
-      if(!id) return;
+      const etapa = zone.dataset.drop;
+      if(!id || !etapa) return;
+
       try{
-        const lead = ALL.find(x=>x.id===id);
-        if(!lead) return;
-
-        // topo = ordem alta
-        const topOrder = Date.now();
-
-        const updated = await patchLead(id, {
-          etapa: newEtapa,
-          ordem: topOrder,
-          atualizado_em: nowISO()
-        });
-        if(updated){
-          const idx = ALL.findIndex(x=>x.id===id);
-          ALL[idx] = updated;
-          render();
-        }
+        await moveLeadWithOrder(id, etapa);
       }catch(err){
         console.error(err);
-        alert("Erro ao mover lead. Verifique RLS/políticas e campos no Supabase.");
+        showToast("Falha ao mover. Verifique conexão/RLS.");
       }
-    }
+    });
+  });
+}
 
-    /***************
-     * MODAL
-     ***************/
-    function fillFormSelects(){
-      buildSelect($("f_prioridade"), LISTS.prioridade, null);
-      buildSelect($("f_etapa"), LISTS.etapa, null);
-      buildSelect($("f_resultado"), LISTS.resultado, null);
-      buildSelect($("f_origem"), LISTS.origem, null);
-      buildSelect($("f_empreendimento"), LISTS.empreendimento, null);
-      buildSelect($("f_atividade"), LISTS.atividade, null);
-      buildSelect($("f_responsavel"), LISTS.responsavel, null);
-      buildSelect($("f_motivo_perda"), LISTS.motivo_perda, null);
-    }
+function priorityWeight(p){
+  if(p === "Alta") return 0;
+  if(p === "Média") return 1;
+  return 2;
+}
 
-    function openNew(){
-      editingId = null;
-      $("dlgTitle").textContent = "Novo Lead";
-      $("delBtn").style.display = "none";
+function sortByPriorityAndOrder(a,b){
+  const pa = priorityWeight(a.prioridade || "Média");
+  const pb = priorityWeight(b.prioridade || "Média");
+  if(pa !== pb) return pa - pb;
 
-      $("f_data_inicio").value = todayISO();
-      $("f_proximo_contato").value = "";
-      $("f_prioridade").value = "Baixa";
-      $("f_nome").value = "";
-      $("f_telefone").value = "";
-      $("f_etapa").value = "Novo";
-      $("f_resultado").value = "Conversando";
-      $("f_responsavel").value = "Sanchai";
-      $("f_empreendimento").value = "Quality";
-      $("f_atividade").value = "WhatsApp";
-      $("f_origem").value = "Instagram";
-      $("f_motivo_perda").value = "";
-      $("f_observacao").value = "";
+  const oa = Number(a.ordem);
+  const ob = Number(b.ordem);
+  if(!Number.isNaN(oa) && !Number.isNaN(ob) && oa !== ob) return oa - ob;
+  if(!Number.isNaN(oa) && Number.isNaN(ob)) return -1;
+  if(Number.isNaN(oa) && !Number.isNaN(ob)) return 1;
 
-      $("dlg").showModal();
-    }
+  const ta = new Date(a.atualizado_em || a.criado_em || 0).getTime();
+  const tb = new Date(b.atualizado_em || b.criado_em || 0).getTime();
+  return tb - ta;
+}
 
-    function openEdit(id){
-      const d = ALL.find(x=>x.id===id);
-      if(!d) return;
-      editingId = id;
-      $("dlgTitle").textContent = "Editar Lead";
-      $("delBtn").style.display = "inline-flex";
+function sortStandbyGrouped(a,b){
+  const ea = (a.empreendimento || "").toLowerCase();
+  const eb = (b.empreendimento || "").toLowerCase();
+  if(ea !== eb) return ea.localeCompare(eb, "pt-BR");
 
-      $("f_data_inicio").value = (d.data_inicio || "").slice(0,10);
-      $("f_proximo_contato").value = (d.proximo_contato || "").slice(0,10);
-      $("f_prioridade").value = d.prioridade || "Baixa";
-      $("f_nome").value = d.nome || "";
-      $("f_telefone").value = d.telefone || "";
-      $("f_etapa").value = d.etapa || "Novo";
-      $("f_resultado").value = d.resultado || "Conversando";
-      $("f_responsavel").value = d.responsavel || "Sanchai";
-      $("f_empreendimento").value = d.empreendimento || "Quality";
-      $("f_atividade").value = d.atividade || "WhatsApp";
-      $("f_origem").value = d.origem || "Instagram";
-      $("f_motivo_perda").value = d.motivo_perda || "";
-      $("f_observacao").value = d.observacao || "";
+  const na = (a.nome || "").toLowerCase();
+  const nb = (b.nome || "").toLowerCase();
+  return na.localeCompare(nb, "pt-BR");
+}
 
-      $("dlg").showModal();
-    }
+function render(){
+  const leads = filtered();
 
-    function closeDlg(){
-      $("dlg").close();
-    }
+  const totalAtivos = leads.filter(l => normalizeEtapa(l.etapa || "Novo") !== "Perdido").length;
+  const totalPerdidos = leads.filter(l => normalizeEtapa(l.etapa || "Novo") === "Perdido").length;
+  const totalTodos = totalAtivos + totalPerdidos;
 
-    function formPayload(){
-      const payload = {
-        data_inicio: $("f_data_inicio").value || null,
-        proximo_contato: $("f_proximo_contato").value || null,
-        prioridade: $("f_prioridade").value || null,
-        nome: ($("f_nome").value || "").trim(),
-        telefone: ($("f_telefone").value || "").trim() || null,
-        etapa: $("f_etapa").value || "Novo",
-        resultado: $("f_resultado").value || null,
-        responsavel: $("f_responsavel").value || null,
-        empreendimento: $("f_empreendimento").value || null,
-        atividade: $("f_atividade").value || null,
-        origem: $("f_origem").value || null,
-        motivo_perda: $("f_motivo_perda").value || null,
-        observacao: ($("f_observacao").value || "").trim() || null,
+  totalBox.querySelector(".n").textContent = totalAtivos;
+  lostBox.querySelector(".n").textContent = totalPerdidos;
+  allBox.querySelector(".n").textContent = totalTodos;
+
+  toggleLostBtn.textContent = SHOW_LOST ? "Ocultar perdidos" : "Mostrar perdidos";
+
+  elBoard.innerHTML = "";
+
+  const etapasNoBoard = LISTS.etapa.filter(etapa => {
+    if(etapa === "Perdido") return SHOW_LOST;
+    return true;
+  });
+
+  etapasNoBoard.forEach(etapa=>{
+    const col = document.createElement("section");
+    col.className = "col";
+    col.dataset.etapa = etapa;
+
+    const sorter = (etapa === "Stand by") ? sortStandbyGrouped : sortByPriorityAndOrder;
+
+    const inCol = leads
+      .filter(l => normalizeEtapa(l.etapa || "Novo") === etapa)
+      .sort(sorter);
+
+    col.innerHTML = `
+      <div class="colHead">
+        <div class="name">${escapeHtml(etapa).toUpperCase()}</div>
+        <div class="count">${inCol.length}</div>
+      </div>
+      <div class="dropzone" data-drop="${escapeHtml(etapa)}">
+        ${inCol.map(cardHTML).join("")}
+      </div>
+    `;
+    elBoard.appendChild(col);
+  });
+
+  wireDnD();
+}
+
+function toCSV(rows){
+  const headers = [
+    "id","ordem","data_inicio","proximo_contato",
+    "nome","telefone","empreendimento","etapa","prioridade",
+    "atividade","resultado","origem","responsavel","motivo_perda","observacao",
+    "criado_em","atualizado_em"
+  ];
+  const esc = (v)=> {
+    const s = String(v ?? "");
+    if(/[",\n;]/.test(s)) return `"${s.replace(/"/g,'""')}"`;
+    return s;
+  };
+  const lines = [headers.join(",")];
+  rows.forEach(r=> lines.push(headers.map(h=>esc(r[h])).join(",")));
+  return lines.join("\n");
+}
+function download(filename, text){
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([text], {type:"text/csv;charset=utf-8"}));
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+}
+
+async function importCSV(text){
+  const isMeta = text.includes("full_name") && text.includes("created_time");
+
+  if(isMeta){
+    const rows = text.split("\n").map(r => r.split("\t")).filter(r => r.length > 1);
+    if(rows.length < 2){ alert("CSV do Meta vazio."); return; }
+
+    const headers = rows[0].map(h => h.trim());
+    const idx = (name) => headers.indexOf(name);
+
+    const objs = rows.slice(1).map(r => {
+      const rawPhone = r[idx("phone_number")] || "";
+      const cleanPhone = rawPhone.replace(/\D/g,"");
+
+      const rawDate = r[idx("created_time")] || "";
+      const dataISO = rawDate ? rawDate.substring(0,10) : todayISO();
+
+      const platform = r[idx("platform")] || "";
+
+      return {
+        id: crypto.randomUUID(),
+        ordem: orderForTop("Novo", null),
+        data_inicio: dataISO,
+        proximo_contato: null,
+
+        nome: (r[idx("full_name")] || "").replace(/^"+|"+$/g, "").trim(),
+        telefone: (cleanPhone.length >= 12 && cleanPhone.startsWith("55")) ? cleanPhone.slice(2) : (cleanPhone.length >= 10 ? cleanPhone : ""),
+        empreendimento: "Evolutti",
+        etapa: "Novo",
+        prioridade: "Alta",
+        atividade: "WhatsApp",
+        resultado: "Conversando",
+        origem: platform === "ig" ? "Instagram" : "Meta",
+        responsavel: "Sanchai",
+        motivo_perda: "",
+        observacao: "",
+        criado_em: nowISO(),
         atualizado_em: nowISO()
       };
-
-      // IMPORTANTÍSSIMO: evita o erro do console "invalid input syntax for type date: \"\""
-      if(payload.proximo_contato === "") payload.proximo_contato = null;
-      if(payload.proximo_contato === undefined) payload.proximo_contato = null;
-
-      if(!payload.nome){
-        alert("Nome é obrigatório.");
-        return null;
-      }
-      // se não é Perdido, limpa motivo_perda
-      if(payload.etapa !== "Perdido") payload.motivo_perda = null;
-      // se é Perdido, exige motivo_perda
-      if(payload.etapa === "Perdido" && !payload.motivo_perda){
-        alert("Motivo de perda é obrigatório quando Etapa = Perdido.");
-        return null;
-      }
-      return payload;
-    }
-
-    $("leadForm").addEventListener("submit", async (e)=>{
-      e.preventDefault();
-      try{
-        const payload = formPayload();
-        if(!payload) return;
-
-        if(editingId){
-          // mantém ordem atual
-          const cur = ALL.find(x=>x.id===editingId);
-          const updated = await patchLead(editingId, {
-            ...payload,
-            ordem: cur?.ordem ?? Date.now()
-          });
-          if(updated){
-            const idx = ALL.findIndex(x=>x.id===editingId);
-            ALL[idx] = updated;
-          }
-        }else{
-          const created = await insertLead({
-            ...payload,
-            criado_em: nowISO(),
-            ordem: Date.now()
-          });
-          if(created) ALL.unshift(created);
-        }
-
-        closeDlg();
-        render();
-      }catch(err){
-        console.error(err);
-        alert("Erro ao salvar no Supabase. Provável: política/RLS, tabela, ou campo com tipo errado.");
-      }
     });
 
-    $("delBtn").addEventListener("click", async ()=>{
-      if(!editingId) return;
-      if(!confirm("Excluir este lead?")) return;
-      try{
-        await deleteLead(editingId);
-        ALL = ALL.filter(x=>x.id!==editingId);
-        closeDlg();
-        render();
-      }catch(err){
-        console.error(err);
-        alert("Erro ao excluir. Verifique RLS/políticas.");
-      }
-    });
-
-    /***************
-     * CSV
-     ***************/
-    function exportCSV(){
-      const rows = [["id","data_inicio","proximo_contato","prioridade","nome","telefone","empreendimento","etapa","atividade","resultado","origem","responsavel","motivo_perda","observacao","criado_em","atualizado_em","ordem"]];
-      for(const x of ALL){
-        rows.push([
-          x.id||"", x.data_inicio||"", x.proximo_contato||"", x.prioridade||"", x.nome||"", x.telefone||"",
-          x.empreendimento||"", x.etapa||"", x.atividade||"", x.resultado||"", x.origem||"", x.responsavel||"",
-          x.motivo_perda||"", (x.observacao||"").replace(/\n/g," "), x.criado_em||"", x.atualizado_em||"", x.ordem||""
-        ]);
-      }
-      const csv = rows.map(r=>r.map(v=>{
-        const s = String(v ?? "");
-        return /[",\n;]/.test(s) ? `"${s.replace(/"/g,'""')}"` : s;
-      }).join(",")).join("\n");
-
-      const blob = new Blob([csv], {type:"text/csv;charset=utf-8"});
-      const a = document.createElement("a");
-      a.href = URL.createObjectURL(blob);
-      a.download = `leads_${todayISO()}.csv`;
-      a.click();
-      URL.revokeObjectURL(a.href);
+    for(const o of objs){
+      await upsertLead(o, {silent:true});
     }
 
-    async function importCSVFile(file){
-      const text = await file.text();
-      const lines = text.split(/\r?\n/).filter(Boolean);
-      if(lines.length < 2){ alert("CSV vazio."); return; }
-      const header = lines[0].split(",").map(s=>s.trim());
-      const idx = (k)=>header.indexOf(k);
+    showToast("Leads do Meta importados.");
+    await load();
+    return;
+  }
 
-      // importa apenas nome/telefone/empreendimento/origem (simples)
-      let ok=0, fail=0;
-      for(let i=1;i<lines.length;i++){
-        const cols = parseCSVLine(lines[i], header.length);
-        if(!cols) continue;
-        const nome = (cols[idx("nome")]||"").trim();
-        if(!nome){ fail++; continue; }
-        const payload = {
-          data_inicio: todayISO(),
-          proximo_contato: null,
-          prioridade: "Baixa",
-          nome,
-          telefone: (cols[idx("telefone")]||"").trim() || null,
-          empreendimento: (cols[idx("empreendimento")]||"").trim() || "Outros",
-          etapa: "Novo",
-          atividade: "WhatsApp",
-          resultado: "Conversando",
-          origem: (cols[idx("origem")]||"").trim() || "Outros",
-          responsavel: "Sanchai",
-          motivo_perda: null,
-          observacao: null,
-          criado_em: nowISO(),
-          atualizado_em: nowISO(),
-          ordem: Date.now() + i
-        };
-        try{
-          const created = await insertLead(payload);
-          if(created){ ALL.unshift(created); ok++; }
-        }catch(e){
-          console.error(e);
-          fail++;
-        }
-      }
-      render();
-      alert(`Importação concluída.\nOK: ${ok}\nFalhas: ${fail}`);
+  alert("Formato de CSV não reconhecido.");
+}
+
+function adjustMainHeight(){
+  if(!mainWrap || !headerEl) return;
+
+  const isMobile = window.matchMedia("(max-width:820px)").matches;
+  if(isMobile){
+    mainWrap.style.height = "auto";
+    return;
+  }
+
+  const h = headerEl.offsetHeight || 132;
+  mainWrap.style.height = `calc(100vh - ${h}px)`;
+}
+
+fillSelect(fEmp, LISTS.empreendimento, "Empreendimento");
+fillSelect(fOrig, LISTS.origem, "Origem");
+fillSelect(fResp, LISTS.responsavel, "Responsável");
+fillSelect(fPri, LISTS.prioridade, "Prioridade");
+
+function syncClearButton(){
+  if(!clearQ) return;
+  if((q.value || "").trim().length) clearQ.classList.add("show");
+  else clearQ.classList.remove("show");
+}
+q.addEventListener("input", ()=>{
+  syncClearButton();
+  render();
+});
+clearQ.addEventListener("click", ()=>{
+  q.value = "";
+  syncClearButton();
+  q.focus();
+  render();
+});
+syncClearButton();
+
+[fEmp,fOrig,fResp,fPri].forEach(el=>{
+  el.addEventListener("input", render);
+  el.addEventListener("change", render);
+});
+
+document.querySelector("#new").addEventListener("click", openNew);
+
+toggleLostBtn.addEventListener("click", ()=>{
+  SHOW_LOST = !SHOW_LOST;
+  render();
+});
+lostBox.addEventListener("click", ()=>{
+  SHOW_LOST = true;
+  render();
+});
+
+document.querySelector("#exportCsv").addEventListener("click", ()=>{
+  const rows = filtered();
+  const csv = toCSV(rows);
+  download(`crm-leads-senger-${todayISO()}.csv`, csv);
+});
+
+document.querySelector("#importCsv").addEventListener("click", ()=>{
+  fileInput.value = "";
+  fileInput.click();
+});
+fileInput.addEventListener("change", async ()=>{
+  const f = fileInput.files?.[0];
+  if(!f) return;
+  const text = await f.text();
+  await importCSV(text);
+});
+
+function updateBadgesOnly(){
+  document.querySelectorAll(".card").forEach(card=>{
+    const id = card.dataset.id;
+    const lead = ALL.find(x => x.id === id);
+    if(!lead) return;
+
+    const etapaNorm = normalizeEtapa(lead.etapa);
+    if(etapaNorm === "Perdido" || etapaNorm === "Stand by") return;
+
+    const b = badgeInfo(lead);
+    const dtEl = card.querySelector(".dt");
+    if(dtEl){
+      dtEl.className = `dt ${b.cls}`;
+      dtEl.textContent = b.text;
     }
+  });
+}
+setInterval(updateBadgesOnly, 60 * 1000);
 
-    function parseCSVLine(line, expected){
-      // parser simples (respeita aspas)
-      const out=[];
-      let cur="", inQ=false;
-      for(let i=0;i<line.length;i++){
-        const ch=line[i];
-        if(ch === '"' ){
-          if(inQ && line[i+1]==='"'){ cur+='"'; i++; }
-          else inQ = !inQ;
-        } else if(ch === ',' && !inQ){
-          out.push(cur); cur="";
-        } else cur+=ch;
-      }
-      out.push(cur);
-      while(out.length < expected) out.push("");
-      return out;
-    }
-
-    /***************
-     * INIT
-     ***************/
-    function initFilters(){
-      buildSelect($("fEmp"), LISTS.empreendimento, "Empreendimento");
-      buildSelect($("fOrigem"), LISTS.origem, "Origem");
-      buildSelect($("fResp"), LISTS.responsavel, "Responsável");
-      buildSelect($("fPrio"), LISTS.prioridade, "Prioridade");
-
-      for(const id of ["q","fEmp","fOrigem","fResp","fPrio"]){
-        $(id).addEventListener("input", render);
-        $(id).addEventListener("change", render);
-      }
-    }
-
-    async function boot(){
-      fillFormSelects();
-      initFilters();
-
-      $("newBtn").addEventListener("click", openNew);
-      $("closeDlg").addEventListener("click", closeDlg);
-      $("cancelBtn").addEventListener("click", closeDlg);
-
-      $("toggleLostBtn").addEventListener("click", ()=>{
-        showLost = !showLost;
-        render();
-      });
-
-      $("exportBtn").addEventListener("click", exportCSV);
-      $("importBtn").addEventListener("click", ()=>$("fileInp").click());
-      $("fileInp").addEventListener("change", async ()=>{
-        const f = $("fileInp").files?.[0];
-        if(!f) return;
-        await importCSVFile(f);
-        $("fileInp").value="";
-      });
-
-      try{
-        setStatus("warn","Carregando…");
-        ALL = await loadAll();
-        setStatus("ok","Online • Sincronizado");
-        $("syncText").textContent = "Sincronizado (Supabase).";
-        render();
-      }catch(err){
-        console.error(err);
-        setStatus("bad","Offline (Supabase)");
-        $("syncText").textContent = "Não conectou (Supabase).";
-        alert("Não conseguiu salvar no Supabase.\nProvável: URL/KEY, RLS/política, tabela, ou coluna faltando.");
-        render();
-      }
-    }
-
-    boot();
-  </script>
+adjustMainHeight();
+window.addEventListener("resize", adjustMainHeight);
+load();
+</script>
 </body>
 </html>
