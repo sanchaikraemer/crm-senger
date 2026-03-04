@@ -962,6 +962,9 @@ async function upsertLead(payload, {silent=false} = {}){
 
   payload.atualizado_em = nowISO();
 
+if (payload.proximo_contato === "") payload.proximo_contato = null;
+if (payload.proximo_contato === undefined) payload.proximo_contato = null;
+
   if(payload.ordem == null || payload.ordem === "") payload.ordem = Date.now();
   payload.ordem = Number(payload.ordem);
 
