@@ -6,9 +6,7 @@
   <title>CRM — Leads Senger (Kanban)</title>
   <style>
     :root{
-      /* ✅ ALTERAÇÃO 3: fundo claro como antes */
       --bg:#f3f7f8;
-
       --card:#ffffff;
       --text:#0a0a0a;
       --muted:#5b6b7a;
@@ -121,7 +119,8 @@
     .clearBtn:hover{ background:rgba(0,0,0,.05); }
     .clearBtn.show{ display:inline-flex; }
 
-    .hint{font-size:12px;color:var(--muted); margin-top:10px}
+    /* gap do header reduzido */
+    .hint{font-size:12px;color:var(--muted); margin-top:5px}
 
     main .wrap{
       padding-top:16px;
@@ -190,7 +189,6 @@
     }
     .card:active{cursor:grabbing}
 
-    /* prioridade alta estilo post-it discreto */
     .card.high-priority{
       background:#fff8cc;
       border:1px solid #e5d18c;
@@ -216,7 +214,6 @@
       margin-top:6px;
     }
 
-    /* ✅ Empreendimento + Agendamento ficam juntos à esquerda */
     .leftGroup{
       display:flex;
       align-items:center;
@@ -232,7 +229,6 @@
       min-width:0;
     }
 
-    /* ✅ Mini-badge do agendamento (próximo contato) */
     .nc{
       padding:5px 10px;
       border-radius:999px;
@@ -243,52 +239,119 @@
       line-height:1;
       flex:0 0 auto;
     }
-    .nc-neutral{  background:#eef1f4; color:#475569; } /* aguardando (futuro) */
-    .nc-green{ background:#16a34a; color:#ffffff; } /* hoje */
-    .nc-red{   background:#ef4444; color:#ffffff; } /* vencido */
+    .nc-neutral{ background:#eef1f4; color:#475569; }
+    .nc-green{ background:#16a34a; color:#ffffff; }
+    .nc-red{ background:#ef4444; color:#ffffff; }
 
     .sub-row .dt{
       padding:4px 10px;
       border-radius:999px;
       white-space:nowrap;
-      font-weight:400;
+      font-weight:700;
       border:1px solid transparent;
       flex:0 0 auto;
     }
 
-    /* ✅ MANTER iguais (dias desde atualizado_em/criado_em) */
-    .dt-green{  background:#16a34a; color:#ffffff; } /* hoje */
-    .dt-blue{   background:#0b9fb2; color:#ffffff; } /* 1-2 */
+    .dt-neutral{ background:#ffffff; color:#475569; border:1px solid var(--line); } /* 0 */
+    .dt-blue{ background:#0b9fb2; color:#ffffff; } /* 1-2 */
     .dt-yellow{ background:#facc15; color:#111111; } /* 3-4 */
-    .dt-orange{ background:#f97316; color:#ffffff; } /* 5-7 */
-    .dt-red{    background:#ef4444; color:#ffffff; } /* 8+ */
+    .dt-red{ background:#ef4444; color:#ffffff; } /* 5+ */
 
+    .standbyLine{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      min-width:0;
+    }
+    .standbyLine .nm{
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      min-width:0;
+    }
+    .standbyLine .sep{ opacity:.5; flex:0 0 auto; }
+    .standbyLine .empInline{
+      font-weight:700;
+      color:var(--muted);
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      min-width:0;
+      flex:1;
+    }
+
+    /* =========================
+       MODAL (AJUSTADO p/ NÃO PERDER TEMPO)
+       - Footer sempre visível (Salvar/Cancelar)
+       - Melhor aproveitamento de espaço
+       ========================= */
     dialog{
       border:0;
       border-radius:16px;
       box-shadow: 0 20px 60px rgba(10,10,10,.20);
-      width:min(820px, 92vw);
+      width:min(860px, 92vw);
+      max-height: 88vh;
+      padding:0;
     }
     dialog::backdrop{background:rgba(10,10,10,.45)}
+
     .modal{
-      padding:16px;
-      display:grid;
-      gap:12px;
+      display:flex;
+      flex-direction:column;
+      height: 88vh;
+      max-height: 88vh;
     }
+
     .modalHead{
-      display:flex; justify-content:space-between; align-items:center; gap:10px;
+      padding:12px 14px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      border-bottom:1px solid var(--line);
+      background:#fff;
+      position:sticky;
+      top:0;
+      z-index:2;
     }
     .modalHead .t{font-weight:980}
+
+    .modalBody{
+      padding:12px 14px;
+      overflow:auto; /* se precisar, rola o miolo */
+    }
+
     .grid{
       display:grid;
       grid-template-columns: 1fr 1fr;
-      gap:10px;
+      gap:8px 12px; /* menos espaço */
     }
     .grid .full{grid-column:1/-1}
-    .lbl{font-size:12px;color:var(--muted);margin:0 0 6px 2px}
-    textarea{width:100%;min-height:90px;resize:vertical}
 
-    .modalFoot{display:flex;justify-content:flex-end;gap:10px;flex-wrap:wrap}
+    .lbl{
+      font-size:12px;
+      color:var(--muted);
+      margin:0 0 4px 2px; /* menor */
+    }
+
+    textarea{
+      width:100%;
+      min-height:64px; /* menor pra caber sem rolagem */
+      resize:vertical;
+    }
+
+    .modalFoot{
+      padding:10px 14px;
+      display:flex;
+      justify-content:flex-end;
+      gap:10px;
+      flex-wrap:wrap;
+      border-top:1px solid var(--line);
+      background:#fff;
+      position:sticky;
+      bottom:0;
+      z-index:2; /* ✅ Salvar sempre visível */
+    }
 
     .toast{
       position:fixed; left:50%; bottom:16px; transform:translateX(-50%);
@@ -304,7 +367,7 @@
     .toast.show{opacity:1}
 
     .totalBox{
-      margin-left:auto;
+      margin-left:0;
       display:flex;
       align-items:center;
       gap:10px;
@@ -315,17 +378,8 @@
       box-shadow: 0 2px 8px rgba(10,10,10,.04);
       white-space:nowrap;
     }
-    .totalBox .t{
-      font-size:12px;
-      color:var(--muted);
-      font-weight:850;
-    }
-    .totalBox .n{
-      font-size:18px;
-      font-weight:980;
-      color:var(--teal);
-      line-height:1;
-    }
+    .totalBox .t{font-size:12px;color:var(--muted);font-weight:850}
+    .totalBox .n{font-size:18px;font-weight:980;color:var(--teal);line-height:1}
 
     .pill{
       display:inline-flex; align-items:center; gap:6px;
@@ -336,11 +390,7 @@
       color:var(--muted);
       box-shadow: 0 2px 8px rgba(10,10,10,.04);
     }
-    .dot{
-      width:8px;height:8px;border-radius:50%;
-      background:var(--muted);
-      display:inline-block;
-    }
+    .dot{width:8px;height:8px;border-radius:50%;background:var(--muted);display:inline-block}
     .dot.ok{background:#12d16c}
     .dot.warn{background:#ffd400}
     .dot.bad{background:#ef4444}
@@ -372,6 +422,7 @@
         width:100%;
         justify-content:space-between;
         padding:9px 10px;
+        grid-column:1 / -1;
       }
 
       .actions{
@@ -382,22 +433,12 @@
         margin-top:10px;
       }
 
-      .searchWrap{
-        grid-column:1 / -1;
-        width:100%;
-      }
+      .searchWrap{ grid-column:1 / -1; width:100%; }
       #q{ width:100%; min-width:0; }
 
-      #fEmp, #fOrig, #fResp, #fPri{
-        width:100%;
-        min-width:0;
-      }
+      #fEmp, #fOrig, #fResp, #fPri{ width:100%; min-width:0; }
 
-      .btn{
-        padding:11px 12px;
-        border-radius:14px;
-        width:100%;
-      }
+      .btn{ padding:11px 12px; border-radius:14px; width:100%; }
 
       #new{
         grid-column:1 / -1;
@@ -415,6 +456,20 @@
         grid-auto-columns:minmax(240px, 0.90fr);
         height:auto;
         min-height: calc(100vh - 10px);
+      }
+
+      /* modal no celular */
+      dialog{
+        width: 96vw;
+        max-height: 92vh;
+      }
+      .modal{
+        height: 92vh;
+        max-height: 92vh;
+      }
+      .grid{
+        grid-template-columns: 1fr; /* 1 coluna no celular pra não apertar */
+        gap:8px;
       }
     }
   </style>
@@ -444,6 +499,11 @@
             <span class="n">0</span>
           </div>
 
+          <div class="totalBox" id="allBox">
+            <span class="t">Leads totais</span>
+            <span class="n">0</span>
+          </div>
+
           <button class="btn primary" id="new">+ Novo Lead</button>
         </div>
       </div>
@@ -463,13 +523,9 @@
 
         <button class="btn" id="exportCsv">Exportar CSV</button>
         <button class="btn" id="importCsv">Importar CSV</button>
-
-        <!-- ✅ ALTERAÇÃO 4: removido botão Atualizar -->
-        <!-- <button class="btn" id="reload">Atualizar</button> -->
       </div>
     </div>
 
-    <div class="hint"></div>
     <div class="hint"></div>
   </div>
 </header>
@@ -489,68 +545,73 @@
       <button class="btn" value="cancel">Fechar</button>
     </div>
 
-    <div class="grid">
-      <div>
-        <p class="lbl">Data início</p>
-        <input class="input" name="data_inicio" type="date" />
-      </div>
+    <!-- ✅ miolo do modal com rolagem (se precisar), mas Salvar fica sempre visível -->
+    <div class="modalBody">
+      <div class="grid">
+        <div>
+          <p class="lbl">Data início</p>
+          <input class="input" name="data_inicio" type="date" />
+        </div>
 
-      <!-- ✅ ALTERAÇÃO 2: Próximo contato (agendamento) -->
-      <div>
-        <p class="lbl">Próximo contato</p>
-        <input class="input" name="proximo_contato" type="date" />
-      </div>
+        <div>
+          <p class="lbl">Próximo contato</p>
+          <input class="input" name="proximo_contato" type="date" />
+        </div>
 
-      <div>
-        <p class="lbl">Prioridade</p>
-        <select class="input" name="prioridade"></select>
-      </div>
+        <div>
+          <p class="lbl">Prioridade</p>
+          <select class="input" name="prioridade"></select>
+        </div>
 
-      <div class="full">
-        <p class="lbl">Nome *</p>
-        <input class="input" name="nome" placeholder="Ex.: João Silva" required />
-      </div>
+        <div class="full">
+          <p class="lbl">Nome *</p>
+          <input class="input" name="nome" placeholder="Ex.: João Silva" required />
+        </div>
 
-      <div>
-        <p class="lbl">Telefone</p>
-        <input class="input" name="telefone" placeholder="Ex.: 54999013331" />
-      </div>
-      <div>
-        <p class="lbl">Empreendimento</p>
-        <select class="input" name="empreendimento"></select>
-      </div>
+        <div>
+          <p class="lbl">Telefone</p>
+          <input class="input" name="telefone" placeholder="Ex.: 54999013331" />
+        </div>
 
-      <div>
-        <p class="lbl">Etapa</p>
-        <select class="input" name="etapa"></select>
-      </div>
-      <div>
-        <p class="lbl">Atividade</p>
-        <select class="input" name="atividade"></select>
-      </div>
+        <div>
+          <p class="lbl">Empreendimento</p>
+          <select class="input" name="empreendimento"></select>
+        </div>
 
-      <div>
-        <p class="lbl">Resultado</p>
-        <select class="input" name="resultado"></select>
-      </div>
-      <div>
-        <p class="lbl">Origem</p>
-        <select class="input" name="origem"></select>
-      </div>
+        <div>
+          <p class="lbl">Etapa</p>
+          <select class="input" name="etapa"></select>
+        </div>
 
-      <div>
-        <p class="lbl">Responsável</p>
-        <select class="input" name="responsavel"></select>
-      </div>
+        <div>
+          <p class="lbl">Atividade</p>
+          <select class="input" name="atividade"></select>
+        </div>
 
-      <div>
-        <p class="lbl">Motivo de perda</p>
-        <select class="input" name="motivo_perda"></select>
-      </div>
+        <div>
+          <p class="lbl">Resultado</p>
+          <select class="input" name="resultado"></select>
+        </div>
 
-      <div class="full">
-        <p class="lbl">Observação</p>
-        <textarea class="input" name="observacao" placeholder="Notas rápidas..."></textarea>
+        <div>
+          <p class="lbl">Origem</p>
+          <select class="input" name="origem"></select>
+        </div>
+
+        <div>
+          <p class="lbl">Responsável</p>
+          <select class="input" name="responsavel"></select>
+        </div>
+
+        <div>
+          <p class="lbl">Motivo de perda</p>
+          <select class="input" name="motivo_perda"></select>
+        </div>
+
+        <div class="full">
+          <p class="lbl">Observação</p>
+          <textarea class="input" name="observacao" placeholder="Notas rápidas..."></textarea>
+        </div>
       </div>
     </div>
 
@@ -565,30 +626,15 @@
 <input id="file" type="file" accept=".csv" style="display:none;" />
 
 <script>
-/* ==========
-   CONFIGURAÇÃO SUPABASE
-   ==========
-   ⚠️ Para a ALTERAÇÃO 2 funcionar no Supabase, crie a coluna:
-   - proximo_contato (tipo DATE ou TEXT) na tabela "leads".
-*/
 const SUPABASE_URL = "https://lnrbpiklzymblpyrobwx.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_KXVbF3c7RGFXVTtfYmrzzg_dMK04Q9q";
 const TABLE = "leads";
 
-/* ==========
-   FLAGS DE UI
-   ==========
-   ✅ ALTERAÇÃO 1: WhatsApp oculto no card (função mantida para reativar depois)
-*/
 const SHOW_WA_ON_CARD = false;
 
-/* ==========
-   LISTAS
-   ==========
- */
 const LISTS = {
   empreendimento: ["Personalité","Quality","Prime","Evolutti","Boulevard","Premium Office","Renaissance","NVR I–II","NVR III","Outros"],
-  etapa: ["Novo","Em atendimento","Agendou visita","Negociação","Stand by","Perdido"],
+  etapa: ["Novo","Em atendimento","Evoluindo","Negociação","Stand by","Perdido"],
   prioridade: ["Alta","Média","Baixa"],
   atividade: ["Ligação","WhatsApp","Reunião","Visita","Proposta","Pós-venda"],
   resultado: ["Conversando","Aguardando","Agendou","Remarcou","Enviou proposta","Sem interesse","Outro"],
@@ -599,7 +645,8 @@ const LISTS = {
 
 const ETAPA_ALIASES = {
   "Contato feito": "Em atendimento",
-  "Visitou": "Agendou visita",
+  "Visitou": "Evoluindo",
+  "Agendou visita": "Evoluindo",
   "Proposta": "Negociação",
   "Fechado": "Stand by"
 };
@@ -651,14 +698,15 @@ const fileInput = document.querySelector("#file");
 const statusbar = document.querySelector("#statusbar");
 const totalBox = document.querySelector("#totalBox");
 const lostBox = document.querySelector("#lostBox");
+const allBox = document.querySelector("#allBox");
 const mainWrap = document.querySelector("#mainWrap");
 const headerEl = document.querySelector("header");
 const toggleLostBtn = document.querySelector("#toggleLost");
 
 let ALL = [];
 let editingId = null;
-let online = false;
 let SHOW_LOST = false;
+let isDragging = false;
 
 function setStatus(type, msg){
   const dotClass = type === "ok" ? "ok" : type === "bad" ? "bad" : "warn";
@@ -671,7 +719,6 @@ function showToast(msg="Salvo."){
   setTimeout(()=>toast.classList.remove("show"), 1200);
 }
 
-/* data local */
 function todayISO(){
   const d = new Date();
   const tz = d.getTimezoneOffset() * 60000;
@@ -684,27 +731,22 @@ function daysSinceISO(iso){
   if(!iso) return 0;
   const d = new Date(iso);
   if(Number.isNaN(d.getTime())) return 0;
-
   const today = dayStartLocal(new Date());
   const base = dayStartLocal(d);
-
   const diff = Math.floor((today - base) / (24*60*60*1000));
   return diff < 0 ? 0 : diff;
 }
 
-/* ✅ badge dos DIAS (mantido como está) */
 function badgeInfo(lead){
   const baseISO = lead.atualizado_em || lead.criado_em || "";
   const days = daysSinceISO(baseISO);
 
-  if(days === 0) return { text: "hoje", cls: "dt-green" };
+  if(days === 0) return { text: "hoje", cls: "dt-neutral" };
   if(days <= 2) return { text: days === 1 ? "1 dia" : "2 dias", cls: "dt-blue" };
   if(days <= 4) return { text: days + " dias", cls: "dt-yellow" };
-  if(days <= 7) return { text: days + " dias", cls: "dt-orange" };
   return { text: days + " dias", cls: "dt-red" };
 }
 
-/* ✅ ALTERAÇÃO 2: mini-badge do AGENDAMENTO (próximo contato), à esquerda do balão de dias */
 function nextContactInfo(lead){
   const iso = (lead.proximo_contato || "").trim();
   if(!iso) return null;
@@ -714,7 +756,7 @@ function nextContactInfo(lead){
 
   const today = dayStartLocal(new Date());
   const base = dayStartLocal(d);
-  const diff = Math.floor((base - today) / (24*60*60*1000)); // futuro positivo, passado negativo
+  const diff = Math.floor((base - today) / (24*60*60*1000));
 
   const dias = ["dom","seg","ter","qua","qui","sex","sáb"];
   const dow = dias[d.getDay()];
@@ -722,9 +764,9 @@ function nextContactInfo(lead){
   const mm = String(d.getMonth()+1).padStart(2,"0");
   const text = `${dow} ${dd}/${mm}`;
 
-  if(diff === 0) return { text, cls:"nc-green" };   // hoje
-  if(diff < 0) return { text, cls:"nc-red" };      // vencido
-  return { text, cls:"nc-neutral" };              // aguardando (futuro)
+  if(diff === 0) return { text, cls:"nc-green" };
+  if(diff < 0) return { text, cls:"nc-red" };
+  return { text, cls:"nc-neutral" };
 }
 
 function normalizePhoneBR(phone){
@@ -740,26 +782,37 @@ function escapeHtml(str){
   }[s]));
 }
 
-/* Prioridade em TEXTO */
 function priorityText(p){
   if (p === "Alta") return "Alta";
   if (p === "Média") return "Média";
   return "Baixa";
 }
 
-/* Card */
 function cardHTML(l){
-  const isPerdido = normalizeEtapa(l.etapa) === "Perdido";
+  const etapaNorm = normalizeEtapa(l.etapa);
+  const isPerdido = etapaNorm === "Perdido";
+  const isStandBy = etapaNorm === "Stand by";
 
   const emp = l.empreendimento || "—";
   const prio = priorityText(l.prioridade || "Média");
   const highPriorityClass = (l.prioridade === "Alta") ? "high-priority" : "";
 
-  /* Whats mantido (mas oculto no card por flag) */
   const wa = (SHOW_WA_ON_CARD && l.telefone) ? `https://wa.me/${normalizePhoneBR(l.telefone)}` : "";
 
   const nc = nextContactInfo(l);
   const ncHTML = nc ? `<div class="nc ${escapeHtml(nc.cls)}">${escapeHtml(nc.text)}</div>` : "";
+
+  if(isStandBy){
+    return `
+      <div class="card" draggable="true" data-id="${escapeHtml(l.id)}">
+        <div class="standbyLine">
+          <div class="nm">${escapeHtml(l.nome || "")}</div>
+          <div class="sep">—</div>
+          <div class="empInline">${escapeHtml(emp)}</div>
+        </div>
+      </div>
+    `;
+  }
 
   if(isPerdido){
     const motivo = l.motivo_perda ? `<div style="margin-top:6px;font-size:12px;color:var(--muted);">Motivo: <b>${escapeHtml(l.motivo_perda)}</b></div>` : "";
@@ -797,14 +850,12 @@ function cardHTML(l){
           ${wa ? `<a class="waDot" href="${wa}" target="_blank" rel="noopener" aria-label="WhatsApp">WA</a>` : ``}
         </div>
 
-        <!-- ✅ balão dos dias NÃO muda -->
         <div class="dt ${escapeHtml(b.cls)}">${escapeHtml(b.text)}</div>
       </div>
     </div>
   `;
 }
 
-/* ===== ORDEM / TOPO ===== */
 const ORDER_STEP = 1000;
 
 function defaults(){
@@ -846,7 +897,6 @@ function orderForTop(etapa, excludeId=null){
   return min - ORDER_STEP;
 }
 
-/* ========== SUPABASE (PostgREST) ========== */
 async function sbFetch(path, {method="GET", body=null, prefer="return=representation"} = {}){
   const url = `${SUPABASE_URL}/rest/v1/${path}`;
   const headers = {
@@ -878,14 +928,12 @@ async function load(){
       resultado: normalizeResultado(l.resultado),
       motivo_perda: normalizeMotivoPerda(l.motivo_perda),
       ordem: Number(l.ordem) || Date.now(),
-      proximo_contato: (l.proximo_contato || "").slice(0,10) // normaliza
+      proximo_contato: (l.proximo_contato || "").slice(0,10)
     }));
 
-    online = true;
     setStatus("ok","Online • Sincronizado");
     render();
   }catch(e){
-    online = false;
     setStatus("bad","Sem conexão (ou tabela/política não pronta)");
     console.error(e);
     showToast("Não conectou no Supabase. Abra via URL http/https (não file do PC).");
@@ -921,9 +969,10 @@ async function upsertLead(payload, {silent=false} = {}){
 
   try{
     if(exists){
-      const updated = await sbFetch(`${TABLE}?id=eq.${encodeURIComponent(payload.id)}`, {
+      const { id, ...payloadNoId } = payload;
+      const updated = await sbFetch(`${TABLE}?id=eq.${encodeURIComponent(id)}`, {
         method: "PATCH",
-        body: payload
+        body: payloadNoId
       });
       const u = Array.isArray(updated) ? updated[0] : payload;
       const idx = ALL.findIndex(x=>x.id===payload.id);
@@ -965,7 +1014,6 @@ async function deleteLead(id){
   }
 }
 
-/* ========== UI ========== */
 function fillSelect(sel, items, firstLabel){
   sel.innerHTML = "";
   const opt0 = document.createElement("option");
@@ -1025,7 +1073,7 @@ function openNew(){
 
   const d = defaults();
   form.data_inicio.value = d.data_inicio;
-  form.proximo_contato.value = ""; /* ✅ */
+  form.proximo_contato.value = "";
 
   form.nome.value = "";
   form.telefone.value = "";
@@ -1060,7 +1108,7 @@ function openEdit(id, forcePerdido=false){
   fillFormSelect("motivo_perda", LISTS.motivo_perda);
 
   form.data_inicio.value = lead.data_inicio || todayISO();
-  form.proximo_contato.value = (lead.proximo_contato || "").slice(0,10); /* ✅ */
+  form.proximo_contato.value = (lead.proximo_contato || "").slice(0,10);
 
   form.nome.value = lead.nome || "";
   form.telefone.value = lead.telefone || "";
@@ -1080,7 +1128,6 @@ function openEdit(id, forcePerdido=false){
 
 form.etapa.addEventListener("change", toggleMotivo);
 
-/* Regra: salvou/editar no modal -> sobe pro TOPO da coluna (ordem) */
 form.addEventListener("submit", async (e)=>{
   e.preventDefault();
 
@@ -1094,10 +1141,9 @@ form.addEventListener("submit", async (e)=>{
     ordem: ordemTopo,
     data_inicio: form.data_inicio.value || todayISO(),
 
-    /* ✅ ALTERAÇÃO 2 */
     proximo_contato: (form.proximo_contato.value && form.proximo_contato.value.trim())
-  ? form.proximo_contato.value.trim()
-  : null,
+      ? form.proximo_contato.value.trim()
+      : null,
 
     nome: form.nome.value.trim(),
     telefone: form.telefone.value.trim(),
@@ -1124,7 +1170,6 @@ deleteBtn.addEventListener("click", async ()=>{
   dlg.close();
 });
 
-/* drag também vai pro topo (ordem) */
 async function moveLeadWithOrder(id, etapa){
   const idx = ALL.findIndex(x=>x.id===id);
   if(idx < 0) return;
@@ -1148,11 +1193,17 @@ async function moveLeadWithOrder(id, etapa){
 function wireDnD(){
   document.querySelectorAll(".card").forEach(card=>{
     card.addEventListener("dragstart", (e)=>{
+      isDragging = true;
       e.dataTransfer.setData("text/plain", card.dataset.id);
       e.dataTransfer.effectAllowed = "move";
     });
 
+    card.addEventListener("dragend", ()=>{
+      setTimeout(()=>{ isDragging = false; }, 0);
+    });
+
     card.addEventListener("click", ()=>{
+      if(isDragging) return;
       openEdit(card.dataset.id);
     });
   });
@@ -1185,22 +1236,36 @@ function wireDnD(){
   });
 }
 
-/* Ordenação na tela */
 function priorityWeight(p){
   if(p === "Alta") return 0;
   if(p === "Média") return 1;
   return 2;
 }
-function sortByPriorityAndEditedDesc(a,b){
+
+function sortByPriorityAndOrder(a,b){
   const pa = priorityWeight(a.prioridade || "Média");
   const pb = priorityWeight(b.prioridade || "Média");
   if(pa !== pb) return pa - pb;
 
+  const oa = Number(a.ordem);
+  const ob = Number(b.ordem);
+  if(!Number.isNaN(oa) && !Number.isNaN(ob) && oa !== ob) return oa - ob;
+  if(!Number.isNaN(oa) && Number.isNaN(ob)) return -1;
+  if(Number.isNaN(oa) && !Number.isNaN(ob)) return 1;
+
   const ta = new Date(a.atualizado_em || a.criado_em || 0).getTime();
   const tb = new Date(b.atualizado_em || b.criado_em || 0).getTime();
-  if(tb !== ta) return tb - ta;
+  return tb - ta;
+}
 
-  return (Number(a.ordem)||0) - (Number(b.ordem)||0);
+function sortStandbyGrouped(a,b){
+  const ea = (a.empreendimento || "").toLowerCase();
+  const eb = (b.empreendimento || "").toLowerCase();
+  if(ea !== eb) return ea.localeCompare(eb, "pt-BR");
+
+  const na = (a.nome || "").toLowerCase();
+  const nb = (b.nome || "").toLowerCase();
+  return na.localeCompare(nb, "pt-BR");
 }
 
 function render(){
@@ -1208,12 +1273,11 @@ function render(){
 
   const totalAtivos = leads.filter(l => normalizeEtapa(l.etapa || "Novo") !== "Perdido").length;
   const totalPerdidos = leads.filter(l => normalizeEtapa(l.etapa || "Novo") === "Perdido").length;
+  const totalTodos = totalAtivos + totalPerdidos;
 
-  const nEl = totalBox.querySelector(".n");
-  if(nEl) nEl.textContent = totalAtivos;
-
-  const n2 = lostBox.querySelector(".n");
-  if(n2) n2.textContent = totalPerdidos;
+  totalBox.querySelector(".n").textContent = totalAtivos;
+  lostBox.querySelector(".n").textContent = totalPerdidos;
+  allBox.querySelector(".n").textContent = totalTodos;
 
   toggleLostBtn.textContent = SHOW_LOST ? "Ocultar perdidos" : "Mostrar perdidos";
 
@@ -1229,9 +1293,11 @@ function render(){
     col.className = "col";
     col.dataset.etapa = etapa;
 
+    const sorter = (etapa === "Stand by") ? sortStandbyGrouped : sortByPriorityAndOrder;
+
     const inCol = leads
       .filter(l => normalizeEtapa(l.etapa || "Novo") === etapa)
-      .sort(sortByPriorityAndEditedDesc);
+      .sort(sorter);
 
     col.innerHTML = `
       <div class="colHead">
@@ -1248,7 +1314,6 @@ function render(){
   wireDnD();
 }
 
-/* CSV */
 function toCSV(rows){
   const headers = [
     "id","ordem","data_inicio","proximo_contato",
@@ -1279,11 +1344,7 @@ async function importCSV(text){
 
   if(isMeta){
     const rows = text.split("\n").map(r => r.split("\t")).filter(r => r.length > 1);
-
-    if(rows.length < 2){
-      alert("CSV do Meta vazio.");
-      return;
-    }
+    if(rows.length < 2){ alert("CSV do Meta vazio."); return; }
 
     const headers = rows[0].map(h => h.trim());
     const idx = (name) => headers.indexOf(name);
@@ -1331,7 +1392,6 @@ async function importCSV(text){
   alert("Formato de CSV não reconhecido.");
 }
 
-/* Ajusta altura do main (desktop). No celular deixamos automático */
 function adjustMainHeight(){
   if(!mainWrap || !headerEl) return;
 
@@ -1345,13 +1405,11 @@ function adjustMainHeight(){
   mainWrap.style.height = `calc(100vh - ${h}px)`;
 }
 
-/* INIT filtros */
 fillSelect(fEmp, LISTS.empreendimento, "Empreendimento");
 fillSelect(fOrig, LISTS.origem, "Origem");
 fillSelect(fResp, LISTS.responsavel, "Responsável");
 fillSelect(fPri, LISTS.prioridade, "Prioridade");
 
-/* Busca: botão X */
 function syncClearButton(){
   if(!clearQ) return;
   if((q.value || "").trim().length) clearQ.classList.add("show");
@@ -1375,9 +1433,6 @@ syncClearButton();
 });
 
 document.querySelector("#new").addEventListener("click", openNew);
-
-/* ✅ ALTERAÇÃO 4: removido listener do reload */
-/* document.querySelector("#reload").addEventListener("click", load); */
 
 toggleLostBtn.addEventListener("click", ()=>{
   SHOW_LOST = !SHOW_LOST;
@@ -1405,14 +1460,14 @@ fileInput.addEventListener("change", async ()=>{
   await importCSV(text);
 });
 
-/* Atualiza somente os badges de tempo (não mexe em Perdidos) */
 function updateBadgesOnly(){
   document.querySelectorAll(".card").forEach(card=>{
     const id = card.dataset.id;
     const lead = ALL.find(x => x.id === id);
     if(!lead) return;
 
-    if(normalizeEtapa(lead.etapa) === "Perdido") return;
+    const etapaNorm = normalizeEtapa(lead.etapa);
+    if(etapaNorm === "Perdido" || etapaNorm === "Stand by") return;
 
     const b = badgeInfo(lead);
     const dtEl = card.querySelector(".dt");
@@ -1420,13 +1475,10 @@ function updateBadgesOnly(){
       dtEl.className = `dt ${b.cls}`;
       dtEl.textContent = b.text;
     }
-
-    /* mini-badge de agendamento não precisa atualizar a cada minuto (só muda por dia) */
   });
 }
 setInterval(updateBadgesOnly, 60 * 1000);
 
-/* start */
 adjustMainHeight();
 window.addEventListener("resize", adjustMainHeight);
 load();
