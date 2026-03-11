@@ -95,7 +95,6 @@
       color:var(--text);
     }
 
-    /* Busca com botão "x" */
     .searchWrap{ position:relative; display:inline-flex; align-items:center; }
     .searchWrap .input{ padding-right:38px; }
     .clearBtn{
@@ -119,7 +118,6 @@
     .clearBtn:hover{ background:rgba(0,0,0,.05); }
     .clearBtn.show{ display:inline-flex; }
 
-    /* gap do header reduzido */
     .hint{font-size:12px;color:var(--muted); margin-top:5px}
 
     main .wrap{
@@ -252,10 +250,10 @@
       flex:0 0 auto;
     }
 
-    .dt-neutral{ background:#ffffff; color:#475569; border:1px solid var(--line); } /* 0 */
-    .dt-blue{ background:#0b9fb2; color:#ffffff; } /* 1-2 */
-    .dt-yellow{ background:#facc15; color:#111111; } /* 3-4 */
-    .dt-red{ background:#ef4444; color:#ffffff; } /* 5+ */
+    .dt-neutral{ background:#ffffff; color:#475569; border:1px solid var(--line); } /* 0-2 dias / agendado */
+    .dt-blue{ background:#0b9fb2; color:#ffffff; } /* 3-4 dias */
+    .dt-yellow{ background:#facc15; color:#111111; } /* 5-6 dias */
+    .dt-red{ background:#ef4444; color:#ffffff; } /* 7+ dias */
 
     .standbyLine{
       display:flex;
@@ -280,11 +278,6 @@
       flex:1;
     }
 
-    /* =========================
-       MODAL (AJUSTADO p/ NÃO PERDER TEMPO)
-       - Footer sempre visível (Salvar/Cancelar)
-       - Melhor aproveitamento de espaço
-       ========================= */
     dialog{
       border:0;
       border-radius:16px;
@@ -318,25 +311,25 @@
 
     .modalBody{
       padding:12px 14px;
-      overflow:auto; /* se precisar, rola o miolo */
+      overflow:auto;
     }
 
     .grid{
       display:grid;
       grid-template-columns: 1fr 1fr;
-      gap:8px 12px; /* menos espaço */
+      gap:8px 12px;
     }
     .grid .full{grid-column:1/-1}
 
     .lbl{
       font-size:12px;
       color:var(--muted);
-      margin:0 0 4px 2px; /* menor */
+      margin:0 0 4px 2px;
     }
 
     textarea{
       width:100%;
-      min-height:64px; /* menor pra caber sem rolagem */
+      min-height:64px;
       resize:vertical;
     }
 
@@ -350,7 +343,7 @@
       background:#fff;
       position:sticky;
       bottom:0;
-      z-index:2; /* ✅ Salvar sempre visível */
+      z-index:2;
     }
 
     .toast{
@@ -395,7 +388,6 @@
     .dot.warn{background:#ffd400}
     .dot.bad{background:#ef4444}
 
-    /* MOBILE */
     @media(max-width:820px){
       header{ position:static; }
       .wrap{ padding:8px 12px; }
@@ -458,7 +450,6 @@
         min-height: calc(100vh - 10px);
       }
 
-      /* modal no celular */
       dialog{
         width: 96vw;
         max-height: 92vh;
@@ -468,7 +459,7 @@
         max-height: 92vh;
       }
       .grid{
-        grid-template-columns: 1fr; /* 1 coluna no celular pra não apertar */
+        grid-template-columns: 1fr;
         gap:8px;
       }
     }
@@ -545,7 +536,6 @@
       <button class="btn" value="cancel">Fechar</button>
     </div>
 
-    <!-- ✅ miolo do modal com rolagem (se precisar), mas Salvar fica sempre visível -->
     <div class="modalBody">
       <div class="grid">
         <div>
@@ -727,10 +717,20 @@ function todayISO(){
 function nowISO(){ return new Date().toISOString(); }
 function dayStartLocal(d){ return new Date(d.getFullYear(), d.getMonth(), d.getDate()); }
 
-function daysSinceISO(iso){
-  if(!iso) return 0;
+function parseISODateLocal(iso){
+  if(!iso) return null;
+  const s = String(iso).trim().slice(0,10);
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(s);
+  if(m){
+    return new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]));
+  }
   const d = new Date(iso);
-  if(Number.isNaN(d.getTime())) return 0;
+  return Number.isNaN(d.getTime()) ? null : d;
+}
+
+function daysSinceISO(iso){
+  const d = parseISODateLocal(iso);
+  if(!d) return 0;
   const today = dayStartLocal(new Date());
   const base = dayStartLocal(d);
   const diff = Math.floor((today - base) / (24*60*60*1000));
@@ -738,21 +738,62 @@ function daysSinceISO(iso){
 }
 
 function badgeInfo(lead){
+  const nextISO = (lead.proximo_contato || "").trim();
+
+  if(nextISO){
+    const nextDate = parseISODateLocal(nextISO);
+    if(nextDate){
+      const today = dayStartLocal(new Date());
+      const nextDay = dayStartLocal(nextDate);
+
+      if(nextDay > today){
+        return { text: "agendado", cls: "dt-neutral" };
+      }
+
+      const days = daysSinceISO(nextISO);
+
+      if(days <= 2) return { text: days === 0 ? "hoje" : days + " dias", cls: "dt-neutral" };
+      if(days <= 4) return { text: days + " dias", cls: "dt-blue" };
+      if(days <= 6) return { text: days + " dias", cls: "dt-yellow" };
+      return { text: days + " dias", cls: "dt-red" };
+    }
+  }
+
   const baseISO = lead.atualizado_em || lead.criado_em || "";
   const days = daysSinceISO(baseISO);
 
-  if(days === 0) return { text: "hoje", cls: "dt-neutral" };
-  if(days <= 2) return { text: days === 1 ? "1 dia" : "2 dias", cls: "dt-blue" };
-  if(days <= 4) return { text: days + " dias", cls: "dt-yellow" };
+  if(days <= 2) return { text: days === 0 ? "hoje" : days + " dias", cls: "dt-neutral" };
+  if(days <= 4) return { text: days + " dias", cls: "dt-blue" };
+  if(days <= 6) return { text: days + " dias", cls: "dt-yellow" };
   return { text: days + " dias", cls: "dt-red" };
+}
+
+function leadAgeForSorting(lead){
+  const nextISO = (lead.proximo_contato || "").trim();
+
+  if(nextISO){
+    const nextDate = parseISODateLocal(nextISO);
+    if(nextDate){
+      const today = dayStartLocal(new Date());
+      const nextDay = dayStartLocal(nextDate);
+
+      if(nextDay > today){
+        return -1;
+      }
+
+      return daysSinceISO(nextISO);
+    }
+  }
+
+  return daysSinceISO(lead.atualizado_em || lead.criado_em || "");
 }
 
 function nextContactInfo(lead){
   const iso = (lead.proximo_contato || "").trim();
   if(!iso) return null;
 
-  const d = new Date(iso + "T00:00:00");
-  if(Number.isNaN(d.getTime())) return null;
+  const d = parseISODateLocal(iso);
+  if(!d) return null;
 
   const today = dayStartLocal(new Date());
   const base = dayStartLocal(d);
@@ -1236,26 +1277,27 @@ function wireDnD(){
   });
 }
 
-function priorityWeight(p){
-  if(p === "Alta") return 0;
-  if(p === "Média") return 1;
-  return 2;
-}
-
 function sortByPriorityAndOrder(a,b){
-  const pa = priorityWeight(a.prioridade || "Média");
-  const pb = priorityWeight(b.prioridade || "Média");
-  if(pa !== pb) return pa - pb;
+  const aAlta = (a.prioridade || "") === "Alta";
+  const bAlta = (b.prioridade || "") === "Alta";
+
+  if(aAlta && !bAlta) return -1;
+  if(!aAlta && bAlta) return 1;
+
+  const ageA = leadAgeForSorting(a);
+  const ageB = leadAgeForSorting(b);
+
+  if(ageA !== ageB) return ageB - ageA;
+
+  const ta = new Date(a.atualizado_em || a.criado_em || 0).getTime();
+  const tb = new Date(b.atualizado_em || b.criado_em || 0).getTime();
+  if(ta !== tb) return ta - tb;
 
   const oa = Number(a.ordem);
   const ob = Number(b.ordem);
   if(!Number.isNaN(oa) && !Number.isNaN(ob) && oa !== ob) return oa - ob;
-  if(!Number.isNaN(oa) && Number.isNaN(ob)) return -1;
-  if(Number.isNaN(oa) && !Number.isNaN(ob)) return 1;
 
-  const ta = new Date(a.atualizado_em || a.criado_em || 0).getTime();
-  const tb = new Date(b.atualizado_em || b.criado_em || 0).getTime();
-  return tb - ta;
+  return 0;
 }
 
 function sortStandbyGrouped(a,b){
@@ -1356,8 +1398,6 @@ async function importCSV(text){
       const rawDate = r[idx("created_time")] || "";
       const dataISO = rawDate ? rawDate.substring(0,10) : todayISO();
 
-      const platform = r[idx("platform")] || "";
-
       return {
         id: crypto.randomUUID(),
         ordem: orderForTop("Novo", null),
@@ -1371,7 +1411,7 @@ async function importCSV(text){
         prioridade: "Alta",
         atividade: "WhatsApp",
         resultado: "Conversando",
-        origem: platform === "ig" ? "Instagram" : "Meta",
+        origem: "Meta",
         responsavel: "Sanchai",
         motivo_perda: "",
         observacao: "",
