@@ -495,7 +495,7 @@
             <span class="n">0</span>
           </div>
 
-          <button class="btn primary" id="new">+ Novo Lead</button>
+          <button class="btn primary" id="new" type="button">+ Novo Lead</button>
         </div>
       </div>
 
@@ -510,10 +510,10 @@
         <select id="fResp"></select>
         <select id="fPri"></select>
 
-        <button class="btn" id="toggleLost">Mostrar perdidos</button>
+        <button class="btn" id="toggleLost" type="button">Mostrar perdidos</button>
 
-        <button class="btn" id="exportCsv">Exportar CSV</button>
-        <button class="btn" id="importCsv">Importar CSV</button>
+        <button class="btn" id="exportCsv" type="button">Exportar CSV</button>
+        <button class="btn" id="importCsv" type="button">Importar CSV</button>
       </div>
     </div>
 
@@ -530,10 +530,10 @@
 <div class="toast" id="toast">Salvo.</div>
 
 <dialog id="dlg">
-  <form method="dialog" class="modal" id="form">
+  <form class="modal" id="form">
     <div class="modalHead">
       <div class="t" id="dlgTitle">Novo Lead</div>
-      <button class="btn" value="cancel">Fechar</button>
+      <button class="btn" type="button" id="closeDlg">Fechar</button>
     </div>
 
     <div class="modalBody">
@@ -574,16 +574,6 @@
         </div>
 
         <div>
-          <p class="lbl">Atividade</p>
-          <select class="input" name="atividade"></select>
-        </div>
-
-        <div>
-          <p class="lbl">Resultado</p>
-          <select class="input" name="resultado"></select>
-        </div>
-
-        <div>
           <p class="lbl">Origem</p>
           <select class="input" name="origem"></select>
         </div>
@@ -607,8 +597,8 @@
 
     <div class="modalFoot">
       <button class="btn danger" id="deleteBtn" type="button" style="display:none;">Excluir</button>
-      <button class="btn" value="cancel">Cancelar</button>
-      <button class="btn primary" id="save" value="default">Salvar</button>
+      <button class="btn" type="button" id="cancelBtn">Cancelar</button>
+      <button class="btn primary" id="save" type="submit">Salvar</button>
     </div>
   </form>
 </dialog>
@@ -626,11 +616,9 @@ const LISTS = {
   empreendimento: ["Personalité","Quality","Prime","Evolutti","Boulevard","Premium Office","Renaissance","NVR I–II","NVR III","Outros"],
   etapa: ["Novo","Em atendimento","Evoluindo","Negociação","Stand by","Perdido"],
   prioridade: ["Alta","Média","Baixa"],
-  atividade: ["Ligação","WhatsApp","Reunião","Visita","Proposta","Pós-venda"],
-  resultado: ["Conversando","Aguardando","Agendou","Remarcou","Enviou proposta","Sem interesse","Outro"],
   origem: ["Meta","Instagram","Indicação","Corretor","Site","WhatsApp","Ligação","Presencial"],
   responsavel: ["Sanchai","Miguel","Cristian","Corretor"],
-  motivo_perda: ["Preço","Parcelamento","Permuta inviável","Vai aguardar","Sem recurso","Outro"]
+  motivo_perda: ["Preço","Parcelamento","Permuta inviável","Vai aguardar","Sem recurso","Nunca respondeu","Lead espírita","Outro"]
 };
 
 const ETAPA_ALIASES = {
@@ -639,11 +627,6 @@ const ETAPA_ALIASES = {
   "Agendou visita": "Evoluindo",
   "Proposta": "Negociação",
   "Fechado": "Stand by"
-};
-
-const RESULTADO_ALIASES = {
-  "Conseguiu falar": "Conversando",
-  "Não respondeu": "Aguardando"
 };
 
 const MOTIVO_PERDA_ALIASES = {
@@ -659,12 +642,7 @@ function normalizeEtapa(etapa){
   if(ETAPA_ALIASES[e]) return ETAPA_ALIASES[e];
   return "Em atendimento";
 }
-function normalizeResultado(r){
-  const v = (r || "").trim();
-  if(LISTS.resultado.includes(v)) return v;
-  if(RESULTADO_ALIASES[v]) return RESULTADO_ALIASES[v];
-  return "Conversando";
-}
+
 function normalizeMotivoPerda(m){
   const v = (m || "").trim();
   if(LISTS.motivo_perda.includes(v)) return v;
@@ -692,9 +670,12 @@ const allBox = document.querySelector("#allBox");
 const mainWrap = document.querySelector("#mainWrap");
 const headerEl = document.querySelector("header");
 const toggleLostBtn = document.querySelector("#toggleLost");
+const closeDlgBtn = document.querySelector("#closeDlg");
+const cancelBtn = document.querySelector("#cancelBtn");
 
 let ALL = [];
 let editingId = null;
+let originalSnapshot = null;
 let SHOW_LOST = false;
 let isDragging = false;
 
@@ -721,9 +702,7 @@ function parseISODateLocal(iso){
   if(!iso) return null;
   const s = String(iso).trim().slice(0,10);
   const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(s);
-  if(m){
-    return new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]));
-  }
+  if(m) return new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]));
   const d = new Date(iso);
   return Number.isNaN(d.getTime()) ? null : d;
 }
@@ -751,7 +730,6 @@ function badgeInfo(lead){
       }
 
       const days = daysSinceISO(nextISO);
-
       if(days <= 2) return { text: days === 0 ? "hoje" : days + " dias", cls: "dt-neutral" };
       if(days <= 4) return { text: days + " dias", cls: "dt-blue" };
       if(days <= 6) return { text: days + " dias", cls: "dt-yellow" };
@@ -777,10 +755,7 @@ function leadAgeForSorting(lead){
       const today = dayStartLocal(new Date());
       const nextDay = dayStartLocal(nextDate);
 
-      if(nextDay > today){
-        return -1;
-      }
-
+      if(nextDay > today) return -1;
       return daysSinceISO(nextISO);
     }
   }
@@ -905,14 +880,11 @@ function defaults(){
     ordem: Date.now(),
     data_inicio: todayISO(),
     proximo_contato: null,
-
     nome: "",
     telefone: "",
     empreendimento: "Outros",
     etapa: "Novo",
     prioridade: "Baixa",
-    atividade: "WhatsApp",
-    resultado: "Conversando",
     origem: "Instagram",
     responsavel: "Sanchai",
     motivo_perda: "",
@@ -920,6 +892,49 @@ function defaults(){
     criado_em: nowISO(),
     atualizado_em: nowISO()
   };
+}
+
+function snapshotLead(obj){
+  return JSON.stringify({
+    nome: (obj.nome || "").trim(),
+    telefone: (obj.telefone || "").trim(),
+    empreendimento: obj.empreendimento || "",
+    etapa: normalizeEtapa(obj.etapa || ""),
+    prioridade: obj.prioridade || "",
+    origem: obj.origem || "",
+    responsavel: obj.responsavel || "",
+    motivo_perda: normalizeMotivoPerda(obj.motivo_perda || ""),
+    observacao: (obj.observacao || "").trim(),
+    data_inicio: (obj.data_inicio || "").trim(),
+    proximo_contato: (obj.proximo_contato || "").trim()
+  });
+}
+
+function currentFormSnapshot(){
+  return JSON.stringify({
+    nome: form.nome.value.trim(),
+    telefone: form.telefone.value.trim(),
+    empreendimento: form.empreendimento.value,
+    etapa: normalizeEtapa(form.etapa.value),
+    prioridade: form.prioridade.value,
+    origem: form.origem.value,
+    responsavel: form.responsavel.value,
+    motivo_perda: form.etapa.value === "Perdido" ? normalizeMotivoPerda(form.motivo_perda.value) : "",
+    observacao: form.observacao.value.trim(),
+    data_inicio: form.data_inicio.value || "",
+    proximo_contato: form.proximo_contato.value ? form.proximo_contato.value.trim() : ""
+  });
+}
+
+function hasDuplicateActiveName(nome, ignoreId=null){
+  const target = (nome || "").trim().toLowerCase();
+  if(!target) return false;
+
+  return ALL.some(l => {
+    if(ignoreId && l.id === ignoreId) return false;
+    if(normalizeEtapa(l.etapa) === "Perdido") return false;
+    return String(l.nome || "").trim().toLowerCase() === target;
+  });
 }
 
 function getLeadsInEtapa(etapa, excludeId=null){
@@ -966,7 +981,6 @@ async function load(){
     ALL = (Array.isArray(data) ? data : []).map(l => ({
       ...l,
       etapa: normalizeEtapa(l.etapa),
-      resultado: normalizeResultado(l.resultado),
       motivo_perda: normalizeMotivoPerda(l.motivo_perda),
       ordem: Number(l.ordem) || Date.now(),
       proximo_contato: (l.proximo_contato || "").slice(0,10)
@@ -989,7 +1003,6 @@ async function upsertLead(payload, {silent=false} = {}){
   }
 
   payload.etapa = normalizeEtapa(payload.etapa);
-  payload.resultado = normalizeResultado(payload.resultado);
   payload.motivo_perda = normalizeMotivoPerda(payload.motivo_perda);
 
   if(payload.etapa !== "Perdido"){
@@ -1098,16 +1111,21 @@ function toggleMotivo(){
   if(!isPerdido) form.motivo_perda.value = "";
 }
 
+function closeDialog(){
+  dlg.close();
+  editingId = null;
+  originalSnapshot = null;
+}
+
 function openNew(){
   editingId = null;
+  originalSnapshot = null;
   deleteBtn.style.display = "none";
   dlgTitle.textContent = "Novo Lead";
 
   fillFormSelect("prioridade", LISTS.prioridade);
   fillFormSelect("empreendimento", LISTS.empreendimento);
   fillFormSelect("etapa", LISTS.etapa);
-  fillFormSelect("atividade", LISTS.atividade);
-  fillFormSelect("resultado", LISTS.resultado);
   fillFormSelect("origem", LISTS.origem);
   fillFormSelect("responsavel", LISTS.responsavel);
   fillFormSelect("motivo_perda", LISTS.motivo_perda);
@@ -1115,14 +1133,11 @@ function openNew(){
   const d = defaults();
   form.data_inicio.value = d.data_inicio;
   form.proximo_contato.value = "";
-
   form.nome.value = "";
   form.telefone.value = "";
   form.empreendimento.value = d.empreendimento;
   form.etapa.value = d.etapa;
   form.prioridade.value = d.prioridade;
-  form.atividade.value = d.atividade;
-  form.resultado.value = d.resultado;
   form.origem.value = d.origem;
   form.responsavel.value = d.responsavel;
   form.motivo_perda.value = "";
@@ -1142,27 +1157,27 @@ function openEdit(id, forcePerdido=false){
   fillFormSelect("prioridade", LISTS.prioridade);
   fillFormSelect("empreendimento", LISTS.empreendimento);
   fillFormSelect("etapa", LISTS.etapa);
-  fillFormSelect("atividade", LISTS.atividade);
-  fillFormSelect("resultado", LISTS.resultado);
   fillFormSelect("origem", LISTS.origem);
   fillFormSelect("responsavel", LISTS.responsavel);
   fillFormSelect("motivo_perda", LISTS.motivo_perda);
 
   form.data_inicio.value = lead.data_inicio || todayISO();
   form.proximo_contato.value = (lead.proximo_contato || "").slice(0,10);
-
   form.nome.value = lead.nome || "";
   form.telefone.value = lead.telefone || "";
   form.empreendimento.value = lead.empreendimento || "Outros";
   form.etapa.value = forcePerdido ? "Perdido" : normalizeEtapa(lead.etapa || "Novo");
   form.prioridade.value = lead.prioridade || "Baixa";
-  form.atividade.value = lead.atividade || "WhatsApp";
-  form.resultado.value = normalizeResultado(lead.resultado || "Conversando");
   form.origem.value = lead.origem || "Instagram";
   form.responsavel.value = lead.responsavel || "Sanchai";
   form.motivo_perda.value = normalizeMotivoPerda(lead.motivo_perda || "");
   form.observacao.value = lead.observacao || "";
   toggleMotivo();
+
+  originalSnapshot = snapshotLead({
+    ...lead,
+    etapa: forcePerdido ? "Perdido" : normalizeEtapa(lead.etapa || "Novo")
+  });
 
   dlg.showModal();
 }
@@ -1172,27 +1187,29 @@ form.etapa.addEventListener("change", toggleMotivo);
 form.addEventListener("submit", async (e)=>{
   e.preventDefault();
 
+  const nome = form.nome.value.trim();
+  if(hasDuplicateActiveName(nome, editingId || null)){
+    alert("Atenção: já existe um lead com esse nome na pipeline ativa. Se quiser diferenciar, acrescente algo ao nome.");
+  }
+
   const etapaEscolhida = normalizeEtapa(form.etapa.value);
   const existing = editingId ? ALL.find(x=>x.id===editingId) : null;
 
-  const ordemTopo = orderForTop(etapaEscolhida, editingId || null);
+  if(editingId && originalSnapshot === currentFormSnapshot()){
+    closeDialog();
+    return;
+  }
 
   const payload = {
     id: editingId || crypto.randomUUID(),
-    ordem: ordemTopo,
+    ordem: editingId ? (Number(existing?.ordem) || Date.now()) : orderForTop(etapaEscolhida, null),
     data_inicio: form.data_inicio.value || todayISO(),
-
-    proximo_contato: (form.proximo_contato.value && form.proximo_contato.value.trim())
-      ? form.proximo_contato.value.trim()
-      : null,
-
-    nome: form.nome.value.trim(),
+    proximo_contato: (form.proximo_contato.value && form.proximo_contato.value.trim()) ? form.proximo_contato.value.trim() : null,
+    nome,
     telefone: form.telefone.value.trim(),
     empreendimento: form.empreendimento.value,
     etapa: etapaEscolhida,
     prioridade: form.prioridade.value,
-    atividade: form.atividade.value,
-    resultado: normalizeResultado(form.resultado.value),
     origem: form.origem.value,
     responsavel: form.responsavel.value,
     motivo_perda: (form.etapa.value === "Perdido") ? normalizeMotivoPerda(form.motivo_perda.value) : "",
@@ -1202,14 +1219,17 @@ form.addEventListener("submit", async (e)=>{
   };
 
   const ok = await upsertLead(payload);
-  if(ok) dlg.close();
+  if(ok) closeDialog();
 });
 
 deleteBtn.addEventListener("click", async ()=>{
   if(!editingId) return;
   await deleteLead(editingId);
-  dlg.close();
+  closeDialog();
 });
+
+closeDlgBtn.addEventListener("click", closeDialog);
+cancelBtn.addEventListener("click", closeDialog);
 
 async function moveLeadWithOrder(id, etapa){
   const idx = ALL.findIndex(x=>x.id===id);
@@ -1360,7 +1380,7 @@ function toCSV(rows){
   const headers = [
     "id","ordem","data_inicio","proximo_contato",
     "nome","telefone","empreendimento","etapa","prioridade",
-    "atividade","resultado","origem","responsavel","motivo_perda","observacao",
+    "origem","responsavel","motivo_perda","observacao",
     "criado_em","atualizado_em"
   ];
   const esc = (v)=> {
@@ -1372,6 +1392,7 @@ function toCSV(rows){
   rows.forEach(r=> lines.push(headers.map(h=>esc(r[h])).join(",")));
   return lines.join("\n");
 }
+
 function download(filename, text){
   const a = document.createElement("a");
   a.href = URL.createObjectURL(new Blob([text], {type:"text/csv;charset=utf-8"}));
@@ -1403,14 +1424,11 @@ async function importCSV(text){
         ordem: orderForTop("Novo", null),
         data_inicio: dataISO,
         proximo_contato: null,
-
         nome: (r[idx("full_name")] || "").replace(/^"+|"+$/g, "").trim(),
         telefone: (cleanPhone.length >= 12 && cleanPhone.startsWith("55")) ? cleanPhone.slice(2) : (cleanPhone.length >= 10 ? cleanPhone : ""),
         empreendimento: "Evolutti",
         etapa: "Novo",
         prioridade: "Alta",
-        atividade: "WhatsApp",
-        resultado: "Conversando",
         origem: "Meta",
         responsavel: "Sanchai",
         motivo_perda: "",
