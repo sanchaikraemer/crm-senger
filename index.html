@@ -28,13 +28,19 @@
     --gold-2:#B8935A;
     --gold-soft:#E8D7B1;
 
+    --gold-strong:#D4AF37;
+    --gold-strong-2:#F2D680;
+    --gold-strong-border:#C9A227;
+    --gold-strong-soft:#FFF8E1;
+
     --blue-accent:#2E5B88;
     --blue-accent-2:#3A6EA5;
     --white:#FFFFFF;
+
+    --wa:#25D366;
   }
 
   *{box-sizing:border-box}
-
   html,body{height:100%}
 
   body{
@@ -338,8 +344,7 @@
   .card:active{ cursor:grabbing; }
 
   .card.high-priority{
-    background:
-      linear-gradient(180deg,#FCF9F1 0%, #F4ECDD 100%);
+    background:linear-gradient(180deg,#FCF9F1 0%, #F4ECDD 100%);
     border:2px solid rgba(201,169,106,.92);
     box-shadow:
       0 10px 22px rgba(8,22,43,.18),
@@ -358,6 +363,36 @@
     border-bottom-left-radius:16px;
   }
 
+  .card.highest-priority{
+    background:linear-gradient(180deg,#FFFDF6 0%, #F8E8B7 100%);
+    border:2px solid var(--gold-strong-border);
+    box-shadow:
+      0 12px 26px rgba(8,22,43,.18),
+      0 0 0 1px rgba(201,162,39,.22),
+      inset 0 1px 0 rgba(255,255,255,.62);
+  }
+
+  .card.highest-priority::before{
+    content:"";
+    position:absolute;
+    left:0;
+    top:0;
+    bottom:0;
+    width:9px;
+    background:linear-gradient(180deg,var(--gold-strong) 0%, var(--gold-strong-2) 100%);
+    border-top-left-radius:16px;
+    border-bottom-left-radius:16px;
+  }
+
+  .card.highest-priority::after{
+    content:"";
+    position:absolute;
+    inset:0;
+    pointer-events:none;
+    border-radius:16px;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.60);
+  }
+
   .card.high-priority::after{
     content:"";
     position:absolute;
@@ -367,17 +402,20 @@
     box-shadow: inset 0 1px 0 rgba(255,255,255,.55);
   }
 
-  .card.high-priority .nm{
+  .card.high-priority .nm,
+  .card.highest-priority .nm{
     color:#15253A;
     font-weight:980;
   }
 
-  .card.high-priority .emp{
+  .card.high-priority .emp,
+  .card.highest-priority .emp{
     color:#5A6777;
     font-weight:700;
   }
 
-  .card.high-priority .sub-row{
+  .card.high-priority .sub-row,
+  .card.highest-priority .sub-row{
     color:#5A6777;
   }
 
@@ -400,6 +438,17 @@
     color:#7B8490;
     font-weight:800;
     white-space:nowrap;
+  }
+
+  .prioText.alta{
+    color:#B8935A;
+    font-weight:950;
+  }
+
+  .prioText.altissima{
+    color:#B8860B;
+    font-weight:1000;
+    text-shadow:0 0 0 rgba(0,0,0,0);
   }
 
   .sub-row{
@@ -427,6 +476,34 @@
     text-overflow:ellipsis;
     min-width:0;
     color:#677383;
+  }
+
+  .waDot{
+    width:28px;
+    height:28px;
+    min-width:28px;
+    border-radius:999px;
+    background:var(--wa);
+    color:#fff;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    text-decoration:none;
+    box-shadow:0 3px 8px rgba(0,0,0,.18);
+    transition:.15s ease;
+    flex:0 0 auto;
+  }
+
+  .waDot:hover{
+    transform:scale(1.06);
+    filter:brightness(1.02);
+  }
+
+  .waDot svg{
+    width:16px;
+    height:16px;
+    display:block;
+    fill:currentColor;
   }
 
   .nc{
@@ -928,12 +1005,12 @@ const SUPABASE_URL = "https://lnrbpiklzymblpyrobwx.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_KXVbF3c7RGFXVTtfYmrzzg_dMK04Q9q";
 const TABLE = "leads";
 
-const SHOW_WA_ON_CARD = false;
+const SHOW_WA_ON_CARD = true;
 
 const LISTS = {
   empreendimento: ["Personalité","Quality","Prime","Evolutti","Boulevard","Premium Office","Renaissance","NVR I–II","NVR III","Outros"],
   etapa: ["Novo","Em atendimento","Evoluindo","Negociação","Stand by","Perdido"],
-  prioridade: ["Alta","Média","Baixa"],
+  prioridade: ["Altíssima","Alta","Média","Baixa"],
   origem: ["Meta","Instagram","Indicação","Corretor","Site","WhatsApp","Ligação","Presencial"],
   responsavel: ["Sanchai","Miguel","Cristian","Corretor"],
   motivo_perda: [
@@ -1163,9 +1240,25 @@ function escapeHtml(str){
 }
 
 function priorityText(p){
+  if (p === "Altíssima") return "Altíssima";
   if (p === "Alta") return "Alta";
   if (p === "Média") return "Média";
   return "Baixa";
+}
+
+function priorityRank(p){
+  if(p === "Altíssima") return 4;
+  if(p === "Alta") return 3;
+  if(p === "Média") return 2;
+  return 1;
+}
+
+function waIconSvg(){
+  return `
+    <svg viewBox="0 0 32 32" aria-hidden="true">
+      <path d="M16 .5C7.4.5.5 7.4.5 16c0 2.8.7 5.5 2.1 7.9L.5 31.5l7.8-2.1c2.3 1.3 4.9 2 7.7 2 8.6 0 15.5-6.9 15.5-15.5S24.6.5 16 .5zm0 28.4c-2.4 0-4.7-.6-6.7-1.8l-.5-.3-4.6 1.2 1.2-4.5-.3-.5c-1.3-2.1-2-4.4-2-6.9 0-7.2 5.8-13 13-13s13 5.8 13 13-5.8 13-13 13zm7.3-9.8c-.4-.2-2.4-1.2-2.8-1.3-.4-.2-.7-.2-1 .2s-1.1 1.3-1.4 1.6c-.3.3-.5.3-.9.1-.4-.2-1.7-.6-3.2-2-1.2-1.1-2-2.5-2.2-2.9-.2-.4 0-.6.2-.8.2-.2.4-.5.6-.7.2-.2.2-.4.3-.6.1-.2 0-.5-.1-.7-.2-.2-1-.8-1.4-1.1-.3-.3-.7-.3-1-.3-.3 0-.6 0-.9.3-.3.3-1.2 1.2-1.2 2.9s1.2 3.4 1.4 3.7c.2.3 2.3 3.6 5.6 5 .8.3 1.4.5 1.9.6.8.2 1.6.2 2.2.1.7-.1 2.4-1 2.7-2 .3-1 .3-1.9.2-2.1-.1-.2-.4-.3-.8-.5z"/>
+    </svg>
+  `;
 }
 
 function cardHTML(l){
@@ -1175,12 +1268,27 @@ function cardHTML(l){
 
   const emp = l.empreendimento || "—";
   const prio = priorityText(l.prioridade || "Média");
-  const highPriorityClass = (l.prioridade === "Alta") ? "high-priority" : "";
-  const prioLabel = l.prioridade === "Alta"
-    ? `<span class="prioText" style="color:#B8935A;font-weight:950;">Alta</span>`
-    : `<span class="prioText">${escapeHtml(prio)}</span>`;
+
+  let priorityClass = "";
+  let prioLabel = `<span class="prioText">${escapeHtml(prio)}</span>`;
+
+  if(l.prioridade === "Alta"){
+    priorityClass = "high-priority";
+    prioLabel = `<span class="prioText alta">Alta</span>`;
+  }
+
+  if(l.prioridade === "Altíssima"){
+    priorityClass = "highest-priority";
+    prioLabel = `<span class="prioText altissima">Altíssima</span>`;
+  }
 
   const wa = (SHOW_WA_ON_CARD && l.telefone) ? `https://wa.me/${normalizePhoneBR(l.telefone)}` : "";
+  const waHTML = wa ? `
+    <a class="waDot" href="${wa}" target="_blank" rel="noopener" aria-label="WhatsApp">
+      ${waIconSvg()}
+    </a>
+  ` : "";
+
   const nc = nextContactInfo(l);
   const ncHTML = nc ? `<div class="nc ${escapeHtml(nc.cls)}">${escapeHtml(nc.text)}</div>` : "";
 
@@ -1202,7 +1310,7 @@ function cardHTML(l){
       : "";
 
     return `
-      <div class="card ${highPriorityClass}" draggable="true" data-id="${escapeHtml(l.id)}">
+      <div class="card ${priorityClass}" draggable="true" data-id="${escapeHtml(l.id)}">
         <div class="row1">
           <div class="nm">${escapeHtml(l.nome || "")}</div>
           ${prioLabel}
@@ -1211,7 +1319,7 @@ function cardHTML(l){
           <div class="leftGroup">
             <div class="emp">${escapeHtml(emp)}</div>
             ${ncHTML}
-            ${wa ? `<a class="waDot" href="${wa}" target="_blank" rel="noopener" aria-label="WhatsApp">WA</a>` : ``}
+            ${waHTML}
           </div>
         </div>
         ${motivo}
@@ -1222,7 +1330,7 @@ function cardHTML(l){
   const b = badgeInfo(l);
 
   return `
-    <div class="card ${highPriorityClass}" draggable="true" data-id="${escapeHtml(l.id)}">
+    <div class="card ${priorityClass}" draggable="true" data-id="${escapeHtml(l.id)}">
       <div class="row1">
         <div class="nm">${escapeHtml(l.nome || "")}</div>
         ${prioLabel}
@@ -1232,8 +1340,9 @@ function cardHTML(l){
         <div class="leftGroup">
           <div class="emp">${escapeHtml(emp)}</div>
           ${ncHTML}
-          ${wa ? `<a class="waDot" href="${wa}" target="_blank" rel="noopener" aria-label="WhatsApp">WA</a>` : ``}
         </div>
+
+        ${waHTML}
 
         <div class="dt ${escapeHtml(b.cls)}">${escapeHtml(b.text)}</div>
       </div>
@@ -1686,11 +1795,10 @@ function wireDnD(){
 }
 
 function sortByPriorityAndOrder(a,b){
-  const aAlta = (a.prioridade || "") === "Alta";
-  const bAlta = (b.prioridade || "") === "Alta";
+  const pa = priorityRank(a.prioridade || "Baixa");
+  const pb = priorityRank(b.prioridade || "Baixa");
 
-  if(aAlta && !bAlta) return -1;
-  if(!aAlta && bAlta) return 1;
+  if(pa !== pb) return pb - pa;
 
   const ageA = leadAgeForSorting(a);
   const ageB = leadAgeForSorting(b);
