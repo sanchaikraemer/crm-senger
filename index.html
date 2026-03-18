@@ -33,10 +33,6 @@
     --gold-strong-border:#C9A227;
     --gold-strong-soft:#FFF8E1;
 
-    --gold-high-light:#E8D7B1;
-    --gold-high-light-2:#D9BC84;
-    --gold-high-border:#C9A96A;
-
     --blue-accent:#2E5B88;
     --blue-accent-2:#3A6EA5;
     --white:#FFFFFF;
@@ -366,12 +362,40 @@
 
   .card:active{ cursor:grabbing; }
 
-  .card.high-priority{
-    background:linear-gradient(180deg,#FEFCF7 0%, #F6EBD7 100%);
-    border:2px solid rgba(217,188,132,.95);
+  .card.low-priority{
+    background:linear-gradient(180deg,#EEF2F6 0%, #F8FAFD 100%);
+    border:1px solid #D8E2EC;
     box-shadow:
-      0 10px 22px rgba(8,22,43,.18),
-      inset 0 0 0 1px rgba(255,255,255,.45);
+      0 6px 14px rgba(10,26,49,.12),
+      inset 0 1px 0 rgba(255,255,255,.45);
+  }
+
+  .card.medium-priority{
+    background:linear-gradient(180deg,#E9DDC7 0%, #F8F1E6 100%);
+    border:1px solid rgba(220,205,180,.95);
+    box-shadow:
+      0 8px 18px rgba(8,22,43,.12),
+      inset 0 1px 0 rgba(255,255,255,.45);
+  }
+
+  .card.medium-priority::before{
+    content:"";
+    position:absolute;
+    left:0;
+    top:0;
+    bottom:0;
+    width:7px;
+    background:linear-gradient(180deg,#E1D2B8 0%, #F2E7D6 100%);
+    border-top-left-radius:16px;
+    border-bottom-left-radius:16px;
+  }
+
+  .card.high-priority{
+    background:linear-gradient(180deg,#E2C27A 0%, #F5E7BE 100%);
+    border:2px solid rgba(210,181,112,.95);
+    box-shadow:
+      0 10px 22px rgba(8,22,43,.16),
+      inset 0 1px 0 rgba(255,255,255,.45);
   }
 
   .card.high-priority::before{
@@ -381,18 +405,18 @@
     top:0;
     bottom:0;
     width:8px;
-    background:linear-gradient(180deg,var(--gold-high-light) 0%, var(--gold-high-light-2) 100%);
+    background:linear-gradient(180deg,#D8B15E 0%, #EED89A 100%);
     border-top-left-radius:16px;
     border-bottom-left-radius:16px;
   }
 
   .card.highest-priority{
-    background:linear-gradient(180deg,#FFFDF6 0%, #F8E8B7 100%);
+    background:linear-gradient(180deg,#D4AF37 0%, #F2D680 100%);
     border:2px solid var(--gold-strong-border);
     box-shadow:
       0 12px 26px rgba(8,22,43,.18),
-      0 0 0 1px rgba(201,162,39,.22),
-      inset 0 1px 0 rgba(255,255,255,.62);
+      0 0 0 1px rgba(201,162,39,.20),
+      inset 0 1px 0 rgba(255,255,255,.55);
   }
 
   .card.highest-priority::before{
@@ -402,16 +426,16 @@
     top:0;
     bottom:0;
     width:9px;
-    background:linear-gradient(180deg,var(--gold-strong) 0%, var(--gold-strong-2) 100%);
+    background:linear-gradient(180deg,#C89F1E 0%, #E9C95D 100%);
     border-top-left-radius:16px;
     border-bottom-left-radius:16px;
   }
 
   .card.closed-priority{
-    background:linear-gradient(180deg,#F4FDF7 0%, #DDF3E5 100%);
-    border:2px solid rgba(22,163,74,.78);
+    background:linear-gradient(180deg,#8ED5A8 0%, #C3EAD2 100%);
+    border:2px solid rgba(126,197,152,.90);
     box-shadow:
-      0 10px 22px rgba(8,22,43,.16),
+      0 10px 22px rgba(8,22,43,.14),
       inset 0 1px 0 rgba(255,255,255,.50);
   }
 
@@ -422,22 +446,26 @@
     top:0;
     bottom:0;
     width:8px;
-    background:linear-gradient(180deg,#16A34A 0%, #65C28A 100%);
+    background:linear-gradient(180deg,#74C592 0%, #A8DFC0 100%);
     border-top-left-radius:16px;
     border-bottom-left-radius:16px;
   }
 
-  .card.highest-priority::after,
+  .card.low-priority::after,
+  .card.medium-priority::after,
   .card.high-priority::after,
+  .card.highest-priority::after,
   .card.closed-priority::after{
     content:"";
     position:absolute;
     inset:0;
     pointer-events:none;
     border-radius:16px;
-    box-shadow: inset 0 1px 0 rgba(255,255,255,.55);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.50);
   }
 
+  .card.low-priority .nm,
+  .card.medium-priority .nm,
   .card.high-priority .nm,
   .card.highest-priority .nm,
   .card.closed-priority .nm{
@@ -445,6 +473,8 @@
     font-weight:980;
   }
 
+  .card.low-priority .emp,
+  .card.medium-priority .emp,
   .card.high-priority .emp,
   .card.highest-priority .emp,
   .card.closed-priority .emp{
@@ -452,6 +482,8 @@
     font-weight:700;
   }
 
+  .card.low-priority .sub-row,
+  .card.medium-priority .sub-row,
   .card.high-priority .sub-row,
   .card.highest-priority .sub-row,
   .card.closed-priority .sub-row{
@@ -479,19 +511,28 @@
     white-space:nowrap;
   }
 
+  .prioText.baixa{
+    color:#7B8490;
+    font-weight:850;
+  }
+
+  .prioText.media{
+    color:#A38A63;
+    font-weight:900;
+  }
+
   .prioText.alta{
-    color:#C49A58;
+    color:#B8872E;
     font-weight:950;
   }
 
   .prioText.altissima{
-    color:#B8860B;
+    color:#9F7A10;
     font-weight:1000;
-    text-shadow:0 0 0 rgba(0,0,0,0);
   }
 
   .prioText.fechado{
-    color:#16A34A;
+    color:#4E9C6C;
     font-weight:950;
   }
 
@@ -617,6 +658,7 @@
     align-items:center;
     gap:8px;
     min-width:0;
+    flex:1;
   }
 
   .standbyLine .nm{
@@ -1336,13 +1378,6 @@ function priorityVisual(p){
     };
   }
 
-  if(p === "Alta"){
-    return {
-      cardClass: "high-priority",
-      label: `<span class="prioText alta">Alta</span>`
-    };
-  }
-
   if(p === "Altíssima"){
     return {
       cardClass: "highest-priority",
@@ -1350,9 +1385,23 @@ function priorityVisual(p){
     };
   }
 
+  if(p === "Alta"){
+    return {
+      cardClass: "high-priority",
+      label: `<span class="prioText alta">Alta</span>`
+    };
+  }
+
+  if(p === "Média"){
+    return {
+      cardClass: "medium-priority",
+      label: `<span class="prioText media">Média</span>`
+    };
+  }
+
   return {
-    cardClass: "",
-    label: `<span class="prioText">${escapeHtml(priorityText(p || "Média"))}</span>`
+    cardClass: "low-priority",
+    label: `<span class="prioText baixa">Baixa</span>`
   };
 }
 
