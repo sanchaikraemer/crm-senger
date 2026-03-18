@@ -33,6 +33,10 @@
     --gold-strong-border:#C9A227;
     --gold-strong-soft:#FFF8E1;
 
+    --gold-high-light:#E8D7B1;
+    --gold-high-light-2:#D9BC84;
+    --gold-high-border:#C9A96A;
+
     --blue-accent:#2E5B88;
     --blue-accent-2:#3A6EA5;
     --white:#FFFFFF;
@@ -131,7 +135,7 @@
 
   .actions{
     display:flex;
-    gap:10px;
+    gap:8px;
     align-items:center;
     flex-wrap:wrap;
   }
@@ -139,7 +143,7 @@
   .btn{
     border:1px solid rgba(255,255,255,.12);
     background:#FFFFFF;
-    padding:10px 14px;
+    padding:10px 12px;
     border-radius:14px;
     cursor:pointer;
     font-weight:850;
@@ -151,6 +155,7 @@
     justify-content:center;
     gap:8px;
     transition:.15s ease;
+    white-space:nowrap;
   }
 
   .btn:hover{ filter:brightness(.98); }
@@ -165,6 +170,24 @@
     background:var(--danger);
     color:#fff;
     border-color:transparent;
+  }
+
+  #new{
+    background:linear-gradient(180deg,var(--gold-strong) 0%, var(--gold-2) 100%);
+    color:#fff;
+    border-color:var(--gold-strong-border);
+  }
+
+  #new:hover{
+    filter:brightness(.96);
+  }
+
+  #toggleLost,
+  #toggleStandby,
+  #exportCsv,
+  #importCsv{
+    min-width:128px;
+    padding:10px 12px;
   }
 
   .input, select, textarea{
@@ -344,8 +367,8 @@
   .card:active{ cursor:grabbing; }
 
   .card.high-priority{
-    background:linear-gradient(180deg,#FCF9F1 0%, #F4ECDD 100%);
-    border:2px solid rgba(201,169,106,.92);
+    background:linear-gradient(180deg,#FEFCF7 0%, #F6EBD7 100%);
+    border:2px solid rgba(217,188,132,.95);
     box-shadow:
       0 10px 22px rgba(8,22,43,.18),
       inset 0 0 0 1px rgba(255,255,255,.45);
@@ -358,7 +381,7 @@
     top:0;
     bottom:0;
     width:8px;
-    background:linear-gradient(180deg,#D6B97B 0%, #B8935A 100%);
+    background:linear-gradient(180deg,var(--gold-high-light) 0%, var(--gold-high-light-2) 100%);
     border-top-left-radius:16px;
     border-bottom-left-radius:16px;
   }
@@ -384,16 +407,29 @@
     border-bottom-left-radius:16px;
   }
 
-  .card.highest-priority::after{
-    content:"";
-    position:absolute;
-    inset:0;
-    pointer-events:none;
-    border-radius:16px;
-    box-shadow: inset 0 1px 0 rgba(255,255,255,.60);
+  .card.closed-priority{
+    background:linear-gradient(180deg,#F4FDF7 0%, #DDF3E5 100%);
+    border:2px solid rgba(22,163,74,.78);
+    box-shadow:
+      0 10px 22px rgba(8,22,43,.16),
+      inset 0 1px 0 rgba(255,255,255,.50);
   }
 
-  .card.high-priority::after{
+  .card.closed-priority::before{
+    content:"";
+    position:absolute;
+    left:0;
+    top:0;
+    bottom:0;
+    width:8px;
+    background:linear-gradient(180deg,#16A34A 0%, #65C28A 100%);
+    border-top-left-radius:16px;
+    border-bottom-left-radius:16px;
+  }
+
+  .card.highest-priority::after,
+  .card.high-priority::after,
+  .card.closed-priority::after{
     content:"";
     position:absolute;
     inset:0;
@@ -403,19 +439,22 @@
   }
 
   .card.high-priority .nm,
-  .card.highest-priority .nm{
+  .card.highest-priority .nm,
+  .card.closed-priority .nm{
     color:#15253A;
     font-weight:980;
   }
 
   .card.high-priority .emp,
-  .card.highest-priority .emp{
+  .card.highest-priority .emp,
+  .card.closed-priority .emp{
     color:#5A6777;
     font-weight:700;
   }
 
   .card.high-priority .sub-row,
-  .card.highest-priority .sub-row{
+  .card.highest-priority .sub-row,
+  .card.closed-priority .sub-row{
     color:#5A6777;
   }
 
@@ -441,7 +480,7 @@
   }
 
   .prioText.alta{
-    color:#B8935A;
+    color:#C49A58;
     font-weight:950;
   }
 
@@ -449,6 +488,11 @@
     color:#B8860B;
     font-weight:1000;
     text-shadow:0 0 0 rgba(0,0,0,0);
+  }
+
+  .prioText.fechado{
+    color:#16A34A;
+    font-weight:950;
   }
 
   .sub-row{
@@ -531,7 +575,7 @@
 
   .nc-red{
     background:var(--danger);
-    color:#ffffff;
+    color:#FFFFFF;
     border-color:transparent;
   }
 
@@ -832,6 +876,14 @@
       padding:12px 14px;
     }
 
+    #toggleLost,
+    #toggleStandby,
+    #exportCsv,
+    #importCsv{
+      min-width:0;
+      width:100%;
+    }
+
     main .wrap{
       padding-top:10px;
       height:auto;
@@ -907,6 +959,7 @@
         <select id="fPri"></select>
 
         <button class="btn" id="toggleLost" type="button">Mostrar perdidos</button>
+        <button class="btn" id="toggleStandby" type="button">Mostrar Stand by</button>
         <button class="btn" id="exportCsv" type="button">Exportar CSV</button>
         <button class="btn" id="importCsv" type="button">Importar CSV</button>
       </div>
@@ -1010,7 +1063,7 @@ const SHOW_WA_ON_CARD = true;
 const LISTS = {
   empreendimento: ["Personalité","Quality","Prime","Evolutti","Boulevard","Premium Office","Renaissance","NVR I–II","NVR III","Outros"],
   etapa: ["Novo","Em atendimento","Evoluindo","Negociação","Stand by","Perdido"],
-  prioridade: ["Altíssima","Alta","Média","Baixa"],
+  prioridade: ["Fechado","Altíssima","Alta","Média","Baixa"],
   origem: ["Meta","Instagram","Indicação","Corretor","Site","WhatsApp","Ligação","Presencial"],
   responsavel: ["Sanchai","Miguel","Cristian","Corretor"],
   motivo_perda: [
@@ -1021,6 +1074,8 @@ const LISTS = {
     "Curiosidade",
     "Após valor some",
     "Comprou outro",
+    "Restritivo CPF",
+    "Insatisfação c/ produto",
     "Outro"
   ]
 };
@@ -1050,7 +1105,9 @@ const MOTIVO_PERDA_ALIASES = {
   "Curiosidade": "Curiosidade",
   "Após valor some": "Após valor some",
   "Investimento baixo": "Investimento baixo",
-  "Parcelamento direto": "Parcelamento direto"
+  "Parcelamento direto": "Parcelamento direto",
+  "Restritivo CPF": "Restritivo CPF",
+  "Insatisfação c/ produto": "Insatisfação c/ produto"
 };
 
 function normalizeEtapa(etapa){
@@ -1065,6 +1122,11 @@ function normalizeMotivoPerda(m){
   if(LISTS.motivo_perda.includes(v)) return v;
   if(MOTIVO_PERDA_ALIASES[v]) return MOTIVO_PERDA_ALIASES[v];
   return v || "";
+}
+
+function normalizeProximoContato(v){
+  const s = String(v ?? "").trim();
+  return s ? s.slice(0,10) : null;
 }
 
 const elBoard = document.querySelector("#board");
@@ -1087,6 +1149,7 @@ const allBox = document.querySelector("#allBox");
 const mainWrap = document.querySelector("#mainWrap");
 const headerEl = document.querySelector("header");
 const toggleLostBtn = document.querySelector("#toggleLost");
+const toggleStandbyBtn = document.querySelector("#toggleStandby");
 const closeDlgBtn = document.querySelector("#closeDlg");
 const cancelBtn = document.querySelector("#cancelBtn");
 
@@ -1108,6 +1171,7 @@ let ALL = [];
 let editingId = null;
 let originalSnapshot = null;
 let SHOW_LOST = false;
+let SHOW_STANDBY = false;
 let isDragging = false;
 
 function setStatus(type, msg){
@@ -1154,7 +1218,7 @@ function daysSinceISO(iso){
 }
 
 function badgeInfo(lead){
-  const nextISO = (lead.proximo_contato || "").trim();
+  const nextISO = normalizeProximoContato(lead.proximo_contato);
 
   if(nextISO){
     const nextDate = parseISODateLocal(nextISO);
@@ -1185,7 +1249,7 @@ function badgeInfo(lead){
 }
 
 function leadAgeForSorting(lead){
-  const nextISO = (lead.proximo_contato || "").trim();
+  const nextISO = normalizeProximoContato(lead.proximo_contato);
 
   if(nextISO){
     const nextDate = parseISODateLocal(nextISO);
@@ -1202,7 +1266,7 @@ function leadAgeForSorting(lead){
 }
 
 function nextContactInfo(lead){
-  const iso = (lead.proximo_contato || "").trim();
+  const iso = normalizeProximoContato(lead.proximo_contato);
   if(!iso) return null;
 
   const d = parseISODateLocal(iso);
@@ -1219,6 +1283,7 @@ function nextContactInfo(lead){
   const text = `${dow} ${dd}/${mm}`;
 
   if(diff === 0) return { text, cls:"nc-green" };
+  if(diff < 0) return { text, cls:"nc-red" };
   return { text, cls:"nc-neutral" };
 }
 
@@ -1240,6 +1305,7 @@ function escapeHtml(str){
 }
 
 function priorityText(p){
+  if (p === "Fechado") return "Fechado";
   if (p === "Altíssima") return "Altíssima";
   if (p === "Alta") return "Alta";
   if (p === "Média") return "Média";
@@ -1247,6 +1313,7 @@ function priorityText(p){
 }
 
 function priorityRank(p){
+  if(p === "Fechado") return 5;
   if(p === "Altíssima") return 4;
   if(p === "Alta") return 3;
   if(p === "Média") return 2;
@@ -1261,26 +1328,43 @@ function waIconSvg(){
   `;
 }
 
+function priorityVisual(p){
+  if(p === "Fechado"){
+    return {
+      cardClass: "closed-priority",
+      label: `<span class="prioText fechado">Fechado</span>`
+    };
+  }
+
+  if(p === "Alta"){
+    return {
+      cardClass: "high-priority",
+      label: `<span class="prioText alta">Alta</span>`
+    };
+  }
+
+  if(p === "Altíssima"){
+    return {
+      cardClass: "highest-priority",
+      label: `<span class="prioText altissima">Altíssima</span>`
+    };
+  }
+
+  return {
+    cardClass: "",
+    label: `<span class="prioText">${escapeHtml(priorityText(p || "Média"))}</span>`
+  };
+}
+
 function cardHTML(l){
   const etapaNorm = normalizeEtapa(l.etapa);
   const isPerdido = etapaNorm === "Perdido";
   const isStandBy = etapaNorm === "Stand by";
 
   const emp = l.empreendimento || "—";
-  const prio = priorityText(l.prioridade || "Média");
-
-  let priorityClass = "";
-  let prioLabel = `<span class="prioText">${escapeHtml(prio)}</span>`;
-
-  if(l.prioridade === "Alta"){
-    priorityClass = "high-priority";
-    prioLabel = `<span class="prioText alta">Alta</span>`;
-  }
-
-  if(l.prioridade === "Altíssima"){
-    priorityClass = "highest-priority";
-    prioLabel = `<span class="prioText altissima">Altíssima</span>`;
-  }
+  const visual = priorityVisual(l.prioridade || "Média");
+  const priorityClass = visual.cardClass;
+  const prioLabel = visual.label;
 
   const wa = (SHOW_WA_ON_CARD && l.telefone) ? `https://wa.me/${normalizePhoneBR(l.telefone)}` : "";
   const waHTML = wa ? `
@@ -1294,11 +1378,20 @@ function cardHTML(l){
 
   if(isStandBy){
     return `
-      <div class="card" draggable="true" data-id="${escapeHtml(l.id)}">
-        <div class="standbyLine">
-          <div class="nm">${escapeHtml(l.nome || "")}</div>
-          <div class="sep">—</div>
-          <div class="empInline">${escapeHtml(emp)}</div>
+      <div class="card ${priorityClass}" draggable="true" data-id="${escapeHtml(l.id)}">
+        <div class="row1">
+          <div class="standbyLine">
+            <div class="nm">${escapeHtml(l.nome || "")}</div>
+            <div class="sep">—</div>
+            <div class="empInline">${escapeHtml(emp)}</div>
+          </div>
+          ${prioLabel}
+        </div>
+        <div class="sub-row">
+          <div class="leftGroup">
+            ${ncHTML}
+          </div>
+          ${waHTML}
         </div>
       </div>
     `;
@@ -1384,7 +1477,7 @@ function snapshotLead(obj){
     motivo_perda: normalizeMotivoPerda(obj.motivo_perda || ""),
     observacao: (obj.observacao || "").trim(),
     data_inicio: (obj.data_inicio || "").trim(),
-    proximo_contato: (obj.proximo_contato || "").trim()
+    proximo_contato: normalizeProximoContato(obj.proximo_contato) || ""
   });
 }
 
@@ -1400,7 +1493,7 @@ function currentFormSnapshot(){
     motivo_perda: F.etapa.value === "Perdido" ? normalizeMotivoPerda(F.motivo_perda.value) : "",
     observacao: F.observacao.value.trim(),
     data_inicio: F.data_inicio.value || "",
-    proximo_contato: F.proximo_contato.value ? F.proximo_contato.value.trim() : ""
+    proximo_contato: normalizeProximoContato(F.proximo_contato.value) || ""
   });
 }
 
@@ -1463,7 +1556,7 @@ async function load(){
       etapa: normalizeEtapa(l.etapa),
       motivo_perda: normalizeMotivoPerda(l.motivo_perda),
       ordem: Number(l.ordem) || Date.now(),
-      proximo_contato: (l.proximo_contato || "").slice(0,10)
+      proximo_contato: normalizeProximoContato(l.proximo_contato)
     }));
 
     setStatus("ok","Online • Sincronizado");
@@ -1484,6 +1577,7 @@ async function upsertLead(payload, {silent=false} = {}){
 
   payload.etapa = normalizeEtapa(payload.etapa);
   payload.motivo_perda = normalizeMotivoPerda(payload.motivo_perda);
+  payload.proximo_contato = normalizeProximoContato(payload.proximo_contato);
 
   if(payload.etapa !== "Perdido"){
     payload.motivo_perda = "";
@@ -1511,14 +1605,24 @@ async function upsertLead(payload, {silent=false} = {}){
 
       const u = Array.isArray(updated) ? updated[0] : payload;
       const idx = ALL.findIndex(x=>x.id===payload.id);
-      if(idx >= 0) ALL[idx] = u;
+      if(idx >= 0) ALL[idx] = {
+        ...u,
+        etapa: normalizeEtapa(u.etapa),
+        motivo_perda: normalizeMotivoPerda(u.motivo_perda),
+        proximo_contato: normalizeProximoContato(u.proximo_contato)
+      };
     }else{
       payload.id = payload.id || crypto.randomUUID();
       payload.criado_em = payload.criado_em || nowISO();
 
       const inserted = await sbFetch(TABLE, { method:"POST", body: payload });
       const i = Array.isArray(inserted) ? inserted[0] : payload;
-      ALL.unshift(i);
+      ALL.unshift({
+        ...i,
+        etapa: normalizeEtapa(i.etapa),
+        motivo_perda: normalizeMotivoPerda(i.motivo_perda),
+        proximo_contato: normalizeProximoContato(i.proximo_contato)
+      });
     }
 
     if(!silent){
@@ -1529,7 +1633,7 @@ async function upsertLead(payload, {silent=false} = {}){
     return true;
   }catch(e){
     console.error(e);
-    alert("Não consegui salvar no Supabase. Provável: RLS/política, tabela, ou coluna proximo_contato não criada.");
+    alert("Não consegui salvar no Supabase. Verifique tabela, colunas e políticas.");
     return false;
   }
 }
@@ -1657,7 +1761,7 @@ function openEdit(id, forcePerdido=false){
   fillFormSelect("motivo_perda", LISTS.motivo_perda);
 
   F.data_inicio.value = lead.data_inicio || todayISO();
-  F.proximo_contato.value = (lead.proximo_contato || "").slice(0,10);
+  F.proximo_contato.value = normalizeProximoContato(lead.proximo_contato) || "";
   F.nome.value = lead.nome || "";
   F.telefone.value = lead.telefone || "";
   F.empreendimento.value = lead.empreendimento || "Outros";
@@ -1690,7 +1794,13 @@ form.addEventListener("submit", async (e)=>{
   }
 
   const etapaEscolhida = normalizeEtapa(F.etapa.value);
+  const prioridadeEscolhida = F.prioridade.value;
   const existing = editingId ? ALL.find(x=>x.id===editingId) : null;
+
+  if(prioridadeEscolhida === "Fechado" && etapaEscolhida === "Stand by"){
+    alert("Lead com prioridade Fechado não pode ir para Stand by.");
+    return;
+  }
 
   if(editingId && originalSnapshot === currentFormSnapshot()){
     closeDialog();
@@ -1701,12 +1811,12 @@ form.addEventListener("submit", async (e)=>{
     id: editingId || crypto.randomUUID(),
     ordem: editingId ? (Number(existing?.ordem) || Date.now()) : orderForTop(etapaEscolhida, null),
     data_inicio: F.data_inicio.value || todayISO(),
-    proximo_contato: (F.proximo_contato.value && F.proximo_contato.value.trim()) ? F.proximo_contato.value.trim() : null,
+    proximo_contato: normalizeProximoContato(F.proximo_contato.value),
     nome,
     telefone: F.telefone.value.trim(),
     empreendimento: F.empreendimento.value,
     etapa: etapaEscolhida,
-    prioridade: F.prioridade.value,
+    prioridade: prioridadeEscolhida,
     origem: F.origem.value,
     responsavel: F.responsavel.value,
     motivo_perda: (F.etapa.value === "Perdido") ? normalizeMotivoPerda(F.motivo_perda.value) : "",
@@ -1740,8 +1850,19 @@ async function moveLeadWithOrder(id, etapa){
     return;
   }
 
+  if(etapaNorm === "Stand by" && current.prioridade === "Fechado"){
+    alert("Lead com prioridade Fechado não pode ir para Stand by.");
+    return;
+  }
+
   const ordemTopo = orderForTop(etapaNorm, id);
-  const next = {...current, etapa: etapaNorm, ordem: ordemTopo};
+  const next = {
+    ...current,
+    etapa: etapaNorm,
+    ordem: ordemTopo,
+    proximo_contato: normalizeProximoContato(current.proximo_contato),
+    atualizado_em: nowISO()
+  };
 
   if(next.etapa !== "Perdido") next.motivo_perda = "";
 
@@ -1817,6 +1938,10 @@ function sortByPriorityAndOrder(a,b){
 }
 
 function sortStandbyGrouped(a,b){
+  const pa = priorityRank(a.prioridade || "Baixa");
+  const pb = priorityRank(b.prioridade || "Baixa");
+  if(pa !== pb) return pb - pa;
+
   const ea = (a.empreendimento || "").toLowerCase();
   const eb = (b.empreendimento || "").toLowerCase();
   if(ea !== eb) return ea.localeCompare(eb, "pt-BR");
@@ -1838,11 +1963,13 @@ function render(){
   allBox.querySelector(".n").textContent = totalTodos;
 
   toggleLostBtn.textContent = SHOW_LOST ? "Ocultar perdidos" : "Mostrar perdidos";
+  toggleStandbyBtn.textContent = SHOW_STANDBY ? "Ocultar Stand by" : "Mostrar Stand by";
 
   elBoard.innerHTML = "";
 
   const etapasNoBoard = LISTS.etapa.filter(etapa => {
     if(etapa === "Perdido") return SHOW_LOST;
+    if(etapa === "Stand by") return SHOW_STANDBY;
     return true;
   });
 
@@ -2002,6 +2129,11 @@ toggleLostBtn.addEventListener("click", ()=>{
   render();
 });
 
+toggleStandbyBtn.addEventListener("click", ()=>{
+  SHOW_STANDBY = !SHOW_STANDBY;
+  render();
+});
+
 lostBox.addEventListener("click", ()=>{
   SHOW_LOST = true;
   render();
@@ -2032,17 +2164,19 @@ function updateBadgesOnly(){
     if(!lead) return;
 
     const etapaNorm = normalizeEtapa(lead.etapa);
-    if(etapaNorm === "Perdido" || etapaNorm === "Stand by") return;
+    if(etapaNorm === "Perdido") return;
 
-    const b = badgeInfo(lead);
     const dtEl = card.querySelector(".dt");
+    const ncEl = card.querySelector(".nc");
 
-    if(dtEl){
-      dtEl.className = `dt ${b.cls}`;
-      dtEl.textContent = b.text;
+    if(etapaNorm !== "Stand by"){
+      const b = badgeInfo(lead);
+      if(dtEl){
+        dtEl.className = `dt ${b.cls}`;
+        dtEl.textContent = b.text;
+      }
     }
 
-    const ncEl = card.querySelector(".nc");
     const ncInfo = nextContactInfo(lead);
     if(ncEl && ncInfo){
       ncEl.className = `nc ${ncInfo.cls}`;
