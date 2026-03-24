@@ -1222,14 +1222,17 @@ function pad2(n){
   return String(n).padStart(2, "0");
 }
 
-function obsDateTimePrefix(){
-  const now = new Date();
-  const dd = pad2(now.getDate());
-  const mm = pad2(now.getMonth() + 1);
-  const yyyy = now.getFullYear();
-  const hh = pad2(now.getHours());
-  const min = pad2(now.getMinutes());
+function obsDateTimePrefix(date = new Date()){
+  const dd = pad2(date.getDate());
+  const mm = pad2(date.getMonth() + 1);
+  const yyyy = date.getFullYear();
+  const hh = pad2(date.getHours());
+  const min = pad2(date.getMinutes());
   return `${dd}/${mm}/${yyyy} ${hh}:${min} - `;
+}
+
+function obsDateKey(date = new Date()){
+  return `${pad2(date.getDate())}/${pad2(date.getMonth() + 1)}/${date.getFullYear()}`;
 }
 
 function getLastNonEmptyObsLine(text){
@@ -1244,33 +1247,42 @@ function isObsHeaderOnlyLine(line){
   return /^\d{2}\/\d{2}\/\d{4} \d{2}:\d{2} -\s*$/.test(String(line || ""));
 }
 
+function getLastObsHeaderDate(text){
+  const matches = String(text || "").match(/(\d{2}\/\d{2}\/\d{4}) \d{2}:\d{2} -/g);
+  if(!matches || !matches.length) return "";
+  const last = matches[matches.length - 1].match(/^(\d{2}\/\d{2}\/\d{4})/);
+  return last ? last[1] : "";
+}
+
 function prepareObservationEntry(){
   const ta = F.observacao;
   if(!ta) return;
 
-  const now = Date.now();
-  if(now - obsLastAutoInsertAt < 180) return;
+  const nowTs = Date.now();
+  if(nowTs - obsLastAutoInsertAt < 180) return;
 
   const current = String(ta.value || "").replace(/\r/g, "");
   const trimmedRight = current.replace(/[ \t]+$/gm, "").replace(/\n+$/g, "");
   const lastLine = getLastNonEmptyObsLine(trimmedRight);
+  const todayKey = obsDateKey(new Date());
+  const lastHeaderDate = getLastObsHeaderDate(trimmedRight);
 
   if(!trimmedRight){
     ta.value = obsDateTimePrefix();
+    obsLastAutoInsertAt = nowTs;
   }else if(isObsHeaderOnlyLine(lastLine)){
     ta.value = trimmedRight;
-  }else{
+  }else if(lastHeaderDate !== todayKey){
     ta.value = `${trimmedRight}\n\n${obsDateTimePrefix()}`;
+    obsLastAutoInsertAt = nowTs;
   }
 
-  obsLastAutoInsertAt = now;
-
   requestAnimationFrame(() => {
-    ta.focus();
     const end = ta.value.length;
     ta.setSelectionRange(end, end);
   });
 }
+
 
 
 function setStatus(type, msg){
