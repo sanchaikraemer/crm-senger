@@ -243,6 +243,8 @@
 
   .sub-row .dt{padding:4px 10px;border-radius:999px;white-space:nowrap;font-weight:800;border:1px solid transparent;flex:0 0 auto}
   .dt-neutral{background:#E7EEF6;color:#35506D;border:1px solid #D3DFEC}
+.dt-soft{background:#E7EEF6;color:#35506D;border:1px solid #D3DFEC}
+.dt-blue{background:#2563EB;color:#ffffff;border-color:transparent}
   .dt-green{background:#16A34A;color:#ffffff;border-color:transparent}
   .dt-orange{background:#E67E22;color:#ffffff;border-color:transparent}
   .dt-red{background:#D64545;color:#ffffff;border-color:transparent}
@@ -1026,10 +1028,21 @@ function nowISO(){ return new Date().toISOString(); }
 function dayStartLocal(d){ return new Date(d.getFullYear(), d.getMonth(), d.getDate()); }
 function parseISODateLocal(iso){
   if(!iso) return null;
-  const s = String(iso).trim().slice(0,10);
-  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(s);
-  if(m) return new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]));
-  const d = new Date(iso);
+  const raw = String(iso).trim();
+  const onlyDate = /^(\d{4})-(\d{2})-(\d{2})$/.exec(raw);
+  if(onlyDate) return new Date(Number(onlyDate[1]), Number(onlyDate[2]) - 1, Number(onlyDate[3]));
+  const localDateTime = /^(\d{4})-(\d{2})-(\d{2})[T\s](\d{2}):(\d{2})(?::(\d{2}))?/.exec(raw);
+  if(localDateTime){
+    return new Date(
+      Number(localDateTime[1]),
+      Number(localDateTime[2]) - 1,
+      Number(localDateTime[3]),
+      Number(localDateTime[4]),
+      Number(localDateTime[5]),
+      Number(localDateTime[6] || 0)
+    );
+  }
+  const d = new Date(raw);
   return Number.isNaN(d.getTime()) ? null : d;
 }
 function daysSinceISO(iso){
@@ -1038,6 +1051,12 @@ function daysSinceISO(iso){
   const today = dayStartLocal(new Date());
   const base = dayStartLocal(d);
   const diff = Math.floor((today - base) / (24*60*60*1000));
+  return diff < 0 ? 0 : diff;
+}
+function minutesSinceISO(iso){
+  const d = parseISODateLocal(iso);
+  if(!d) return 0;
+  const diff = Math.floor((Date.now() - d.getTime()) / 60000);
   return diff < 0 ? 0 : diff;
 }
 function toPublicAttachmentUrl(filePath){
@@ -1069,26 +1088,27 @@ function attachmentMiniHTML(leadId){
   return `<span class="cardAttach">📎 ${count}</span>`;
 }
 function badgeInfo(lead){
-  const nextISO = normalizeProximoContato(lead.proximo_contato);
-  if(nextISO){
-    const nextDate = parseISODateLocal(nextISO);
-    if(nextDate){
-      const today = dayStartLocal(new Date());
-      const nextDay = dayStartLocal(nextDate);
-      if(nextDay > today) return { text: "agendado", cls: "dt-neutral" };
-      const days = daysSinceISO(nextISO);
-      if(days <= 2) return { text: days === 0 ? "hoje" : days + " dias", cls: "dt-neutral" };
-      if(days <= 5) return { text: days + " dias", cls: "dt-green" };
-      if(days <= 8) return { text: days + " dias", cls: "dt-orange" };
-      return { text: days + " dias", cls: "dt-red" };
-    }
-  }
-  const baseISO = lead.atualizado_em || lead.criado_em || "";
+  const baseISO = lead.atualizado_em || lead.criado_em || lead.data_inicio || "";
   const days = daysSinceISO(baseISO);
-  if(days <= 2) return { text: days === 0 ? "hoje" : days + " dias", cls: "dt-neutral" };
-  if(days <= 5) return { text: days + " dias", cls: "dt-green" };
-  if(days <= 8) return { text: days + " dias", cls: "dt-orange" };
-  return { text: days + " dias", cls: "dt-red" };
+
+  if(days <= 3){
+    return {
+      text: days === 0 ? "hoje" : days + " dia" + (days > 1 ? "s" : ""),
+      cls: "dt-soft"
+    };
+  }
+
+  if(days <= 7){
+    return {
+      text: days + " dias",
+      cls: "dt-blue"
+    };
+  }
+
+  return {
+    text: days + " dias",
+    cls: "dt-red"
+  };
 }
 function nextContactInfo(lead){
   const iso = normalizeProximoContato(lead.proximo_contato);
@@ -1295,7 +1315,7 @@ async function upsertLead(payload, {silent=false} = {}){
     if(exists){
       const { id, ...payloadNoId } = payload;
       const updated = await sbFetch(`${TABLE}?id=eq.${encodeURIComponent(id)}`, {method:"PATCH", body: payloadNoId});
-      const u = Array.isArray(updated) ? updated[0] : payload;
+      const u = Array.isArray(updated) && updated[0] ? {...payload, ...updated[0]} : payload;
       const idx = ALL.findIndex(x=>x.id===payload.id);
       if(idx >= 0) ALL[idx] = {...u, etapa: normalizeEtapa(u.etapa), motivo_perda: normalizeMotivoPerda(u.motivo_perda), visita: normalizeVisita(u.visita), proximo_contato: normalizeProximoContato(u.proximo_contato)};
     }else{
@@ -1691,7 +1711,11 @@ form.addEventListener("submit", async (e)=>{
     atualizado_em: nowISO()
   };
   const ok = await upsertLead(payload);
-  if(ok) closeDialog();
+  if(ok){
+    originalSnapshot = currentFormSnapshot();
+    updateBadgesOnly();
+    closeDialog(true);
+  }
 });
 themeToggleBtn?.addEventListener('click', (e)=>{
   e.stopPropagation();
