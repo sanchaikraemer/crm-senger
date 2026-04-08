@@ -81,15 +81,44 @@
     box-shadow:0 6px 18px rgba(15,23,42,.06);
   }
 
-  .wrap{max-width:1600px;margin:0 auto;padding:4px 10px}
-  .top{display:flex;flex-direction:column;gap:6px;align-items:stretch}
-  .title{display:flex;flex-direction:column;gap:2px}
-  .titleRow{display:flex;align-items:center;gap:6px;flex-wrap:wrap;width:100%}
-  .title h1{font-size:15px;margin:0;color:#FFFFFF;font-weight:950}
+  .wrap{max-width:1600px;margin:0 auto;padding:6px 10px}
+  .top{display:flex;flex-direction:column;gap:10px;align-items:stretch}
+  .title{display:flex;flex-direction:column;gap:4px}
+  .titleRow{display:flex;align-items:center;gap:8px;width:100%;flex-wrap:nowrap}
+  .title h1{font-size:15px;margin:0;color:#FFFFFF;font-weight:950;letter-spacing:-.02em}
   body.light .title h1{color:#0F1F33}
   .subtitleInline{display:none}
 
-  .actions{display:flex;gap:6px;align-items:center;flex-wrap:wrap;width:100%}
+  .actions{display:flex;gap:8px;align-items:center;flex-wrap:nowrap;width:100%}
+  .actions > *{flex:0 0 auto}
+  .actions .btn,.actions select,.actions .input{min-height:42px}
+  .actions .btn{padding:9px 12px;font-size:14px}
+  .actions select{min-width:128px}
+  .actions .searchWrap{flex:1 1 320px;min-width:260px}
+  #clearFilters{min-width:94px}
+  .searchWrap .input{width:100%;min-width:0}
+  .filterToggle{display:none}
+  .filtersPanel{display:flex;gap:8px;align-items:center;flex-wrap:nowrap;min-width:0}
+  .moreWrap,.themeWrap{position:relative;display:inline-flex;align-items:center}
+  .moreMenu,.themeMenu{display:none;position:absolute;top:calc(100% + 8px);right:0;min-width:220px;padding:8px;background:#FFFFFF;border:1px solid #D6E0EA;border-radius:14px;box-shadow:0 14px 28px rgba(3,12,28,.18);z-index:40;gap:8px;flex-direction:column}
+  .moreWrap.open .moreMenu,.themeWrap.open .themeMenu{display:flex}
+  .moreMenu .btn,.themeMenu .btn{width:100%;justify-content:flex-start;font-size:12px;padding:9px 12px;min-height:38px}
+  body:not(.light) .moreMenu, body:not(.light) .themeMenu{background:#0F2949;border-color:rgba(255,255,255,.10)}
+  body:not(.light) .moreMenu .btn, body:not(.light) .themeMenu .btn{background:#173A63;color:#FFFFFF;border-color:rgba(255,255,255,.10)}
+  .themeSwatch{width:12px;height:12px;border-radius:999px;display:inline-block;flex:0 0 auto;border:1px solid rgba(0,0,0,.12)}
+  .spacer{display:none}
+  .hint{display:none}
+
+
+.titleRow > h1{flex:0 0 auto}
+.titleRow > .statusbar,.titleRow > .totalBox,.titleRow > .themeWrap,.titleRow > #new{flex:0 0 auto}
+.titleRow > .spacer{display:none!important}
+#new{min-width:220px;max-width:260px;padding:10px 22px;border-radius:18px;justify-content:center;flex:0 0 auto}
+#themeWrap{margin-left:auto}
+.actions > .searchWrap{flex:1 1 340px;min-width:260px;max-width:350px}
+#clearFilters{flex:0 0 auto}
+.filtersPanel{flex:0 1 auto}
+.filtersPanel select{flex:0 0 auto}
 
   .btn{
     border:1px solid rgba(255,255,255,.12);
@@ -116,7 +145,7 @@
   #new{background:linear-gradient(180deg,var(--gold-strong) 0%, var(--gold-2) 100%);color:#fff;border-color:var(--gold-strong-border)}
   body.light #new{background:linear-gradient(180deg,#D4AF37 0%, #C9A227 100%);border-color:#B8961F;color:#fff}
 
-  #toggleLost,#toggleStandby,#exportCsv,#importCsv{min-width:0}
+  #toggleLost,#toggleStandby,#exportCsv,#importCsv{min-width:0;font-size:12px;padding:8px 10px}
 
   .input,select,textarea{
     border:1px solid rgba(255,255,255,.12);
@@ -274,9 +303,21 @@
   .modalBody .input::placeholder,.modalBody textarea::placeholder{color:#7B8490}
   .modalBody select option{background:#FFFFFF;color:#16263A}
 
-  .modalFoot{padding:10px 14px;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;border-top:1px solid var(--line);background:#FFFFFF;position:sticky;bottom:0;z-index:2}
-  .modalFootActions{display:flex;justify-content:flex-end;gap:10px;flex-wrap:wrap}
-  #addObsEntry{min-width:200px}
+  .modalFoot{padding:10px 14px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:nowrap;border-top:1px solid var(--line);background:#FFFFFF;position:sticky;bottom:0;z-index:2}
+  .modalFootLeft{display:flex;align-items:center;gap:10px;min-width:0;flex:1}
+  .modalFootActions{display:flex;justify-content:flex-end;gap:10px;flex-wrap:nowrap;flex:0 0 auto}
+  #addObsEntry{min-width:200px;flex:0 0 auto}
+  .attachBar{display:flex;align-items:center;gap:10px;min-width:0;flex:1;padding:0;border:0;background:transparent}
+  .attachActions{display:flex;align-items:center;gap:8px;flex-wrap:nowrap;flex:0 0 auto}
+  #attachBtn{min-width:120px}
+  #attachInput{display:none}
+  .attachHint{font-size:11px;color:var(--muted);white-space:nowrap}
+  .attachList{display:flex;align-items:center;gap:6px;flex-wrap:wrap;min-height:24px;flex:1;min-width:0}
+  .attachChip{display:inline-flex;align-items:center;gap:6px;max-width:220px;padding:6px 10px;border-radius:999px;background:#EEF2F7;color:#334155;border:1px solid #D9E1EA;text-decoration:none;font-size:12px;font-weight:800;cursor:pointer}
+  .attachChip:hover{filter:brightness(.98)}
+  .attachChip .attachName{max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .attachCountMini{display:inline-flex;align-items:center;gap:5px;padding:4px 8px;border-radius:999px;background:#FFF8E1;color:#8A6A16;border:1px solid #E8D9A8;font-size:11px;font-weight:900;white-space:nowrap}
+  .cardAttach{display:inline-flex;align-items:center;gap:4px;padding:4px 8px;border-radius:999px;background:#FFF8E1;color:#8A6A16;border:1px solid #E8D9A8;font-size:11px;font-weight:900;line-height:1;flex:0 0 auto}
 
   .toast{position:fixed;left:50%;bottom:16px;transform:translateX(-50%);background:var(--teal);color:#fff;padding:10px 12px;border-radius:12px;font-size:12px;box-shadow:0 12px 34px rgba(14,42,71,.22);opacity:0;pointer-events:none;transition:.18s ease;z-index:50;border:1px solid transparent}
   .toast.show{opacity:1}
@@ -295,6 +336,112 @@
   .dot.warn{background:#C9A96A}
   .dot.bad{background:#D64545}
 
+  
+
+  /* ===== Temas adicionais ===== */
+  body.theme-dark-pro{
+    --text:#E5E7EB; --muted:#94A3B8; --line:#2A2F36; --teal:#111827; --teal-2:#1F2937;
+    background:linear-gradient(180deg,#050505 0%, #0A0A0A 100%);
+    font-family:Inter, "Segoe UI", Roboto, Arial, sans-serif;
+  }
+  body.theme-dark-pro header{background:linear-gradient(180deg,#090909 0%, #111111 100%);border-bottom:1px solid #222;box-shadow:0 10px 30px rgba(0,0,0,.45)}
+  body.theme-dark-pro .col{background:linear-gradient(180deg,#121212 0%, #171717 100%);border-color:#27272A;box-shadow:0 16px 34px rgba(0,0,0,.36)}
+  body.theme-dark-pro .colHead{border-bottom:1px solid #27272A;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,0))}
+  body.theme-dark-pro .colHead .name, body.theme-dark-pro .colHead .count{color:#F8FAFC}
+  body.theme-dark-pro .card.low-priority{background:linear-gradient(180deg,#24262B,#1A1C20);border-color:#30343A;box-shadow:0 8px 18px rgba(0,0,0,.26)}
+  body.theme-dark-pro .card.medium-priority{background:linear-gradient(180deg,#3A3328,#2B251D);border-color:#56472E}
+  body.theme-dark-pro .card.high-priority{background:linear-gradient(180deg,#6D5325,#4E3B18);border-color:#9A7A38}
+  body.theme-dark-pro .card.highest-priority{background:linear-gradient(180deg,#8F6B1E,#6E5016);border-color:#D4AF37}
+  body.theme-dark-pro .card.closed-priority{background:linear-gradient(180deg,#183327,#11261D);border-color:#2E7250}
+  body.theme-dark-pro .nm{color:#F9FAFB;font-size:14px;font-weight:900}
+  body.theme-dark-pro .leftGroup .emp, body.theme-dark-pro .standbyLine .empInline, body.theme-dark-pro .standbyLine .sep{color:#CBD5E1}
+  body.theme-dark-pro .prioText.baixa{color:#CBD5E1}.theme-dark-pro .prioText.media{color:#E9D6A5}.theme-dark-pro .prioText.alta,.theme-dark-pro .prioText.altissima{color:#F5D06F}.theme-dark-pro .prioText.fechado{color:#7EE0AB}
+  body.theme-dark-pro .pill, body.theme-dark-pro .totalBox{background:linear-gradient(180deg,#171717 0%, #101010 100%);border-color:#262626;color:#fff}
+  body.theme-dark-pro .totalBox .t{color:#A1A1AA}.theme-dark-pro .totalBox .n{color:#FAFAFA}
+  body.theme-dark-pro .btn{background:#151515;color:#F8FAFC;border-color:#2A2A2A;box-shadow:none}
+  body.theme-dark-pro .btn.primary{background:linear-gradient(180deg,#252525 0%, #111111 100%);border-color:#333}
+  body.theme-dark-pro #new{background:linear-gradient(180deg,#D4AF37 0%, #9A7A2F 100%);color:#111;border-color:#B7922C}
+  body.theme-dark-pro .input, body.theme-dark-pro select, body.theme-dark-pro textarea{background:#111318;color:#F3F4F6;border-color:#2A2F36}
+  body.theme-dark-pro .input::placeholder, body.theme-dark-pro textarea::placeholder{color:#7C8798}
+  body.theme-dark-pro .nc-neutral, body.theme-dark-pro .dt-neutral{background:#20242B;color:#E2E8F0;border-color:#323844}
+
+  body.theme-light-clean{--text:#172033; --muted:#6B7280; --line:#DCE3EC; background:linear-gradient(180deg,#F8FAFC 0%, #EEF2F7 100%); font-family:"Segoe UI", Tahoma, Arial, sans-serif;}
+  body.theme-light-clean header{background:#FFFFFF;border-bottom:1px solid #E5E7EB;box-shadow:0 8px 20px rgba(15,23,42,.05)}
+  body.theme-light-clean .title h1{color:#111827}
+  body.theme-light-clean .col{background:linear-gradient(180deg,#FFFFFF 0%, #F4F7FB 100%);border-color:#E3E8EF;box-shadow:0 12px 28px rgba(148,163,184,.14)}
+  body.theme-light-clean .colHead{border-bottom:1px solid #E7ECF2;background:#F8FAFC}
+  body.theme-light-clean .colHead .name{color:#111827}.theme-light-clean .colHead .count{background:#E8EEF5;color:#475569;border-color:#D7E1EB}
+  body.theme-light-clean .card{box-shadow:0 8px 18px rgba(15,23,42,.08)}
+  body.theme-light-clean .card.low-priority{background:linear-gradient(180deg,#FFFFFF,#F7FAFC);border-color:#DCE5EE}
+  body.theme-light-clean .card.medium-priority{background:linear-gradient(180deg,#F8F2E9,#EFE3D2);border-color:#E2D2BC}
+  body.theme-light-clean .card.high-priority{background:linear-gradient(180deg,#F5E6BF,#EDD28A);border-color:#D8B15E}
+  body.theme-light-clean .card.highest-priority{background:linear-gradient(180deg,#E8D17A,#D5B041);border-color:#C79B21}
+  body.theme-light-clean .card.closed-priority{background:linear-gradient(180deg,#DDF4E7,#BFE3CF);border-color:#8CC6A5}
+  body.theme-light-clean .nm{font-size:14px;font-weight:800;color:#0F172A}
+  body.theme-light-clean .btn{background:#FFFFFF;border-color:#D8E1EA;color:#162033}
+  body.theme-light-clean .btn.primary{background:linear-gradient(180deg,#1B3A61 0%, #0E2A47 100%);color:#fff;border-color:#12304F}
+  body.theme-light-clean #new{background:linear-gradient(180deg,#D6AF38 0%, #B88E1D 100%);border-color:#A87F16}
+  body.theme-light-clean .input, body.theme-light-clean select, body.theme-light-clean textarea{background:#FFFFFF;color:#0F172A;border-color:#D8E1EA;box-shadow:none}
+  body.theme-light-clean .pill, body.theme-light-clean .totalBox{background:#FFFFFF;border-color:#DEE7F0;color:#0F172A}
+  body.theme-light-clean .totalBox .t{color:#64748B}.theme-light-clean .totalBox .n{color:#0F172A}
+
+  body.theme-azul{--text:#10213A; --muted:#5D6B80; --line:#C7D3E0; background:linear-gradient(180deg,#EAF1F8 0%, #DCE6F2 100%); font-family:Arial, Helvetica, sans-serif;}
+  body.theme-azul header{background:linear-gradient(180deg,#173A63 0%, #0E2A47 100%);border-bottom:1px solid rgba(255,255,255,.08)}
+  body.theme-azul .title h1{color:#fff}
+  body.theme-azul .col{background:linear-gradient(180deg,#16385F 0%, #102A46 100%);border-color:#20466F;box-shadow:0 14px 30px rgba(9,25,44,.25)}
+  body.theme-azul .colHead{border-bottom:1px solid rgba(255,255,255,.10)}
+  body.theme-azul .colHead .name, body.theme-azul .colHead .count{color:#fff}
+  body.theme-azul .card.low-priority{background:linear-gradient(180deg,#FFFFFF,#F3F7FB);border-color:#D7E2ED}
+  body.theme-azul .card.medium-priority{background:linear-gradient(180deg,#F4EFE3,#E7DDC9);border-color:#D8CAB1}
+  body.theme-azul .card.high-priority{background:linear-gradient(180deg,#F0E1AE,#E1C874);border-color:#C6A85B}
+  body.theme-azul .card.highest-priority{background:linear-gradient(180deg,#E4C85A,#CDA133);border-color:#B78B23}
+  body.theme-azul .card.closed-priority{background:linear-gradient(180deg,#D7F0E1,#B5D8C2);border-color:#7CB292}
+  body.theme-azul .nm{font-size:14px;font-weight:900;color:#0E2947}
+  body.theme-azul .leftGroup .emp{color:#49627E}
+  body.theme-azul .btn{background:#183B63;color:#fff;border-color:#2A557E}
+  body.theme-azul .btn.primary{background:linear-gradient(180deg,#214C7D,#16385E)}
+  body.theme-azul #new{background:linear-gradient(180deg,#D5AE39,#B68C1E);color:#fff;border-color:#9F7920}
+  body.theme-azul .input, body.theme-azul select{background:#102C4B;color:#fff;border-color:#29527A}
+  body.theme-azul .input::placeholder{color:rgba(255,255,255,.7)}
+  body.theme-azul .pill, body.theme-azul .totalBox{background:linear-gradient(180deg,#16385F 0%, #0F2947 100%);border-color:#27486B;color:#fff}
+
+  body.theme-verde{--text:#13291F; --muted:#5D7168; --line:#CBD9D2; background:linear-gradient(180deg,#E8F0EB 0%, #DCE8E0 100%); font-family:Verdana, Geneva, Tahoma, sans-serif;}
+  body.theme-verde header{background:linear-gradient(180deg,#17382D 0%, #10271F 100%);border-bottom:1px solid rgba(255,255,255,.08)}
+  body.theme-verde .title h1{color:#fff}
+  body.theme-verde .col{background:linear-gradient(180deg,#18342A 0%, #12271F 100%);border-color:#2A4A3D;box-shadow:0 14px 30px rgba(8,24,18,.22)}
+  body.theme-verde .colHead .name, body.theme-verde .colHead .count{color:#fff}
+  body.theme-verde .card.low-priority{background:linear-gradient(180deg,#FFFFFF,#F4F8F6);border-color:#D4E0DA}
+  body.theme-verde .card.medium-priority{background:linear-gradient(180deg,#F3EEDD,#E3DABF);border-color:#D2C39B}
+  body.theme-verde .card.high-priority{background:linear-gradient(180deg,#E9D8A5,#D9BD6C);border-color:#BA9A4B}
+  body.theme-verde .card.highest-priority{background:linear-gradient(180deg,#DABE5E,#B6902B);border-color:#9A7620}
+  body.theme-verde .card.closed-priority{background:linear-gradient(180deg,#CFEADB,#A8D0BA);border-color:#7CAD93}
+  body.theme-verde .nm{font-size:14px;font-weight:800;color:#163126}
+  body.theme-verde .btn{background:#1B3B2E;color:#fff;border-color:#325746}
+  body.theme-verde .btn.primary{background:linear-gradient(180deg,#214736,#163126)}
+  body.theme-verde #new{background:linear-gradient(180deg,#C9A96A,#A67B39);border-color:#8F672F}
+  body.theme-verde .input, body.theme-verde select{background:#143226;color:#fff;border-color:#2E5546}
+  body.theme-verde .input::placeholder{color:rgba(255,255,255,.72)}
+  body.theme-verde .pill, body.theme-verde .totalBox{background:linear-gradient(180deg,#214537 0%, #163126 100%);border-color:#325443;color:#fff}
+
+  body.theme-gold{--text:#23170E; --muted:#7A6554; --line:#DCCFBE; background:linear-gradient(180deg,#19140E 0%, #0F0C09 100%); font-family:Georgia, "Times New Roman", serif;}
+  body.theme-gold header{background:linear-gradient(180deg,#15100B 0%, #0D0A07 100%);border-bottom:1px solid #3B3126}
+  body.theme-gold .title h1{color:#F8EBD0}
+  body.theme-gold .col{background:linear-gradient(180deg,#1C1611 0%, #13100C 100%);border-color:#413327;box-shadow:0 16px 34px rgba(0,0,0,.34)}
+  body.theme-gold .colHead .name{color:#F4E7CC}.theme-gold .colHead .count{background:#2E241A;color:#F7E8C8;border-color:#514233}
+  body.theme-gold .card.low-priority{background:linear-gradient(180deg,#F5EBDD,#E9DCC7);border-color:#D7C5A9}
+  body.theme-gold .card.medium-priority{background:linear-gradient(180deg,#EAD9B8,#D9C097);border-color:#BDA174}
+  body.theme-gold .card.high-priority{background:linear-gradient(180deg,#E4C86E,#D0AB41);border-color:#B88D25}
+  body.theme-gold .card.highest-priority{background:linear-gradient(180deg,#D8B145,#B8860B);border-color:#946B09}
+  body.theme-gold .card.closed-priority{background:linear-gradient(180deg,#D5E8D2,#B6D2B0);border-color:#7FA077}
+  body.theme-gold .nm{font-size:15px;font-weight:700;color:#1E150E}
+  body.theme-gold .btn{background:#1E1711;color:#F8EACB;border-color:#49382A}
+  body.theme-gold .btn.primary{background:linear-gradient(180deg,#302218,#19120D)}
+  body.theme-gold #new{background:linear-gradient(180deg,#D6AF38,#A87F16);color:#1A120A;border-color:#8F6B11}
+  body.theme-gold .input, body.theme-gold select{background:#17120D;color:#F8EACB;border-color:#46372B}
+  body.theme-gold .input::placeholder{color:#B89B74}
+  body.theme-gold .pill, body.theme-gold .totalBox{background:linear-gradient(180deg,#231912 0%, #16100B 100%);border-color:#473829;color:#F6E8CA}
+  body.theme-gold .totalBox .t{color:#CBB28E}.theme-gold .totalBox .n{color:#F7E9CD}
+
   @media(max-width:1280px){
     .board{grid-template-columns:repeat(3,minmax(0,1fr));}
     .searchWrap .input{width:200px;min-width:200px;}
@@ -302,34 +449,203 @@
 
   @media(max-width:1024px){
     .board{grid-template-columns:repeat(2,minmax(0,1fr));}
-    .actions{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));}
-    .searchWrap{grid-column:span 2;}
+    .actions{display:flex;flex-wrap:wrap;gap:8px;}
+    .searchWrap{flex:1 1 260px;min-width:220px;}
     .searchWrap .input{width:100%;min-width:0;}
   }
 
   @media(max-width:820px){
-    header{position:static}
+    header{
+      position:sticky;
+      top:0;
+      z-index:30;
+      backdrop-filter:blur(10px);
+    }
     .wrap{padding:8px 12px}
-    .titleRow{display:grid;grid-template-columns:1fr 1fr;gap:8px;align-items:center;width:100%}
-    .title h1{grid-column:1 / -1;font-size:16px;margin:0}
-    .statusbar,.totalBox{grid-column:1 / -1}
-    .totalBox{width:100%;justify-content:space-between;padding:8px 10px}
-    .actions{width:100%;display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:6px}
-    .searchWrap{grid-column:1 / -1;width:100%}
-    .searchWrap .input,#fEmp,#fOrig,#fResp,#fPri{width:100%;min-width:0}
-    .btn{padding:11px 12px;border-radius:14px;width:100%}
-    #new{grid-column:1 / -1;font-size:15px;padding:12px 14px}
+    .top{gap:10px}
+    .titleRow{
+      display:grid;
+      grid-template-columns:minmax(0,1fr) auto auto;
+      gap:8px;
+      align-items:center;
+      width:100%;
+    }
+    .title h1{
+      grid-column:1 / 2;
+      grid-row:1;
+      font-size:16px;
+      margin:0;
+      line-height:1.15;
+      min-width:0;
+    }
+    #themeToggle{
+      grid-column:3 / 4;
+      grid-row:1;
+      width:48px;
+      min-width:48px;
+      padding:10px;
+      justify-self:end;
+    }
+    .statusbar{
+      grid-column:2 / 3;
+      grid-row:1;
+      overflow:visible;
+      min-width:0;
+      justify-self:end;
+    }
+    .statusbar .pill{justify-content:center;padding:6px 10px;font-size:11px;line-height:1;min-height:auto}
+    .totalBox{
+      width:100%;
+      justify-content:space-between;
+      padding:7px 8px;
+      min-height:44px;
+      border-radius:12px;
+      gap:6px;
+    }
+    #totalBox{grid-column:1 / 2}
+    #lostBox{grid-column:2 / 3}
+    #allBox{grid-column:3 / 4}
+    .totalBox .t{font-size:8px}
+    .totalBox .n{font-size:15px}
+    .actions{
+      width:100%;
+      display:grid;
+      grid-template-columns:minmax(0,1fr) 66px 76px;
+      gap:6px;
+      margin-top:2px;
+      align-items:start;
+    }
+    .searchWrap{grid-column:1 / 2;width:100%;min-width:0;overflow:visible}
+    .filterToggle{display:inline-flex;grid-column:2 / 3;width:100%}
+    #clearFilters{grid-column:3 / 4;width:100%}
+    .filtersPanel{
+      grid-column:1 / -1;
+      display:none;
+      grid-template-columns:1fr;
+      gap:8px;
+    }
+    .filtersPanel.open{display:grid}
+    .themeWrap{position:static;width:100%}
+    .themeMenu{position:static;top:auto;right:auto;min-width:0;width:100%;margin-top:8px;padding:0;background:transparent;border:0;box-shadow:none}
+    .themeWrap.open .themeMenu{display:grid;gap:8px}
+    .themeMenu .btn{width:100%;justify-content:center}
+    .moreWrap{position:static;width:100%}
+    .moreToggle{width:100%}
+    .moreMenu{position:static;top:auto;right:auto;min-width:0;width:100%;margin-top:8px;padding:0;background:transparent;border:0;box-shadow:none}
+    .moreWrap.open .moreMenu{display:grid;gap:8px}
+    .moreMenu .btn{width:100%;justify-content:center}
+    .searchWrap .input,#fEmp,#fOrig,#fResp,#fPri,#themeToggle{width:100%;min-width:0}
+    .searchWrap .input{width:100%;min-width:0;padding-right:34px}
+    .btn{
+      padding:10px 8px;
+      border-radius:14px;
+      width:100%;
+      min-height:42px;
+      font-size:12px;
+    }
+    #new{
+      position:static;
+      grid-column:1 / -1;
+      width:100%;
+      font-size:15px;
+      padding:12px 14px;
+      border-radius:14px;
+      box-shadow:0 8px 18px rgba(3,12,28,.18);
+      order:99;
+    }
     #toggleLost,#toggleStandby,#exportCsv,#importCsv{min-width:0;width:100%}
-    main .wrap{padding-top:8px;height:auto;min-height:calc(100vh - 10px)}
-    .board{grid-template-columns:1fr;height:auto;min-height:calc(100vh - 10px)}
-    dialog{width:96vw;max-height:92vh}
-    .modal{height:92vh;max-height:92vh}
+    main .wrap{
+      padding-top:8px;
+      padding-bottom:12px;
+      height:auto;
+      min-height:calc(100vh - 10px);
+    }
+    .board{
+      grid-template-columns:1fr;
+      height:auto;
+      min-height:calc(100vh - 10px);
+      gap:10px;
+    }
+    .col{
+      min-height:220px;
+      border-radius:16px;
+    }
+    .colHead{
+      position:sticky;
+      top:0;
+      z-index:2;
+      padding:11px 12px 9px;
+    }
+    .dropzone{padding:10px;gap:8px}
+    .card{padding:11px 11px;border-radius:14px}
+    .nm{font-size:13px}
+    .sub-row{gap:6px;align-items:flex-start}
+    .leftGroup{gap:6px}
+    .waDot{width:30px;height:30px;min-width:30px}
+    dialog{width:96vw;max-height:94vh;border-radius:18px}
+    .modal{height:94vh;max-height:94vh}
+    .modalHead,.modalBody,.modalFoot{padding-left:12px;padding-right:12px}
+    .modalHead{
+      padding-top:12px;
+      padding-bottom:10px;
+    }
+    .modalBody{padding-top:10px;padding-bottom:10px}
     .leadGrid{grid-template-columns:1fr;grid-template-areas:none;gap:8px}
     .leadGrid .field{grid-area:auto !important}
-    textarea{min-height:220px}
-    .modalFoot{align-items:stretch}
-    .modalFootActions{width:100%}
+    textarea{min-height:220px;font-size:16px}
+    .modalFoot{
+      align-items:stretch;
+      gap:8px;
+      flex-wrap:wrap;
+      padding-bottom:calc(12px + env(safe-area-inset-bottom, 0px));
+    }
+    .modalFootLeft{width:100%;flex-wrap:wrap;gap:8px}
+    #addObsEntry{min-width:0;width:auto;flex:1 1 150px}
+    .attachBar{width:100%;gap:8px;flex-wrap:wrap}
+    .attachActions{width:100%;flex-wrap:wrap}
+    #attachBtn,#addObsEntry{flex:1 1 150px}
+    .attachHint{white-space:normal}
+    .attachList{width:100%}
+    .attachChip{max-width:100%}
+    .modalFootActions{
+      width:100%;
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:8px;
+    }
+    .modalFootActions .btn:last-child{grid-column:1 / -1}
   }
+
+  @media(max-width:560px){
+    .titleRow{grid-template-columns:minmax(0,1fr) auto auto}
+    .statusbar .pill{padding:5px 8px;font-size:10px}
+    .actions{grid-template-columns:minmax(0,1fr) 60px 72px}
+    #totalBox,#lostBox,#allBox{grid-column:auto}
+    .totalBox{min-height:42px;padding:6px 7px}
+    .totalBox .t{font-size:7px}
+    .totalBox .n{font-size:14px}
+    .modalFootActions{grid-template-columns:1fr}
+    .modalFootActions .btn:last-child{grid-column:auto}
+  }
+
+/* === topo compacto corrigido v3 === */
+header .wrap{max-width:100%;padding:8px 14px 10px}
+.top{display:grid;grid-template-columns:1fr;gap:10px;align-items:start}
+.title{display:block}.titleRow{display:flex;align-items:center;justify-content:flex-start;gap:10px;flex-wrap:wrap;width:100%}
+.titleRow>h1,.titleRow>.statusbar,.titleRow>.totalBox,.titleRow>.themeWrap,.titleRow>#new{flex:0 0 auto;margin:0}
+#themeWrap{margin-left:8px!important}
+.spacer,.subtitleInline{display:none!important}
+#new{min-width:170px!important;max-width:none!important;padding:10px 18px!important;border-radius:16px!important}
+.actions{display:flex;align-items:center;justify-content:flex-start;gap:8px;flex-wrap:wrap;width:100%}
+.actions>.searchWrap{flex:0 1 280px!important;min-width:260px!important;max-width:280px!important}
+#clearFilters{min-width:100px!important}
+.filtersPanel{display:flex;align-items:center;gap:8px;flex-wrap:wrap!important;flex:0 1 auto!important;min-width:0}
+.filtersPanel select{min-width:150px!important}
+.moreWrap{margin-left:0!important}
+.moreToggle,#moreToggle{min-width:92px!important}
+@media(min-width:1100px){.titleRow{flex-wrap:nowrap}.actions{flex-wrap:nowrap}.filtersPanel{flex-wrap:nowrap!important}.actions>.searchWrap{max-width:280px!important}}
+@media(max-width:820px){header .wrap{padding:8px 12px}.titleRow{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:8px}.titleRow>h1{grid-column:1/2}.statusbar{grid-column:2/3}.themeWrap{grid-column:3/4;justify-self:end}#new{grid-column:1/-1;width:100%;min-width:0!important}.actions{display:grid;grid-template-columns:minmax(0,1fr) 92px 100px;gap:8px}.actions>.searchWrap{grid-column:1/2;max-width:none!important;min-width:0!important}.filterToggle{display:inline-flex;grid-column:2/3}.clearFilters{grid-column:3/4}.filtersPanel{grid-column:1/-1;display:none!important;flex-wrap:wrap!important}.filtersPanel.open{display:flex!important}}
+
 </style>
 </head>
 <body>
@@ -362,7 +678,19 @@
             <span class="n">0</span>
           </div>
 
-          <button class="btn primary" id="toggleTheme" type="button">☀️ / 🌙</button>
+          <div class="spacer"></div>
+          <div class="themeWrap" id="themeWrap">
+            <button class="btn primary" id="themeToggle" type="button" aria-expanded="false">Tema ▾</button>
+            <div class="themeMenu" id="themeMenu">
+              <button class="btn" type="button" data-theme="original"><span class="themeSwatch" style="background:#12325D"></span>Original escuro</button>
+              <button class="btn" type="button" data-theme="light"><span class="themeSwatch" style="background:#FFFFFF"></span>Light original</button>
+              <button class="btn" type="button" data-theme="dark-pro"><span class="themeSwatch" style="background:#111111"></span>Dark Pro</button>
+              <button class="btn" type="button" data-theme="light-clean"><span class="themeSwatch" style="background:#F8FAFC"></span>Light Clean</button>
+              <button class="btn" type="button" data-theme="azul"><span class="themeSwatch" style="background:#173A63"></span>Azul Institucional</button>
+              <button class="btn" type="button" data-theme="verde"><span class="themeSwatch" style="background:#17382D"></span>Verde Executivo</button>
+              <button class="btn" type="button" data-theme="gold"><span class="themeSwatch" style="background:#B8860B"></span>Preto & Dourado</button>
+            </div>
+          </div>
           <button class="btn primary" id="new" type="button">+ Novo Lead</button>
         </div>
       </div>
@@ -373,19 +701,28 @@
           <button class="clearBtn" id="clearQ" type="button" aria-label="Limpar busca">×</button>
         </div>
 
-        <select id="fEmp"></select>
-        <select id="fOrig"></select>
-        <select id="fResp"></select>
-        <select id="fPri"></select>
+        <button class="btn primary filterToggle" id="toggleFilters" type="button" aria-expanded="false">Filtros</button>
+        <button class="btn" id="clearFilters" type="button">Limpar</button>
 
-        <button class="btn" id="toggleLost" type="button">Mostrar perdidos</button>
-        <button class="btn" id="toggleStandby" type="button">Mostrar Stand by</button>
-        <button class="btn" id="exportCsv" type="button">Exportar CSV</button>
-        <button class="btn" id="importCsv" type="button">Importar CSV</button>
+        <div class="filtersPanel" id="filtersPanel">
+          <select id="fEmp"></select>
+          <select id="fOrig"></select>
+          <select id="fResp"></select>
+          <select id="fPri"></select>
+          <div class="moreWrap" id="moreWrap">
+            <button class="btn" id="moreToggle" type="button" aria-expanded="false">Mais ▾</button>
+            <div class="moreMenu" id="moreMenu">
+              <button class="btn" id="toggleLost" type="button">Mostrar perdidos</button>
+              <button class="btn" id="toggleStandby" type="button">Mostrar Stand by</button>
+              <button class="btn" id="exportCsv" type="button">Exportar CSV</button>
+              <button class="btn" id="importCsv" type="button">Importar CSV</button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
-    <div class="hint">Obs: o campo observação agora é totalmente editável no meio do texto.</div>
+    
   </div>
 </header>
 
@@ -466,10 +803,21 @@
           <textarea class="input" name="observacao" placeholder="Notas rápidas..."></textarea>
         </div>
       </div>
+
     </div>
 
     <div class="modalFoot">
-      <button class="btn primary" id="addObsEntry" type="button">novo atendimento</button>
+      <div class="modalFootLeft">
+        <button class="btn primary" id="addObsEntry" type="button">novo atendimento</button>
+        <div class="attachBar">
+          <div class="attachActions">
+            <button class="btn" id="attachBtn" type="button">📎 Anexar</button>
+            <input id="attachInput" type="file" multiple accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.txt" />
+            <span class="attachHint" id="attachHint">Salve o lead para anexar arquivos.</span>
+          </div>
+          <div class="attachList" id="attachList"></div>
+        </div>
+      </div>
       <div class="modalFootActions">
         <button class="btn danger" id="deleteBtn" type="button" style="display:none;">Excluir</button>
         <button class="btn" type="button" id="cancelBtn">Cancelar</button>
@@ -485,6 +833,8 @@
 const SUPABASE_URL = "https://lnrbpiklzymblpyrobwx.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_KXVbF3c7RGFXVTtfYmrzzg_dMK04Q9q";
 const TABLE = "leads";
+const ATTACH_TABLE = "lead_attachments";
+const ATTACH_BUCKET = "lead-attachments";
 const SHOW_WA_ON_CARD = true;
 const ORDER_STEP = 1000;
 
@@ -590,10 +940,22 @@ const mainWrap = document.querySelector("#mainWrap");
 const headerEl = document.querySelector("header");
 const toggleLostBtn = document.querySelector("#toggleLost");
 const toggleStandbyBtn = document.querySelector("#toggleStandby");
+const toggleFiltersBtn = document.querySelector("#toggleFilters");
+const clearFiltersBtn = document.querySelector("#clearFilters");
+const filtersPanel = document.querySelector("#filtersPanel");
+const moreWrap = document.querySelector("#moreWrap");
+const moreToggleBtn = document.querySelector("#moreToggle");
+const moreMenu = document.querySelector("#moreMenu");
+const themeWrap = document.querySelector("#themeWrap");
+const themeToggleBtn = document.querySelector("#themeToggle");
+const themeMenu = document.querySelector("#themeMenu");
 const closeDlgBtn = document.querySelector("#closeDlg");
 const cancelBtn = document.querySelector("#cancelBtn");
-const toggleThemeBtn = document.querySelector("#toggleTheme");
 const addObsEntryBtn = document.querySelector("#addObsEntry");
+const attachBtn = document.querySelector("#attachBtn");
+const attachInput = document.querySelector("#attachInput");
+const attachHint = document.querySelector("#attachHint");
+const attachList = document.querySelector("#attachList");
 
 const F = {
   data_inicio: form.elements["data_inicio"],
@@ -616,6 +978,8 @@ let originalSnapshot = null;
 let SHOW_LOST = false;
 let SHOW_STANDBY = false;
 let isDragging = false;
+let ATTACHMENTS = [];
+let ATTACHMENTS_BY_LEAD = {};
 
 function pad2(n){ return String(n).padStart(2, "0"); }
 function obsDateTimePrefix(date = new Date()){
@@ -635,6 +999,14 @@ function getLastNonEmptyObsLine(text){
 }
 function isObsHeaderOnlyLine(line){
   return /^\d{2}\/\d{2}\/\d{4} \d{2}:\d{2} -\s*$/.test(String(line || ""));
+}
+function appendObservationEntryText(currentText, message, date = new Date()){
+  const current = String(currentText || '').replace(/\r/g, '');
+  const trimmedRight = current.replace(/[ \t]+$/gm, '').replace(/\n+$/g, '');
+  const line = `${obsDateTimePrefix(date)}${message}`;
+  if(!trimmedRight) return line;
+  if(isObsHeaderOnlyLine(getLastNonEmptyObsLine(trimmedRight))) return `${trimmedRight}${message}`;
+  return `${trimmedRight}\n\n${line}`;
 }
 function setStatus(type, msg){
   const dotClass = type === "ok" ? "ok" : type === "bad" ? "bad" : "warn";
@@ -667,6 +1039,34 @@ function daysSinceISO(iso){
   const base = dayStartLocal(d);
   const diff = Math.floor((today - base) / (24*60*60*1000));
   return diff < 0 ? 0 : diff;
+}
+function toPublicAttachmentUrl(filePath){
+  return `${SUPABASE_URL}/storage/v1/object/public/${ATTACH_BUCKET}/${filePath}`;
+}
+function fileKindIcon(fileName='', fileType=''){
+  const name = String(fileName || '').toLowerCase();
+  const type = String(fileType || '').toLowerCase();
+  if(type.includes('pdf') || name.endsWith('.pdf')) return '📄';
+  if(type.includes('image') || /\.(png|jpe?g|webp|gif|bmp|svg)$/i.test(name)) return '🖼️';
+  if(/\.(doc|docx|txt|rtf)$/i.test(name)) return '📝';
+  if(/\.(xls|xlsx|csv)$/i.test(name)) return '📊';
+  return '📎';
+}
+function refreshAttachmentMap(){
+  ATTACHMENTS_BY_LEAD = ATTACHMENTS.reduce((acc, item)=>{
+    const key = item.lead_id;
+    if(!key) return acc;
+    (acc[key] ||= []).push(item);
+    return acc;
+  }, {});
+}
+function attachmentCount(leadId){
+  return (ATTACHMENTS_BY_LEAD[leadId] || []).length;
+}
+function attachmentMiniHTML(leadId){
+  const count = attachmentCount(leadId);
+  if(!count) return '';
+  return `<span class="cardAttach">📎 ${count}</span>`;
 }
 function badgeInfo(lead){
   const nextISO = normalizeProximoContato(lead.proximo_contato);
@@ -746,19 +1146,19 @@ function cardHTML(l){
   const nc = nextContactInfo(l);
   const ncHTML = nc ? `<div class="nc ${escapeHtml(nc.cls)}">${escapeHtml(nc.text)}</div>` : "";
   const visitaNorm = normalizeVisita(l.visita);
-  const visitaHTML = visitaNorm !== "Não" ? `<div class="visitChip">${escapeHtml(visitaNorm)}</div>` : "";
+    const attachHTML = attachmentMiniHTML(l.id);
 
   if(isStandBy){
-    return `<div class="card ${priorityClass}" draggable="true" data-id="${escapeHtml(l.id)}"><div class="row1"><div class="standbyLine"><div class="nm">${escapeHtml(l.nome || "")}</div><div class="sep">—</div><div class="empInline">${escapeHtml(emp)}</div></div>${prioLabel}</div><div class="sub-row"><div class="leftGroup">${ncHTML}${visitaHTML}</div>${waHTML}</div></div>`;
+    return `<div class="card ${priorityClass}" draggable="true" data-id="${escapeHtml(l.id)}"><div class="row1"><div class="standbyLine"><div class="nm">${escapeHtml(l.nome || "")}</div><div class="sep">—</div><div class="empInline">${escapeHtml(emp)}</div></div>${prioLabel}</div><div class="sub-row"><div class="leftGroup">${ncHTML}${attachHTML}</div>${waHTML}</div></div>`;
   }
 
   if(isPerdido){
     const motivo = l.motivo_perda ? `<div style="margin-top:6px;font-size:12px;color:var(--muted);">Motivo: <b style="color:var(--text)">${escapeHtml(l.motivo_perda)}</b></div>` : "";
-    return `<div class="card ${priorityClass}" draggable="true" data-id="${escapeHtml(l.id)}"><div class="row1"><div class="nm">${escapeHtml(l.nome || "")}</div>${prioLabel}</div><div class="sub-row"><div class="leftGroup"><div class="emp">${escapeHtml(emp)}</div>${ncHTML}${visitaHTML}${waHTML}</div></div>${motivo}</div>`;
+    return `<div class="card ${priorityClass}" draggable="true" data-id="${escapeHtml(l.id)}"><div class="row1"><div class="nm">${escapeHtml(l.nome || "")}</div>${prioLabel}</div><div class="sub-row"><div class="leftGroup"><div class="emp">${escapeHtml(emp)}</div>${ncHTML}${attachHTML}${waHTML}</div></div>${motivo}</div>`;
   }
 
   const b = badgeInfo(l);
-  return `<div class="card ${priorityClass}" draggable="true" data-id="${escapeHtml(l.id)}"><div class="row1"><div class="nm">${escapeHtml(l.nome || "")}</div>${prioLabel}</div><div class="sub-row"><div class="leftGroup"><div class="emp">${escapeHtml(emp)}</div>${ncHTML}${visitaHTML}</div>${waHTML}<div class="dt ${escapeHtml(b.cls)}">${escapeHtml(b.text)}</div></div></div>`;
+  return `<div class="card ${priorityClass}" draggable="true" data-id="${escapeHtml(l.id)}"><div class="row1"><div class="nm">${escapeHtml(l.nome || "")}</div>${prioLabel}</div><div class="sub-row"><div class="leftGroup"><div class="emp">${escapeHtml(emp)}</div>${ncHTML}${attachHTML}</div>${waHTML}<div class="dt ${escapeHtml(b.cls)}">${escapeHtml(b.text)}</div></div></div>`;
 }
 
 function defaults(){
@@ -792,11 +1192,84 @@ async function sbFetch(path, {method="GET", body=null, prefer="return=representa
   if(res.status === 204) return null;
   return await res.json();
 }
-async function load(){
+async function listAttachments(){
+  try{
+    const data = await sbFetch(`${ATTACH_TABLE}?select=id,lead_id,file_name,file_path,file_type,created_at&order=created_at.desc`);
+    ATTACHMENTS = (Array.isArray(data) ? data : []).map(item => ({...item, public_url: toPublicAttachmentUrl(item.file_path)}));
+  }catch(e){
+    ATTACHMENTS = [];
+    console.warn('Tabela de anexos indisponível:', e);
+  }
+  refreshAttachmentMap();
+}
+function renderAttachmentList(leadId){
+  if(!attachList) return;
+  if(!leadId){
+    attachList.innerHTML = '';
+    return;
+  }
+  const items = (ATTACHMENTS_BY_LEAD[leadId] || []).slice().sort((a,b)=> String(b.created_at || '').localeCompare(String(a.created_at || '')));
+  if(!items.length){
+    attachList.innerHTML = `<span class="attachHint">Sem anexos neste lead.</span>`;
+    return;
+  }
+  attachList.innerHTML = items.map(item => `<a class="attachChip" href="${escapeHtml(item.public_url)}" target="_blank" rel="noopener" title="${escapeHtml(item.file_name || 'Arquivo')}"><span>${fileKindIcon(item.file_name, item.file_type)}</span><span class="attachName">${escapeHtml(item.file_name || 'Arquivo')}</span></a>`).join('');
+}
+function syncAttachControls(){
+  const leadId = editingId || null;
+  const canAttach = !!leadId;
+  if(attachBtn) attachBtn.disabled = !canAttach;
+  if(attachHint){
+    const count = leadId ? attachmentCount(leadId) : 0;
+    attachHint.textContent = leadId ? (count ? `Este lead possui ${count} anexo(s).` : 'Nenhum anexo neste lead ainda.') : 'Salve o lead para anexar arquivos.';
+  }
+  renderAttachmentList(leadId);
+}
+async function uploadLeadFiles(leadId, files){
+  if(!leadId) throw new Error('Salve o lead antes de anexar arquivos.');
+  const uploaded = [];
+  for(const file of files){
+    const safeName = String(file.name || 'arquivo').replace(/[^a-zA-Z0-9._-]+/g, '_');
+    const filePath = `${leadId}/${Date.now()}_${Math.random().toString(36).slice(2,8)}_${safeName}`;
+    const uploadUrl = `${SUPABASE_URL}/storage/v1/object/${ATTACH_BUCKET}/${filePath}`;
+    const headers = {
+      'apikey': SUPABASE_ANON_KEY,
+      'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+      'x-upsert': 'false',
+      'Content-Type': file.type || 'application/octet-stream'
+    };
+    const uploadRes = await fetch(uploadUrl, { method:'POST', headers, body:file });
+    if(!uploadRes.ok){
+      const detail = await uploadRes.text().catch(()=> '');
+      throw new Error(`Falha ao enviar ${file.name}: ${detail || uploadRes.statusText}`);
+    }
+    const metaPayload = { lead_id: leadId, file_name: file.name, file_path: filePath, file_type: file.type || '' };
+    const inserted = await sbFetch(ATTACH_TABLE, { method:'POST', body:metaPayload });
+    const row = Array.isArray(inserted) ? inserted[0] : metaPayload;
+    uploaded.push({ ...row, public_url: toPublicAttachmentUrl(filePath) });
+  }
+  const lead = ALL.find(x => x.id === leadId);
+  if(lead){
+    const count = uploaded.length;
+    const obsMessage = count === 1 ? '(1 documento anexado)' : `(${count} documentos anexados)`;
+    const updatedObs = appendObservationEntryText(lead.observacao || '', obsMessage);
+    const updatedAt = nowISO();
+    await upsertLead({ ...lead, observacao: updatedObs, atualizado_em: updatedAt }, { silent:true });
+    if(editingId === leadId){
+      F.observacao.value = updatedObs;
+      originalSnapshot = currentFormSnapshot();
+    }
+  }
+  ATTACHMENTS = [...uploaded, ...ATTACHMENTS];
+  refreshAttachmentMap();
+  render();
+  syncAttachControls();
+}async function load(){
   try{
     setStatus("warn","Conectando…");
     const data = await sbFetch(`${TABLE}?select=*`);
     ALL = (Array.isArray(data) ? data : []).map(l => ({...l, etapa: normalizeEtapa(l.etapa), motivo_perda: normalizeMotivoPerda(l.motivo_perda), visita: normalizeVisita(l.visita), ordem: Number(l.ordem) || Date.now(), proximo_contato: normalizeProximoContato(l.proximo_contato)}));
+    await listAttachments();
     setStatus("ok","Online • Sincronizado");
     render();
   }catch(e){
@@ -878,7 +1351,20 @@ function toggleMotivo(){
   F.motivo_perda.required = isPerdido;
   if(!isPerdido) F.motivo_perda.value = "";
 }
-function closeDialog(){ dlg.close(); editingId = null; originalSnapshot = null; }
+function hasUnsavedChanges(){
+  return !!(dlg.open && originalSnapshot !== null && currentFormSnapshot() !== originalSnapshot);
+}
+function confirmDiscardChanges(){
+  if(!hasUnsavedChanges()) return true;
+  return confirm("Há alterações não salvas. Deseja fechar mesmo assim?");
+}
+function closeDialog(force=false){
+  if(!force && !confirmDiscardChanges()) return false;
+  dlg.close();
+  editingId = null;
+  originalSnapshot = null;
+  return true;
+}
 function openNew(){
   editingId = null; originalSnapshot = null; deleteBtn.style.display = "none"; dlgTitle.textContent = "Novo Lead";
   fillFormSelect("prioridade", LISTS.prioridade);
@@ -890,7 +1376,9 @@ function openNew(){
   fillFormSelect("motivo_perda", LISTS.motivo_perda);
   const d = defaults();
   F.data_inicio.value = d.data_inicio; F.proximo_contato.value = ""; F.nome.value = ""; F.telefone.value = ""; F.empreendimento.value = d.empreendimento; F.etapa.value = d.etapa; F.prioridade.value = d.prioridade; F.origem.value = d.origem; F.responsavel.value = d.responsavel; F.visita.value = d.visita; F.motivo_perda.value = ""; F.observacao.value = "";
-  toggleMotivo(); dlg.showModal();
+  toggleMotivo();
+  originalSnapshot = currentFormSnapshot();
+  dlg.showModal();
 }
 function openEdit(id, forcePerdido=false){
   const lead = ALL.find(x=>x.id===id); if(!lead) return;
@@ -917,6 +1405,7 @@ function openEdit(id, forcePerdido=false){
   toggleMotivo();
   originalSnapshot = snapshotLead({...lead, etapa: forcePerdido ? "PERDIDO" : normalizeEtapa(lead.etapa || "NOVO / INICIAL")});
   dlg.showModal();
+  syncAttachControls();
 }
 function wireDnD(){
   document.querySelectorAll(".card").forEach(card=>{
@@ -936,21 +1425,48 @@ function wireDnD(){
       if(!lead) return;
       const newEtapa = normalizeEtapa(zone.dataset.drop);
       if(newEtapa === normalizeEtapa(lead.etapa)) return;
+      if(newEtapa === "PERDIDO"){
+        openEdit(lead.id, true);
+        return;
+      }
       await upsertLead({...lead, etapa:newEtapa, ordem:orderForTop(newEtapa, lead.id)});
     });
   });
 }
+function activitySortKey(lead){
+  const next = normalizeProximoContato(lead.proximo_contato);
+  if(next){
+    const today = dayStartLocal(new Date());
+    const due = dayStartLocal(parseISODateLocal(next));
+    const diff = Math.floor((due - today) / (24*60*60*1000));
+    if(diff < 0) return { bucket:0, metric: diff };
+    if(diff === 0) return { bucket:1, metric: 0 };
+    return { bucket:2, metric: diff };
+  }
+  const base = parseISODateLocal(lead.atualizado_em || lead.criado_em || lead.data_inicio);
+  const baseTime = base ? base.getTime() : Number.MAX_SAFE_INTEGER;
+  return { bucket:3, metric: baseTime };
+}
 function sortByEtapaPriorityDate(leads, etapa){
   const e = normalizeEtapa(etapa);
+  const activeEtapas = new Set(["NOVO / INICIAL","ATENDIMENTO","VISITA / PROPOSTA","NEGOCIAÇÃO"]);
   return leads.filter(l=>normalizeEtapa(l.etapa) === e).sort((a,b)=>{
-    if(e === "STAND BY"){
-      const ea = (a.empreendimento || "").localeCompare(b.empreendimento || "");
-      if(ea !== 0) return ea;
+    if(activeEtapas.has(e)){
+      const ka = activitySortKey(a);
+      const kb = activitySortKey(b);
+      if(ka.bucket !== kb.bucket) return ka.bucket - kb.bucket;
+      if(ka.bucket === 0 && ka.metric !== kb.metric) return ka.metric - kb.metric;
+      if(ka.bucket === 2 && ka.metric !== kb.metric) return ka.metric - kb.metric;
+      if(ka.bucket === 3 && ka.metric !== kb.metric) return ka.metric - kb.metric;
+      const pb = priorityRank(b.prioridade);
+      const pa = priorityRank(a.prioridade);
+      if(pb !== pa) return pb - pa;
+      return Number(a.ordem || 0) - Number(b.ordem || 0);
     }
-    const pa = priorityRank(a.prioridade);
-    const pb = priorityRank(b.prioridade);
-    if(pb !== pa) return pb - pa;
-    return Number(a.ordem || 0) - Number(b.ordem || 0);
+    const da = new Date(a.atualizado_em || a.criado_em || a.data_inicio || 0).getTime();
+    const db = new Date(b.atualizado_em || b.criado_em || b.data_inicio || 0).getTime();
+    if(db !== da) return db - da;
+    return Number(b.ordem || 0) - Number(a.ordem || 0);
   });
 }
 function render(){
@@ -1007,14 +1523,71 @@ async function importCSV(text){
   }
   alert("Formato de CSV não reconhecido.");
 }
+function setFiltersOpen(open){
+  if(!toggleFiltersBtn || !filtersPanel) return;
+  const shouldOpen = !!open;
+  filtersPanel.classList.toggle("open", shouldOpen);
+  toggleFiltersBtn.setAttribute("aria-expanded", shouldOpen ? "true" : "false");
+  toggleFiltersBtn.textContent = shouldOpen ? "Ocultar filtros" : "Filtros";
+}
+function setMoreOpen(open){
+  if(!moreWrap || !moreToggleBtn) return;
+  const shouldOpen = !!open;
+  moreWrap.classList.toggle('open', shouldOpen);
+  moreToggleBtn.setAttribute('aria-expanded', shouldOpen ? 'true' : 'false');
+  moreToggleBtn.textContent = shouldOpen ? 'Mais ▴' : 'Mais ▾';
+}
+function syncFiltersForViewport(){
+  const isMobile = window.matchMedia("(max-width: 820px)").matches;
+  if(!toggleFiltersBtn || !filtersPanel) return;
+  if(isMobile){
+    setFiltersOpen(false);
+  }else{
+    filtersPanel.classList.remove("open");
+    toggleFiltersBtn.setAttribute("aria-expanded", "false");
+    toggleFiltersBtn.textContent = "Filtros";
+  }
+  setMoreOpen(false);
+  setThemeOpen(false);
+}
+
 function adjustMainHeight(){
   const isMobile = window.matchMedia("(max-width:820px)").matches;
   if(isMobile){ mainWrap.style.height = "auto"; return; }
   const h = headerEl.offsetHeight || 96;
   mainWrap.style.height = `calc(100vh - ${h}px)`;
 }
+function clearAllFilters(){
+  q.value = "";
+  fEmp.value = "";
+  fOrig.value = "";
+  fResp.value = "";
+  fPri.value = "";
+  syncClearButton();
+  render();
+}
 function syncClearButton(){ if((q.value || "").trim().length) clearQ.classList.add("show"); else clearQ.classList.remove("show"); }
-function applyTheme(theme){ if(theme === "light") document.body.classList.add("light"); else document.body.classList.remove("light"); localStorage.setItem("crm_theme", theme); }
+const THEME_LABELS = { original:'Original escuro', light:'Light original', 'dark-pro':'Dark Pro', 'light-clean':'Light Clean', azul:'Azul Institucional', verde:'Verde Executivo', gold:'Preto & Dourado' };
+const ALL_THEME_CLASSES = ['light','theme-dark-pro','theme-light-clean','theme-azul','theme-verde','theme-gold'];
+function setThemeOpen(open){
+  if(!themeWrap || !themeToggleBtn) return;
+  const shouldOpen = !!open;
+  themeWrap.classList.toggle('open', shouldOpen);
+  themeToggleBtn.setAttribute('aria-expanded', shouldOpen ? 'true' : 'false');
+}
+function applyTheme(theme){
+  const next = THEME_LABELS[theme] ? theme : 'original';
+  document.body.classList.remove(...ALL_THEME_CLASSES);
+  if(next === 'light') document.body.classList.add('light');
+  else if(next === 'dark-pro') document.body.classList.add('theme-dark-pro');
+  else if(next === 'light-clean') document.body.classList.add('theme-light-clean');
+  else if(next === 'azul') document.body.classList.add('theme-azul');
+  else if(next === 'verde') document.body.classList.add('theme-verde');
+  else if(next === 'gold') document.body.classList.add('theme-gold');
+  if(themeToggleBtn) themeToggleBtn.textContent = `${THEME_LABELS[next]} ▾`;
+  localStorage.setItem('crm_theme', next);
+}
+
 
 fillSelect(fEmp, LISTS.empreendimento, "Empreendimento");
 fillSelect(fOrig, LISTS.origem, "Origem");
@@ -1026,13 +1599,27 @@ clearQ.addEventListener("click", ()=>{ q.value = ""; syncClearButton(); q.focus(
 syncClearButton();
 [fEmp,fOrig,fResp,fPri].forEach(el=>{ el.addEventListener("input", render); el.addEventListener("change", render); });
 document.querySelector("#new").addEventListener("click", openNew);
-closeDlgBtn.addEventListener("click", closeDialog);
-cancelBtn.addEventListener("click", closeDialog);
-toggleLostBtn.addEventListener("click", ()=>{ SHOW_LOST = !SHOW_LOST; render(); });
-toggleStandbyBtn.addEventListener("click", ()=>{ SHOW_STANDBY = !SHOW_STANDBY; render(); });
-lostBox.addEventListener("click", ()=>{ SHOW_LOST = true; render(); });
-document.querySelector("#exportCsv").addEventListener("click", ()=>{ download(`crm-leads-senger-${todayISO()}.csv`, toCSV(filtered())); });
-document.querySelector("#importCsv").addEventListener("click", ()=>{ fileInput.value = ""; fileInput.click(); });
+closeDlgBtn.addEventListener("click", ()=> closeDialog());
+cancelBtn.addEventListener("click", ()=> closeDialog());
+dlg.addEventListener("cancel", (e)=>{ e.preventDefault(); closeDialog(); });
+toggleLostBtn.addEventListener("click", ()=>{ SHOW_LOST = !SHOW_LOST; setMoreOpen(false); render(); });
+toggleStandbyBtn.addEventListener("click", ()=>{ SHOW_STANDBY = !SHOW_STANDBY; setMoreOpen(false); render(); });
+toggleFiltersBtn?.addEventListener("click", ()=>{
+  const open = !filtersPanel.classList.contains("open");
+  setFiltersOpen(open);
+});
+clearFiltersBtn?.addEventListener("click", clearAllFilters);
+moreToggleBtn?.addEventListener("click", (e)=>{
+  e.stopPropagation();
+  setMoreOpen(!(moreWrap?.classList.contains('open')));
+});
+document.addEventListener('click', (e)=>{
+  if(moreWrap && !moreWrap.contains(e.target)) setMoreOpen(false);
+  if(themeWrap && !themeWrap.contains(e.target)) setThemeOpen(false);
+});
+lostBox.addEventListener("click", ()=>{ SHOW_LOST = !SHOW_LOST; render(); });
+document.querySelector("#exportCsv").addEventListener("click", ()=>{ setMoreOpen(false); download(`crm-leads-senger-${todayISO()}.csv`, toCSV(filtered())); });
+document.querySelector("#importCsv").addEventListener("click", ()=>{ setMoreOpen(false); fileInput.value = ""; fileInput.click(); });
 fileInput.addEventListener("change", async ()=>{ const f = fileInput.files?.[0]; if(!f) return; const text = await f.text(); await importCSV(text); });
 deleteBtn.addEventListener("click", async ()=>{ if(editingId) await deleteLead(editingId); closeDialog(); });
 F.etapa.addEventListener("change", toggleMotivo);
@@ -1048,6 +1635,35 @@ addObsEntryBtn.addEventListener("click", ()=>{
   requestAnimationFrame(() => { const end = ta.value.length; ta.setSelectionRange(end, end); });
 });
 F.observacao.addEventListener("keydown", (e)=>{ if((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "j"){ e.preventDefault(); addObsEntryBtn.click(); } });
+attachBtn?.addEventListener("click", ()=>{
+  if(!editingId){
+    alert("Salve o lead antes de anexar arquivos.");
+    return;
+  }
+  if(hasUnsavedChanges()){
+    alert("Salve as alterações do lead antes de anexar arquivos.");
+    return;
+  }
+  attachInput.value = "";
+  attachInput.click();
+});
+attachInput?.addEventListener("change", async ()=>{
+  const files = Array.from(attachInput.files || []);
+  if(!files.length) return;
+  try{
+    attachBtn.disabled = true;
+    attachHint.textContent = 'Enviando anexos...';
+    await uploadLeadFiles(editingId, files);
+    showToast(files.length === 1 ? 'Anexo enviado.' : 'Anexos enviados.');
+  }catch(err){
+    console.error(err);
+    alert(`Não consegui enviar os anexos. Confira o bucket ${ATTACH_BUCKET} e a tabela ${ATTACH_TABLE} no Supabase.`);
+    syncAttachControls();
+  }finally{
+    attachBtn.disabled = false;
+    attachInput.value = '';
+  }
+});
 form.addEventListener("submit", async (e)=>{
   e.preventDefault();
   const nome = F.nome.value.trim();
@@ -1077,7 +1693,16 @@ form.addEventListener("submit", async (e)=>{
   const ok = await upsertLead(payload);
   if(ok) closeDialog();
 });
-toggleThemeBtn.addEventListener("click", ()=>{ applyTheme(document.body.classList.contains("light") ? "dark" : "light"); });
+themeToggleBtn?.addEventListener('click', (e)=>{
+  e.stopPropagation();
+  setThemeOpen(!(themeWrap?.classList.contains('open')));
+});
+themeMenu?.addEventListener('click', (e)=>{
+  const btn = e.target.closest('[data-theme]');
+  if(!btn) return;
+  applyTheme(btn.dataset.theme);
+  setThemeOpen(false);
+});
 function updateBadgesOnly(){
   document.querySelectorAll(".card").forEach(card=>{
     const id = card.dataset.id;
@@ -1096,9 +1721,11 @@ function updateBadgesOnly(){
   });
 }
 setInterval(updateBadgesOnly, 60 * 1000);
+syncFiltersForViewport();
 adjustMainHeight();
-window.addEventListener("resize", adjustMainHeight);
-applyTheme(localStorage.getItem("crm_theme") || "dark");
+window.addEventListener("resize", ()=>{ adjustMainHeight(); syncFiltersForViewport(); });
+window.addEventListener("orientationchange", ()=>{ adjustMainHeight(); syncFiltersForViewport(); });
+applyTheme(localStorage.getItem('crm_theme') || 'original');
 load();
 </script>
 </body>
