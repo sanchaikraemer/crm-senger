@@ -1058,6 +1058,261 @@ body:not(.light):not(.theme-dark-pro):not(.theme-light-clean):not(.theme-azul) h
   backdrop-filter:none;
 }
 
+
+
+/* ===== IMOBILIÁRIO PREMIUM / ALTO PADRÃO ===== */
+body{
+  font-family:Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+}
+.title h1{
+  font-size:17px;
+  font-weight:850;
+  letter-spacing:-.02em;
+}
+header .wrap{
+  max-width:1680px;
+  padding:10px 16px 12px;
+}
+.actions{gap:10px}
+.btn{
+  transition:transform .16s ease, box-shadow .16s ease, filter .16s ease, border-color .16s ease, background .16s ease;
+}
+.btn:hover{transform:translateY(-1px)}
+.totalBox,.pill{
+  backdrop-filter:blur(10px);
+}
+.col{
+  border-radius:22px;
+}
+.colHead .name{
+  font-size:12px;
+  letter-spacing:.04em;
+}
+.card{
+  border-radius:18px;
+  padding:15px 14px;
+  box-shadow:0 8px 20px rgba(10,26,49,.10);
+}
+.card:hover{transform:translateY(-2px)}
+.card.low-priority::before,
+.card.medium-priority::before,
+.card.high-priority::before,
+.card.highest-priority::before,
+.card.closed-priority::before{
+  width:5px !important;
+}
+.nm{
+  font-size:14px;
+  font-weight:750 !important;
+  line-height:1.22;
+}
+.leftGroup .emp,
+.standbyLine .empInline{
+  font-size:12px;
+  font-weight:600;
+}
+.prioText{font-size:11px}
+.waDot{
+  width:30px;
+  height:30px;
+  min-width:30px;
+}
+
+body.theme-azul{
+  --text:#10213A;
+  --muted:#627085;
+  --line:#26496D;
+  background:
+    radial-gradient(circle at 18% 10%, rgba(214,175,56,.12), transparent 26%),
+    radial-gradient(circle at 82% 82%, rgba(255,186,120,.18), transparent 24%),
+    linear-gradient(180deg,#071429 0%, #0B1F3B 55%, #122744 100%);
+  font-family:Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+}
+body.theme-azul header{
+  background:linear-gradient(180deg,rgba(5,18,38,.94) 0%, rgba(9,28,53,.96) 100%);
+  border-bottom:1px solid rgba(207,168,72,.16);
+  box-shadow:0 10px 30px rgba(2,10,24,.32);
+  backdrop-filter:blur(10px);
+}
+body.theme-azul .title h1{
+  color:#F5F7FB;
+  font-weight:800;
+  letter-spacing:-.03em;
+}
+body.theme-azul #themeToggle,
+body.theme-azul .btn.primary{
+  background:linear-gradient(180deg,#153657 0%, #0E2945 100%);
+  border-color:rgba(255,255,255,.10);
+  color:#F5F7FB;
+}
+body.theme-azul #new{
+  background:linear-gradient(180deg,#D8B24B 0%, #B88B22 100%);
+  border-color:#9B741B;
+  color:#FFFDF7;
+  box-shadow:0 10px 26px rgba(184,139,34,.22);
+}
+body.theme-azul .themeMenu,
+body.theme-azul .moreMenu{
+  background:rgba(9,28,53,.98);
+  border:1px solid rgba(255,255,255,.10);
+  box-shadow:0 14px 32px rgba(2,10,24,.34);
+}
+body.theme-azul .themeMenu .btn,
+body.theme-azul .moreMenu .btn{
+  background:#102C4B;
+  color:#F5F7FB;
+  border-color:rgba(255,255,255,.08);
+}
+body.theme-azul .pill,
+body.theme-azul .totalBox{
+  background:linear-gradient(180deg,rgba(19,53,88,.88) 0%, rgba(13,37,64,.94) 100%);
+  border:1px solid rgba(255,255,255,.09);
+  color:#F5F7FB;
+  box-shadow:0 8px 18px rgba(3,12,28,.14);
+}
+body.theme-azul .totalBox .t{color:rgba(245,247,251,.72)}
+body.theme-azul .totalBox .n{color:#FFFFFF}
+body.theme-azul .col{
+  background:linear-gradient(180deg,rgba(10,28,50,.92) 0%, rgba(8,20,37,.92) 100%);
+  border:1px solid rgba(255,255,255,.08);
+  box-shadow:0 20px 36px rgba(3,12,28,.24);
+}
+body.theme-azul .col::before{
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.03), inset 0 0 0 1px rgba(215,178,75,.03);
+}
+body.theme-azul .colHead{
+  background:linear-gradient(180deg,rgba(255,255,255,.025) 0%, rgba(255,255,255,0) 100%);
+  border-bottom:1px solid rgba(255,255,255,.08);
+}
+body.theme-azul .colHead .name{color:#F3F6FB}
+body.theme-azul .colHead .count{
+  background:rgba(255,255,255,.08);
+  border-color:rgba(255,255,255,.06);
+  color:#F3F6FB;
+}
+body.theme-azul .dropzone{padding:14px;gap:12px}
+body.theme-azul .dropzone.dragover{
+  outline:2px dashed rgba(216,178,75,.28);
+}
+body.theme-azul .card{
+  background:linear-gradient(180deg,#F9FAFC 0%, #EEF2F6 100%);
+  border:1px solid #DDE6F0;
+  box-shadow:0 8px 20px rgba(2,10,24,.12);
+}
+body.theme-azul .card.low-priority{
+  background:linear-gradient(180deg,#F9FAFC 0%, #EDF2F7 100%);
+  border-color:#DDE6F0;
+}
+body.theme-azul .card.medium-priority{
+  background:linear-gradient(180deg,#F8F5EC 0%, #EEE6D6 100%);
+  border-color:#E5D7C0;
+}
+body.theme-azul .card.high-priority{
+  background:linear-gradient(180deg,#F5EACB 0%, #ECDDB0 100%);
+  border:1px solid #D8C18A;
+}
+body.theme-azul .card.highest-priority{
+  background:linear-gradient(180deg,#F0DC9A 0%, #E2C46A 100%);
+  border:1px solid #CFA848;
+  box-shadow:0 10px 24px rgba(184,139,34,.14);
+}
+body.theme-azul .card.closed-priority{
+  background:linear-gradient(180deg,#DDEFE2 0%, #CBE2D1 100%);
+  border:1px solid #AFCDB7;
+}
+body.theme-azul .card.medium-priority::before{background:linear-gradient(180deg,#D1B47A 0%, #E5D0A6 100%)}
+body.theme-azul .card.high-priority::before{background:linear-gradient(180deg,#C99B3E 0%, #DDB766 100%)}
+body.theme-azul .card.highest-priority::before{background:linear-gradient(180deg,#B88718 0%, #D3AC4A 100%)}
+body.theme-azul .card.closed-priority::before{background:linear-gradient(180deg,#6CA37B 0%, #9DC0A6 100%)}
+body.theme-azul .nm{color:#10213A}
+body.theme-azul .leftGroup .emp,
+body.theme-azul .standbyLine .empInline{color:#66758B}
+body.theme-azul .prioText.baixa{color:#7B8797}
+body.theme-azul .prioText.media{color:#9E8250}
+body.theme-azul .prioText.alta{color:#A27620}
+body.theme-azul .prioText.altissima{color:#855D12}
+body.theme-azul .prioText.fechado{color:#5A936C}
+body.theme-azul .nc-neutral,
+body.theme-azul .dt-neutral,
+body.theme-azul .dt-soft{background:#EEF2F6;color:#4B6079;border-color:#D7E1EB}
+body.theme-azul .visitChip{background:#EEF3F8;color:#475A70;border-color:#D9E3EC}
+body.theme-azul .waDot{box-shadow:0 6px 16px rgba(37,211,102,.18)}
+body.theme-azul .cardAttach,
+body.theme-azul .attachCountMini{
+  background:#FFF3CF;
+  color:#8A6922;
+  border-color:#E9D59A;
+}
+body.theme-azul dialog,
+body.theme-azul .modal,
+body.theme-azul .modalHead,
+body.theme-azul .modalBody,
+body.theme-azul .modalFoot{
+  background:#FFFDF9;
+}
+body.theme-azul .modalBody .input,
+body.theme-azul .modalBody select,
+body.theme-azul .modalBody textarea{
+  background:#FFFFFF;
+  border-color:#DDE6F0;
+}
+
+body.theme-dark-pro{
+  background:linear-gradient(180deg,#0A0C10 0%, #11151B 100%);
+}
+body.theme-dark-pro header{
+  background:linear-gradient(180deg,#0C1015 0%, #10161D 100%);
+}
+body.theme-dark-pro .col{
+  background:linear-gradient(180deg,#121820 0%, #0F141B 100%);
+}
+body.theme-dark-pro .card{
+  box-shadow:0 8px 18px rgba(0,0,0,.22);
+}
+body.theme-dark-pro .card.low-priority{
+  background:linear-gradient(180deg,#1D232B 0%, #171C23 100%);
+}
+body.theme-dark-pro .card.medium-priority{
+  background:linear-gradient(180deg,#312C24 0%, #262119 100%);
+}
+body.theme-dark-pro .card.high-priority{
+  background:linear-gradient(180deg,#4A3A1E 0%, #352912 100%);
+}
+body.theme-dark-pro .card.highest-priority{
+  background:linear-gradient(180deg,#705524 0%, #553E17 100%);
+}
+body.theme-dark-pro .card.closed-priority{
+  background:linear-gradient(180deg,#163126 0%, #11251C 100%);
+}
+
+body.theme-light-clean{
+  background:linear-gradient(180deg,#F7F9FC 0%, #EEF3F8 100%);
+  font-family:Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+}
+body.theme-light-clean .title h1{color:#0F172A}
+body.theme-light-clean .col{
+  background:linear-gradient(180deg,#FFFFFF 0%, #F7FAFD 100%);
+  box-shadow:0 14px 28px rgba(148,163,184,.10);
+}
+body.theme-light-clean .colHead{background:#FBFCFE}
+body.theme-light-clean .card{
+  background:linear-gradient(180deg,#FFFFFF 0%, #F9FBFD 100%);
+  border-color:#DEE7F0;
+}
+body.theme-light-clean .card.medium-priority{
+  background:linear-gradient(180deg,#FBF6EC 0%, #F4EBDD 100%);
+}
+body.theme-light-clean .card.high-priority{
+  background:linear-gradient(180deg,#F8ECC9 0%, #F1DEAD 100%);
+}
+body.theme-light-clean .card.highest-priority{
+  background:linear-gradient(180deg,#F1DE9D 0%, #E3C462 100%);
+  border-color:#CFA848;
+}
+body.theme-light-clean .card.closed-priority{
+  background:linear-gradient(180deg,#E4F2E7 0%, #D2E8D8 100%);
+}
+
 </style>
 </head>
 <body>
@@ -1094,11 +1349,9 @@ body:not(.light):not(.theme-dark-pro):not(.theme-light-clean):not(.theme-azul) h
           <div class="themeWrap" id="themeWrap">
             <button class="btn primary" id="themeToggle" type="button" aria-expanded="false">Tema ▾</button>
             <div class="themeMenu" id="themeMenu">
-              <button class="btn" type="button" data-theme="original"><span class="themeSwatch" style="background:#12325D"></span>Original escuro</button>
-              <button class="btn" type="button" data-theme="light"><span class="themeSwatch" style="background:#FFFFFF"></span>Light original</button>
-              <button class="btn" type="button" data-theme="dark-pro"><span class="themeSwatch" style="background:#111111"></span>Graphite Dark</button>
-              <button class="btn" type="button" data-theme="light-clean"><span class="themeSwatch" style="background:#F8FAFC"></span>Clean Modern</button>
-              <button class="btn" type="button" data-theme="azul"><span class="themeSwatch" style="background:#173A63"></span>Azul Institucional</button>
+              <button class="btn" type="button" data-theme="azul"><span class="themeSwatch" style="background:#0E2A47"></span>Imobiliário Premium</button>
+              <button class="btn" type="button" data-theme="dark-pro"><span class="themeSwatch" style="background:#11161D"></span>Graphite Dark</button>
+              <button class="btn" type="button" data-theme="light-clean"><span class="themeSwatch" style="background:#F8FAFC"></span>Light Clean</button>
             </div>
           </div>
           <button class="btn primary" id="new" type="button">+ Novo Lead</button>
@@ -1995,7 +2248,7 @@ function clearAllFilters(){
   render();
 }
 function syncClearButton(){ if((q.value || "").trim().length) clearQ.classList.add("show"); else clearQ.classList.remove("show"); }
-const THEME_LABELS = { original:'Original escuro', light:'Light original', 'dark-pro':'Graphite Dark', 'light-clean':'Clean Modern', azul:'Azul Institucional' };
+const THEME_LABELS = { azul:'Imobiliário Premium', 'dark-pro':'Graphite Dark', 'light-clean':'Light Clean' };
 const ALL_THEME_CLASSES = ['light','theme-dark-pro','theme-light-clean','theme-azul'];
 function setThemeOpen(open){
   if(!themeWrap || !themeToggleBtn) return;
@@ -2004,12 +2257,13 @@ function setThemeOpen(open){
   themeToggleBtn.setAttribute('aria-expanded', shouldOpen ? 'true' : 'false');
 }
 function applyTheme(theme){
-  const next = THEME_LABELS[theme] ? theme : 'original';
+  const alias = { original:'azul', light:'light-clean' };
+  const normalized = alias[theme] || theme;
+  const next = THEME_LABELS[normalized] ? normalized : 'azul';
   document.body.classList.remove(...ALL_THEME_CLASSES);
-  if(next === 'light') document.body.classList.add('light');
-  else if(next === 'dark-pro') document.body.classList.add('theme-dark-pro');
+  if(next === 'dark-pro') document.body.classList.add('theme-dark-pro');
   else if(next === 'light-clean') document.body.classList.add('theme-light-clean');
-  else if(next === 'azul') document.body.classList.add('theme-azul');
+  else document.body.classList.add('theme-azul');
   if(themeToggleBtn) themeToggleBtn.textContent = `${THEME_LABELS[next]} ▾`;
   localStorage.setItem('crm_theme', next);
 }
@@ -2155,7 +2409,7 @@ syncFiltersForViewport();
 adjustMainHeight();
 window.addEventListener("resize", ()=>{ adjustMainHeight(); syncFiltersForViewport(); });
 window.addEventListener("orientationchange", ()=>{ adjustMainHeight(); syncFiltersForViewport(); });
-applyTheme(localStorage.getItem('crm_theme') || 'dark-pro');
+applyTheme(localStorage.getItem('crm_theme') || 'azul');
 load();
 </script>
 </body>
