@@ -87,7 +87,7 @@ body.t-light .logo-name{color:#1B2E4B}
 .nav-tab.active{color:var(--accent);border-bottom-color:var(--accent)}
 .nav-badge{background:#EF4444;color:white;font-size:9px;padding:1px 5px;border-radius:999px;font-weight:800}
 /* Spacer */
-.h-spacer{flex:1 1 0;min-width:0}
+.h-spacer{flex:0 0 6px;min-width:6px}
 /* Buttons */
 .btn{
   border:1px solid var(--line);background:var(--bg3);
@@ -107,12 +107,13 @@ body.t-light .btn:hover{background:#F0F4FA}
 /* New lead button */
 #btnNew{background:linear-gradient(180deg,#4A90D9,#2B6CB0);color:#fff;border-color:#2563EB;padding:8px 16px;border-radius:12px;font-size:13px;min-width:130px}
 /* Quick lead button */
-#btnQuick{background:linear-gradient(180deg,#16A34A,#0D7030);color:#fff;border-color:#0A6028;border-radius:12px;padding:8px 12px;font-size:16px;min-width:40px}
+#btnQuick{background:linear-gradient(180deg,#16A34A,#0D7030);color:#fff;border-color:#0A6028;border-radius:12px;padding:8px 12px;font-size:15px;min-width:46px}
 /* Install app */
 #btnInstallApp{border-radius:12px;padding:8px 14px;font-size:12px;min-width:120px}
 body.app-installed #btnInstallApp{display:none!important}
 /* Theme toggle */
 .theme-wrap{position:relative;flex-shrink:0}
+.header-actions{display:flex;align-items:center;gap:8px;flex-shrink:0}
 .theme-menu{
   display:none;position:absolute;top:calc(100% + 6px);right:0;
   min-width:170px;background:var(--bg2);border:1px solid var(--line);
@@ -151,10 +152,23 @@ body.t-light .filt-panel select,body.t-light .search-wrap input{background:#FFFF
 .more-wrap.open .more-menu{display:flex}
 .more-menu .btn{justify-content:flex-start;width:100%}
 @media(max-width:820px){
-  .h-row2{height:auto;padding:6px 0;flex-wrap:wrap}
-  .search-wrap{flex:1 1 200px}
+  .h-row1{height:auto;flex-wrap:wrap;padding:8px 0}
+  .nav-tabs{order:3;width:100%;overflow:auto}
+  .nav-sep{display:none}
+  .h-spacer{display:none}
+  .header-actions{margin-left:auto}
+  .h-row2{height:auto;padding:8px 0;flex-wrap:wrap}
+  .search-wrap{flex:1 1 100%}
+  .h-row2 select,.h-row2 .more-wrap,.h-row2 #btnAiImport{flex:1 1 calc(50% - 6px);min-width:0}
+  .h-row2 .btn{width:100%;justify-content:center}
   .filt-panel{flex-wrap:wrap}
   .cbox .t{display:none}
+}
+@media(max-width:640px){
+  .header-actions{width:100%;justify-content:flex-start}
+  #btnNew{min-width:0;flex:1 1 auto}
+  #btnQuick,#btnInstallApp,.theme-wrap{flex:0 0 auto}
+  .h-row2 select,.h-row2 .more-wrap,.h-row2 #btnAiImport{flex:1 1 100%}
 }
 
 /* ═══ ALERT BANNER ═══ */
@@ -521,19 +535,21 @@ body.t-light .ag-day.sel{background:#1B2E4B}
       <div class="nav-sep"></div>
       <div class="h-spacer"></div>
 
-      <!-- TEMA -->
-      <div class="theme-wrap" id="themeWrap">
-        <button class="btn" id="themeToggle">🎨 Tema ▾</button>
-        <div class="theme-menu" id="themeMenu">
-          <button class="theme-opt active" data-theme="t-navy"><span class="t-swatch" style="background:#0D1B2E"></span>🌊 Navy</button>
-          <button class="theme-opt" data-theme="t-light"><span class="t-swatch" style="background:#F5F7FA;border-color:#ccc"></span>☀️ Claro</button>
-          <button class="theme-opt" data-theme="t-dark"><span class="t-swatch" style="background:#08090C"></span>🌑 Escuro</button>
+      <div class="header-actions">
+        <!-- TEMA -->
+        <div class="theme-wrap" id="themeWrap">
+          <button class="btn" id="themeToggle">Claro ▾</button>
+          <div class="theme-menu" id="themeMenu">
+            <button class="theme-opt" data-theme="t-navy">Azul</button>
+            <button class="theme-opt active" data-theme="t-light">Claro</button>
+            <button class="theme-opt" data-theme="t-dark">Escuro</button>
+          </div>
         </div>
-      </div>
 
-      <button class="btn btn-accent" id="btnNew">+ Novo Lead</button>
-      <button class="btn btn-green" id="btnQuick" title="Lead Rápido">⚡</button>
-      <button class="btn btn-gold" id="btnInstallApp" title="Instalar app" style="display:none">📱 Instalar app</button>
+        <button class="btn btn-accent" id="btnNew">+ Novo Lead</button>
+        <button class="btn btn-green" id="btnQuick" title="Lead Rápido">👤</button>
+        <button class="btn btn-gold" id="btnInstallApp" title="Instalar app" style="display:none">📱 Instalar app</button>
+      </div>
     </div>
 
     <!-- Row 2: filtros -->
@@ -1717,11 +1733,11 @@ async function importCSV(text){const rows=text.split(/\r?\n/).filter(Boolean);if
 ══════════════════════════════════════ */
 const ALL_THEMES=['t-navy','t-light','t-dark'];
 function applyTheme(t){
-  const theme=ALL_THEMES.includes(t)?t:'t-navy';
+  const theme=ALL_THEMES.includes(t)?t:'t-light';
   document.body.className=theme;
   document.querySelectorAll('.theme-opt').forEach(o=>o.classList.toggle('active',o.dataset.theme===theme));
-  const lbl={'t-navy':'🌊 Navy','t-light':'☀️ Claro','t-dark':'🌑 Escuro'};
-  document.getElementById('themeToggle').textContent=(lbl[theme]||'🎨 Tema')+' ▾';
+  const lbl={'t-navy':'Azul','t-light':'Claro','t-dark':'Escuro'};
+  document.getElementById('themeToggle').textContent=(lbl[theme]||'Tema')+' ▾';
   localStorage.setItem('crm_theme',theme);
   document.querySelector('meta[name="theme-color"]')?.setAttribute('content',theme==='t-light'?'#F5F7FA':theme==='t-dark'?'#08090C':'#0D1B2E');
   setupPWA();
@@ -1941,7 +1957,7 @@ syncFilterSelects();
 setupPaste();
 setupPWA();
 registerSW();
-applyTheme(localStorage.getItem('crm_theme')||'t-navy');
+applyTheme('t-light');
 updateInstallBtn();
 setInterval(()=>{document.querySelectorAll('.card').forEach(c=>{const id=c.dataset.id;const l=ALL.find(x=>x.id===id);if(!l)return;const nc=nextContact(l);const ncEl=c.querySelector('.chip-nc-neutral,.chip-nc-green,.chip-nc-red');if(ncEl&&nc){ncEl.className=`chip ${nc.cls}`;ncEl.textContent=nc.text;}});},60000);
 setInterval(updateAgendaBadge,60000);
