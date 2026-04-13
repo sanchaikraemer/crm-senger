@@ -165,10 +165,23 @@ body.t-light .filt-panel select,body.t-light .search-wrap input{background:#FFFF
   .cbox .t{display:none}
 }
 @media(max-width:640px){
-  .header-actions{width:100%;justify-content:flex-start}
-  #btnNew{min-width:0;flex:1 1 auto}
-  #btnQuick,#btnInstallApp,.theme-wrap{flex:0 0 auto}
-  .h-row2 select,.h-row2 .more-wrap,.h-row2 #btnAiImport{flex:1 1 100%}
+  .h-wrap{padding:0 10px}
+  .h-row1{gap:6px}
+  .logo{flex:1 1 auto;min-width:0}
+  .logo-tag{display:none}
+  #statusbar{flex:1 1 auto;min-width:0}
+  #statusbar .pill{max-width:100%;overflow:hidden;text-overflow:ellipsis}
+  #boxAtivos,#boxPerdidos{display:none}
+  .header-actions{order:3;width:100%;display:grid;grid-template-columns:auto 1fr auto auto;gap:6px}
+  .theme-wrap{min-width:88px}
+  #btnNew{min-width:0;flex:initial}
+  #btnQuick,#btnInstallApp,.theme-wrap{flex:initial}
+  .nav-tabs{order:4;width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .nav-tab{padding:0 10px;font-size:11px}
+  .h-row2{overflow-x:hidden}
+  #fEmp,#fOrig,#fResp{display:none}
+  #fPri{flex:1 1 100%;min-width:0}
+  .h-row2 .more-wrap,.h-row2 #btnAiImport{flex:1 1 calc(50% - 6px)}
 }
 
 /* ═══ ALERT BANNER ═══ */
@@ -255,9 +268,16 @@ body.t-light .filt-panel select,body.t-light .search-wrap input{background:#FFFF
 @media(max-width:1280px){.board{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media(max-width:960px){.board{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:640px){
-  #mainWrap{height:auto;padding:6px 10px}
-  .board{grid-template-columns:1fr;height:auto}
+  #mainWrap{height:auto;padding:6px 8px}
+  .board{grid-template-columns:1fr;height:auto;gap:8px}
   .col{min-height:160px}
+  .dropzone{padding:8px;gap:6px}
+  .card{padding:8px 10px;border-radius:11px}
+  .card-nm{font-size:11px;padding-left:4px}
+  .card-emp{font-size:10px;max-width:92px;padding-left:4px}
+  .card-row2{margin-top:4px;gap:5px}
+  .chip{padding:3px 6px;font-size:9px}
+  .wa-btn{width:24px;height:24px;min-width:24px}
 }
 
 /* ═══ DASHBOARD ═══ */
@@ -1962,6 +1982,7 @@ updateInstallBtn();
 setInterval(()=>{document.querySelectorAll('.card').forEach(c=>{const id=c.dataset.id;const l=ALL.find(x=>x.id===id);if(!l)return;const nc=nextContact(l);const ncEl=c.querySelector('.chip-nc-neutral,.chip-nc-green,.chip-nc-red');if(ncEl&&nc){ncEl.className=`chip ${nc.cls}`;ncEl.textContent=nc.text;}});},60000);
 setInterval(updateAgendaBadge,60000);
 rescheduleAllNotifs();
+updateAgendaBadge();
 loadAll();
 </script>
 </body>
