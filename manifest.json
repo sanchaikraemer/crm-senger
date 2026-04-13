@@ -1,10 +1,11 @@
 {
   "name": "Imobase CRM",
   "short_name": "Imobase",
-  "start_url": "./index.html",
+  "start_url": "./",
+  "scope": "./",
   "display": "standalone",
   "background_color": "#ffffff",
-  "theme_color": "#0f172a",
+  "theme_color": "#0b5ed7",
   "icons": [
     {
       "src": "icon-192.png",
