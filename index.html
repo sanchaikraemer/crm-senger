@@ -108,6 +108,9 @@ body.t-light .btn:hover{background:#F0F4FA}
 #btnNew{background:linear-gradient(180deg,#4A90D9,#2B6CB0);color:#fff;border-color:#2563EB;padding:8px 16px;border-radius:12px;font-size:13px;min-width:130px}
 /* Quick lead button */
 #btnQuick{background:linear-gradient(180deg,#16A34A,#0D7030);color:#fff;border-color:#0A6028;border-radius:12px;padding:8px 12px;font-size:16px;min-width:40px}
+/* Install app */
+#btnInstallApp{border-radius:12px;padding:8px 14px;font-size:12px;min-width:120px}
+body.app-installed #btnInstallApp{display:none!important}
 /* Theme toggle */
 .theme-wrap{position:relative;flex-shrink:0}
 .theme-menu{
@@ -530,6 +533,7 @@ body.t-light .ag-day.sel{background:#1B2E4B}
 
       <button class="btn btn-accent" id="btnNew">+ Novo Lead</button>
       <button class="btn btn-green" id="btnQuick" title="Lead Rápido">⚡</button>
+      <button class="btn btn-gold" id="btnInstallApp" title="Instalar app" style="display:none">📱 Instalar app</button>
     </div>
 
     <!-- Row 2: filtros -->
@@ -1720,17 +1724,90 @@ function applyTheme(t){
   document.getElementById('themeToggle').textContent=(lbl[theme]||'🎨 Tema')+' ▾';
   localStorage.setItem('crm_theme',theme);
   document.querySelector('meta[name="theme-color"]')?.setAttribute('content',theme==='t-light'?'#F5F7FA':theme==='t-dark'?'#08090C':'#0D1B2E');
+  setupPWA();
 }
 
 /* ══════════════════════════════════════
-   PWA MANIFEST
+   PWA MANIFEST + INSTALL
 ══════════════════════════════════════ */
+let deferredInstallPrompt=null;
+function getAppBasePath(){
+  const p=location.pathname||'/';
+  return p.endsWith('/')?p:p.substring(0,p.lastIndexOf('/')+1);
+}
 function setupPWA(){
-  const manifest={name:'imovbase CRM',short_name:'imovbase',start_url:'/crm-senger/',display:'standalone',background_color:'#0D1B2E',theme_color:'#0D1B2E',icons:[{src:'https://sanchaikraemer.github.io/crm-senger/icon-192.png',sizes:'192x192',type:'image/png'},{src:'https://sanchaikraemer.github.io/crm-senger/icon-512.png',sizes:'512x512',type:'image/png'}]};
+  const base=getAppBasePath();
+  const icon192=new URL('icon-192.png',location.href).href;
+  const icon512=new URL('icon-512.png',location.href).href;
+  const manifest={
+    name:'imovbase CRM',
+    short_name:'imovbase',
+    start_url:base,
+    scope:base,
+    display:'standalone',
+    background_color:'#0D1B2E',
+    theme_color:document.querySelector('meta[name="theme-color"]')?.getAttribute('content')||'#0D1B2E',
+    icons:[
+      {src:icon192,sizes:'192x192',type:'image/png'},
+      {src:icon512,sizes:'512x512',type:'image/png'}
+    ]
+  };
   const blob=new Blob([JSON.stringify(manifest)],{type:'application/json'});
   const url=URL.createObjectURL(blob);
   document.getElementById('pwaManifest').setAttribute('href',url);
 }
+function isStandaloneMode(){
+  return window.matchMedia('(display-mode: standalone)').matches||window.navigator.standalone===true;
+}
+function updateInstallBtn(){
+  const btn=document.getElementById('btnInstallApp');
+  if(!btn)return;
+  if(isStandaloneMode()){
+    document.body.classList.add('app-installed');
+    btn.style.display='none';
+    return;
+  }
+  document.body.classList.remove('app-installed');
+  const isLocal=location.protocol==='file:';
+  btn.style.display=(deferredInstallPrompt||isLocal)?'inline-flex':'none';
+  btn.textContent=isLocal?'📱 Instalar app':'📱 Instalar app';
+  btn.title=isLocal?'Publique em HTTPS para instalar como app':'Instalar app';
+}
+async function handleInstallClick(){
+  const isLocal=location.protocol==='file:';
+  if(isLocal){
+    alert('Para instalar como app, abra este CRM em um endereço HTTPS, como GitHub Pages.');
+    return;
+  }
+  if(!deferredInstallPrompt){
+    alert('O app ainda não está pronto para instalação neste navegador. Recarregue a página e tente de novo, ou abra o menu do navegador e procure por “Instalar app”.');
+    return;
+  }
+  deferredInstallPrompt.prompt();
+  try{await deferredInstallPrompt.userChoice;}catch(e){}
+  deferredInstallPrompt=null;
+  updateInstallBtn();
+}
+async function registerSW(){
+  if(!('serviceWorker' in navigator))return;
+  if(location.protocol==='file:')return;
+  try{
+    await navigator.serviceWorker.register('./service-worker.js');
+  }catch(e){
+    console.warn('SW não registrado:',e);
+  }
+}
+window.addEventListener('beforeinstallprompt',e=>{
+  e.preventDefault();
+  deferredInstallPrompt=e;
+  updateInstallBtn();
+});
+window.addEventListener('appinstalled',()=>{
+  deferredInstallPrompt=null;
+  document.body.classList.add('app-installed');
+  showToast('App instalado ✓');
+  updateInstallBtn();
+});
 
 /* ══════════════════════════════════════
    EVENT LISTENERS
@@ -1817,6 +1894,7 @@ leadForm.addEventListener('submit',async e=>{
 });
 
 // Quick lead
+document.getElementById('btnInstallApp').addEventListener('click',handleInstallClick);
 document.getElementById('qlCancelBtn').addEventListener('click',closeQuickLead);
 document.getElementById('qlSaveBtn').addEventListener('click',saveQuickLead);
 document.getElementById('qlModal').addEventListener('click',e=>{if(e.target===e.currentTarget)closeQuickLead();});
@@ -1862,7 +1940,9 @@ loadAdminData();
 syncFilterSelects();
 setupPaste();
 setupPWA();
+registerSW();
 applyTheme(localStorage.getItem('crm_theme')||'t-navy');
+updateInstallBtn();
 setInterval(()=>{document.querySelectorAll('.card').forEach(c=>{const id=c.dataset.id;const l=ALL.find(x=>x.id===id);if(!l)return;const nc=nextContact(l);const ncEl=c.querySelector('.chip-nc-neutral,.chip-nc-green,.chip-nc-red');if(ncEl&&nc){ncEl.className=`chip ${nc.cls}`;ncEl.textContent=nc.text;}});},60000);
 setInterval(updateAgendaBadge,60000);
 rescheduleAllNotifs();
