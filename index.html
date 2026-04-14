@@ -7,6 +7,9 @@
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
 <meta name="theme-color" content="#0D1B2E"/>
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+<meta http-equiv="Pragma" content="no-cache"/>
+<meta http-equiv="Expires" content="0"/>
 <link rel="manifest" id="pwaManifest"/>
 <style>
 /* ═══════════════════════════════════════
@@ -2031,7 +2034,13 @@ async function registerSW(){
   if(!('serviceWorker' in navigator))return;
   if(location.protocol==='file:')return;
   try{
-    await navigator.serviceWorker.register('./service-worker.js');
+    const reg=await navigator.serviceWorker.register('./service-worker.js?v=3');
+    await reg.update();
+    if(navigator.serviceWorker.controller){
+      navigator.serviceWorker.addEventListener('controllerchange',()=>{
+        window.location.reload();
+      },{once:true});
+    }
   }catch(e){
     console.warn('SW não registrado:',e);
   }
