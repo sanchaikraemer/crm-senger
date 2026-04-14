@@ -1,14 +1,7 @@
-const CACHE_NAME = 'crm-cache-v2';
-const APP_SHELL = [
-  './',
-  './index.html'
-];
+const CACHE_NAME = 'crm-cache-v3';
 
 self.addEventListener('install', (event) => {
   self.skipWaiting();
-  event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(APP_SHELL))
-  );
 });
 
 self.addEventListener('activate', (event) => {
@@ -31,46 +24,35 @@ self.addEventListener('fetch', (event) => {
 
   if (request.method !== 'GET') return;
 
-  const url = new URL(request.url);
-
   const isHTMLRequest =
     request.mode === 'navigate' ||
     (request.headers.get('accept') || '').includes('text/html');
 
-  // HTML: sempre tenta rede primeiro
+  // HTML sempre tenta rede primeiro
   if (isHTMLRequest) {
     event.respondWith(
-      fetch(request)
-        .then((response) => {
-          const responseClone = response.clone();
-          caches.open(CACHE_NAME).then((cache) => {
-            cache.put('./index.html', responseClone);
-          });
-          return response;
-        })
-        .catch(() => caches.match('./index.html'))
+      fetch(request).catch(() => caches.match(request))
     );
     return;
   }
 
-  // CSS, JS, imagens etc: cache first com fallback para rede
+  // Demais arquivos: cache first
   event.respondWith(
     caches.match(request).then((cachedResponse) => {
-      return (
-        cachedResponse ||
-        fetch(request).then((networkResponse) => {
-          if (!networkResponse || networkResponse.status !== 200) {
-            return networkResponse;
-          }
+      if (cachedResponse) return cachedResponse;
 
-          const responseClone = networkResponse.clone();
-          caches.open(CACHE_NAME).then((cache) => {
-            cache.put(request, responseClone);
-          });
-
+      return fetch(request).then((networkResponse) => {
+        if (!networkResponse || networkResponse.status !== 200) {
           return networkResponse;
-        })
-      );
+        }
+
+        const responseClone = networkResponse.clone();
+        caches.open(CACHE_NAME).then((cache) => {
+          cache.put(request, responseClone);
+        });
+
+        return networkResponse;
+      });
     })
   );
 });
