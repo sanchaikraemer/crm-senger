@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>imovbase — CRM Imobiliário</title>
+<title>levecrm — CRM Imobiliário</title>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
 <meta name="theme-color" content="#0D1B2E"/>
@@ -62,11 +62,16 @@ header{
 .h-wrap{max-width:1700px;margin:0 auto;padding:0 14px}
 .h-row1{display:flex;align-items:center;height:50px;gap:8px;min-width:0}
 /* Logo */
-.logo{display:flex;align-items:center;gap:9px;flex-shrink:0;text-decoration:none}
-.logo-name{font-family:Montserrat,sans-serif;font-size:15px;font-weight:800;color:var(--text);letter-spacing:-.3px;line-height:1}
+.logo{display:flex;align-items:center;gap:12px;flex-shrink:0;text-decoration:none;min-width:max-content}
+.logo-dark{display:block}
+.logo-light{display:none}
+body.t-light .logo-dark{display:none}
+body.t-light .logo-light{display:block}
+
+.logo-name{font-family:Montserrat,sans-serif;font-size:20px;font-weight:800;color:var(--text);letter-spacing:-.5px;line-height:1}
 body.t-light .logo-name{color:#1B2E4B}
-.logo-name b{color:#4A90D9;font-weight:300}
-.logo-tag{font-size:7px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-top:1px}
+.logo-name b{color:#6EA7E6;font-weight:500}
+.logo-tag{font-size:8px;color:var(--muted);letter-spacing:1.8px;text-transform:uppercase;margin-top:3px}
 /* Status */
 .pill{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:999px;background:var(--bg3);border:1px solid var(--line);font-size:11px;font-weight:700;color:var(--text);white-space:nowrap}
 .dot{width:7px;height:7px;border-radius:50%}.dot.ok{background:#16A34A}.dot.warn{background:#E67E22}.dot.bad{background:#D64545}
@@ -85,9 +90,9 @@ body.t-light .logo-name{color:#1B2E4B}
 }
 .nav-tab:hover{color:var(--text)}
 .nav-tab.active{color:var(--accent);border-bottom-color:var(--accent)}
-.nav-badge{background:#EF4444;color:white;font-size:9px;padding:1px 5px;border-radius:999px;font-weight:800}
+.nav-badge{display:inline-flex!important;align-items:center;justify-content:center;min-width:18px;height:18px;background:#EF4444;color:white;font-size:10px;padding:0 6px;border-radius:999px;font-weight:800;line-height:1;box-shadow:0 2px 8px rgba(239,68,68,.25)}
 /* Spacer */
-.h-spacer{flex:0 0 6px;min-width:6px}
+.h-spacer{flex:0 0 0;min-width:0}
 /* Buttons */
 .btn{
   border:1px solid var(--line);background:var(--bg3);
@@ -107,13 +112,14 @@ body.t-light .btn:hover{background:#F0F4FA}
 /* New lead button */
 #btnNew{background:linear-gradient(180deg,#4A90D9,#2B6CB0);color:#fff;border-color:#2563EB;padding:8px 16px;border-radius:12px;font-size:13px;min-width:130px}
 /* Quick lead button */
-#btnQuick{background:linear-gradient(180deg,#16A34A,#0D7030);color:#fff;border-color:#0A6028;border-radius:12px;padding:8px 12px;font-size:15px;min-width:46px}
+#btnQuick{background:#FFFFFF;color:#1B2E4B;border:1px solid #D0DAE8;border-radius:12px;padding:8px 12px;font-size:15px;min-width:46px}
+#btnQuick:hover{background:#F0F4FA}
 /* Install app */
-#btnInstallApp{border-radius:12px;padding:8px 14px;font-size:12px;min-width:120px}
+#btnInstallApp{border-radius:12px;padding:8px 16px;font-size:12px;min-width:146px;white-space:nowrap}
 body.app-installed #btnInstallApp{display:none!important}
 /* Theme toggle */
 .theme-wrap{position:relative;flex-shrink:0}
-.header-actions{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.header-actions{display:flex;align-items:center;gap:8px;flex-shrink:0;margin-left:4px}
 .theme-menu{
   display:none;position:absolute;top:calc(100% + 6px);right:0;
   min-width:170px;background:var(--bg2);border:1px solid var(--line);
@@ -130,23 +136,49 @@ body.app-installed #btnInstallApp{display:none!important}
 .theme-opt.active{background:var(--bg3);color:var(--accent)}
 .t-swatch{width:13px;height:13px;border-radius:4px;flex-shrink:0;border:1px solid rgba(0,0,0,.15)}
 
+
+/* Mobile professional */
+.mobile-only{display:none}
+#agendaBtnMobile{position:relative}
+#agendaBtnMobile .nav-badge{position:static;margin-left:6px}
+#mobileActions{display:none}
+#mobileFilterModal{display:none;position:fixed;inset:0;z-index:70;background:rgba(0,0,0,.45);backdrop-filter:blur(3px);align-items:flex-end;justify-content:center;padding:14px}
+#mobileFilterModal.open{display:flex}
+.mf-sheet{width:min(520px,100%);background:var(--bg2);border:1px solid var(--line);border-radius:20px 20px 0 0;box-shadow:0 -12px 40px rgba(0,0,0,.28);padding:12px 12px calc(14px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:10px;max-height:82vh;overflow:auto}
+.mf-handle{width:42px;height:5px;border-radius:999px;background:var(--line);margin:2px auto 2px}
+.mf-title{font-size:14px;font-weight:800;color:var(--text);padding:0 4px}
+.mf-grid{display:grid;grid-template-columns:1fr;gap:8px}
+.mf-grid select{padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:var(--bg3);color:var(--text);font:inherit;font-size:13px;outline:none;width:100%}
+.mf-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.mf-actions .btn{width:100%;justify-content:center}
+.mf-close{width:100%;justify-content:center}
+body.t-light .mf-grid select{background:#FFFFFF;border-color:#D0DAE8;color:#1B2E4B}
+
 /* ═══ ACTIONS ROW ═══ */
 .h-row2{display:flex;align-items:center;height:44px;gap:7px;border-top:1px solid var(--line)}
 .search-wrap{position:relative;display:flex;align-items:center;flex:0 1 260px;min-width:0}
 .search-wrap input{
-  width:100%;padding:7px 32px 7px 10px;border-radius:var(--radius-sm);
+  width:100%;padding:9px 34px 9px 14px;border-radius:999px;
   border:1px solid var(--line);background:var(--bg3);color:var(--text);
-  font:inherit;font-size:12px;outline:none;
+  font:inherit;font-size:12px;outline:none;box-shadow:0 2px 10px rgba(27,46,75,.05);
 }
 .search-wrap input::placeholder{color:var(--muted)}
 .search-clear{position:absolute;right:8px;background:transparent;border:0;color:var(--muted);cursor:pointer;font-size:16px;line-height:1;display:none}
 .search-clear.show{display:block}
 .filt-panel{display:flex;align-items:center;gap:7px;flex-wrap:nowrap}
 .filt-panel select{
-  padding:6px 10px;border-radius:var(--radius-sm);border:1px solid var(--line);
-  background:var(--bg3);color:var(--text);font:inherit;font-size:12px;outline:none;
+  padding:8px 14px;border-radius:999px;border:1px solid var(--line);
+  background:var(--bg3);color:var(--text);font:inherit;font-size:12px;font-weight:700;outline:none;
+  min-height:38px;box-shadow:0 2px 8px rgba(0,0,0,.08);appearance:none;
 }
-body.t-light .filt-panel select,body.t-light .search-wrap input{background:#FFFFFF;border-color:#D0DAE8;color:#1B2E4B}
+body.t-light .filt-panel select,body.t-light .h-row2 > select,body.t-light .search-wrap input{background:#FFFFFF;border-color:#D0DAE8;color:#1B2E4B}
+body.t-light .filt-panel select, body.t-light .h-row2 > select{box-shadow:0 2px 10px rgba(27,46,75,.06)}
+#moreToggle,#btnToggleLost,#btnToggleSb,#btnExport,#btnImport,#btnAiImport,#mfToggleLost,#mfToggleSb,#mfExport,#mfImport,#mfAiImport{
+  border-radius:999px!important;
+}
+.search-wrap input{
+  box-shadow:0 2px 8px rgba(0,0,0,.06);
+}
 .more-wrap{position:relative}
 .more-menu{display:none;position:absolute;top:calc(100%+6px);right:0;min-width:180px;background:var(--bg2);border:1px solid var(--line);border-radius:14px;box-shadow:0 14px 30px rgba(0,0,0,.2);z-index:50;padding:6px;flex-direction:column;gap:4px}
 .more-wrap.open .more-menu{display:flex}
@@ -172,16 +204,21 @@ body.t-light .filt-panel select,body.t-light .search-wrap input{background:#FFFF
   #statusbar{flex:1 1 auto;min-width:0}
   #statusbar .pill{max-width:100%;overflow:hidden;text-overflow:ellipsis}
   #boxAtivos,#boxPerdidos{display:none}
-  .header-actions{order:3;width:100%;display:grid;grid-template-columns:auto 1fr auto auto;gap:6px}
-  .theme-wrap{min-width:88px}
-  #btnNew{min-width:0;flex:initial}
-  #btnQuick,#btnInstallApp,.theme-wrap{flex:initial}
-  .nav-tabs{order:4;width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
-  .nav-tab{padding:0 10px;font-size:11px}
-  .h-row2{overflow-x:hidden}
-  #fEmp,#fOrig,#fResp{display:none}
-  #fPri{flex:1 1 100%;min-width:0}
-  .h-row2 .more-wrap,.h-row2 #btnAiImport{flex:1 1 calc(50% - 6px)}
+  .header-actions{display:none!important}
+  .theme-wrap,#btnNew,#btnQuick,#btnInstallApp{display:none!important}
+  .nav-tabs{display:none!important}
+  .h-row2{overflow-x:hidden;height:auto;padding:10px 0 6px;flex-wrap:wrap;gap:8px}
+  .search-wrap{flex:1 1 100%}
+  #fEmp,#fOrig,#fResp,#fPri,#moreWrap,#btnAiImport{display:none!important}
+  #mobileActions{display:grid;grid-template-columns:1.2fr .9fr .8fr;gap:8px;margin:2px 0 4px}
+  #mobileActions .btn{width:100%;min-height:44px;justify-content:center;border-radius:14px;font-size:12px;padding:10px 10px}
+  #btnNewMobile{background:linear-gradient(180deg,#1E4FA0,#2B6CB0);color:#fff;border-color:#2563EB}
+  #agendaBtnMobile,#mobileFiltersBtn{background:var(--bg3);color:var(--text)}
+  #agendaBtnMobile .nav-badge{position:relative;top:auto;right:auto;margin-left:6px}
+}
+@media(max-width:420px){
+  #mobileActions{grid-template-columns:1fr 1fr 1fr}
+  #mobileActions .btn{font-size:11px;padding:10px 8px}
 }
 
 /* ═══ ALERT BANNER ═══ */
@@ -405,43 +442,43 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
 /* ═══ AGENDA MODAL ═══ */
 #agModal{display:none;position:fixed;inset:0;z-index:60;align-items:flex-start;justify-content:flex-end;background:rgba(0,0,0,.4);backdrop-filter:blur(3px);padding:52px 14px 0}
 #agModal.open{display:flex}
-.ag-box{background:var(--bg2);border:1px solid var(--line);border-radius:18px;width:min(480px,96vw);max-height:calc(100vh - 68px);display:flex;flex-direction:column;box-shadow:0 20px 50px rgba(0,0,0,.3);overflow:hidden}
+.ag-box{background:var(--bg2);border:1px solid var(--line);border-radius:18px;width:min(420px,92vw);max-height:calc(100vh - 68px);display:flex;flex-direction:column;box-shadow:0 20px 50px rgba(0,0,0,.3);overflow:hidden}
 .ag-head{padding:13px 17px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
 .ag-title{font-family:Montserrat,sans-serif;font-size:14px;font-weight:800;color:var(--text);display:flex;align-items:center;gap:8px}
 .ag-tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);padding:6px 17px 0;flex-shrink:0}
 .ag-tab{background:transparent;border:0;border-bottom:2px solid transparent;padding:6px 12px;font-size:11px;font-weight:700;color:var(--muted);cursor:pointer;font-family:inherit;margin-bottom:-1px;transition:.12s}
 .ag-tab.active{color:var(--accent);border-bottom-color:var(--accent)}
-.ag-body{padding:14px 17px;overflow-y:auto;flex:1}
+.ag-body{padding:10px 14px;overflow-y:auto;flex:1}
 /* Calendário */
-.ag-cal-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
-.ag-cal-month{font-size:13px;font-weight:800;color:var(--text)}
-.ag-cal-arr{background:var(--bg3);border:1px solid var(--line);color:var(--muted);cursor:pointer;width:27px;height:27px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:14px}
-.ag-cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-bottom:12px}
-.ag-dow{font-size:9px;font-weight:700;color:var(--muted);text-align:center;padding:4px 0}
-.ag-day{aspect-ratio:1;display:flex;align-items:center;justify-content:center;border-radius:7px;font-size:11px;font-weight:600;color:var(--text);cursor:pointer;position:relative;transition:.12s}
+.ag-cal-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.ag-cal-month{font-size:12px;font-weight:800;color:var(--text)}
+.ag-cal-arr{background:var(--bg3);border:1px solid var(--line);color:var(--muted);cursor:pointer;width:25px;height:25px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:13px}
+.ag-cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:1px;margin-bottom:8px}
+.ag-dow{font-size:8px;font-weight:700;color:var(--muted);text-align:center;padding:2px 0}
+.ag-day{height:28px;display:flex;align-items:center;justify-content:center;border-radius:7px;font-size:10px;font-weight:600;color:var(--text);cursor:pointer;position:relative;transition:.12s}
 .ag-day:hover{background:var(--bg3)}
 .ag-day.today{background:var(--accent);color:white;font-weight:800}
 .ag-day.sel{background:var(--accent2);color:white;font-weight:800}
 body.t-light .ag-day.sel{background:#1B2E4B}
 .ag-day.has-ev::after{content:'';position:absolute;bottom:2px;left:50%;transform:translateX(-50%);width:3px;height:3px;border-radius:50%;background:#EF4444}
 .ag-day.today.has-ev::after{background:white}
-.ag-day-lbl{font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
+.ag-day-lbl{font-size:10px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
 /* Eventos */
-.ag-event-list{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
-.ag-event{display:flex;align-items:center;gap:9px;padding:9px 11px;background:var(--bg3);border:1px solid var(--line);border-radius:9px;border-left:3px solid var(--accent)}
+.ag-event-list{display:flex;flex-direction:column;gap:6px;margin-bottom:10px;max-height:108px;overflow-y:auto}
+.ag-event{display:flex;align-items:center;gap:8px;padding:8px 10px;background:var(--bg3);border:1px solid var(--line);border-radius:9px;border-left:3px solid var(--accent)}
 .ag-ev-time{font-size:11px;font-weight:800;color:var(--accent);flex-shrink:0;min-width:40px}
 .ag-ev-desc{font-size:12px;color:var(--text);flex:1}
 .ag-ev-del{background:transparent;border:0;color:var(--muted);cursor:pointer;font-size:15px;padding:2px 4px;border-radius:4px}
 .ag-ev-del:hover{color:#EF4444}
 .ag-no-ev{font-size:12px;color:var(--muted);text-align:center;padding:10px 0}
 /* Add form */
-.ag-form{background:var(--bg3);border:1px solid var(--line);border-radius:11px;padding:12px}
-.ag-form-title{font-size:11px;font-weight:800;color:var(--accent);margin-bottom:10px}
-.ag-form-row{display:flex;gap:7px;margin-bottom:8px}
+.ag-form{background:var(--bg3);border:1px solid var(--line);border-radius:11px;padding:10px}
+.ag-form-title{font-size:11px;font-weight:800;color:var(--accent);margin-bottom:8px}
+.ag-form-row{display:flex;gap:7px;margin-bottom:7px}
 .ag-time{width:90px;flex-shrink:0;padding:8px 10px;border-radius:8px;border:1px solid var(--line);background:var(--bg2);color:var(--text);font:inherit;font-size:12px;outline:none}
 .ag-desc{flex:1;padding:8px 10px;border-radius:8px;border:1px solid var(--line);background:var(--bg2);color:var(--text);font:inherit;font-size:12px;outline:none}
 .ag-desc::placeholder,.ag-time::placeholder{color:var(--muted)}
-.ag-notify-row{display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap}
+.ag-notify-row{display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap}
 .ag-notify-lbl{font-size:11px;color:var(--muted);font-weight:600}
 .ag-notify-sel{padding:6px 9px;border-radius:7px;border:1px solid var(--line);background:var(--bg2);color:var(--text);font:inherit;font-size:11px;outline:none}
 .ag-add-btn{width:100%;padding:9px;border-radius:8px;border:0;background:var(--accent);color:white;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;transition:.13s}
@@ -456,6 +493,17 @@ body.t-light .ag-day.sel{background:#1B2E4B}
 .ag-up-del{background:transparent;border:0;color:var(--muted);cursor:pointer;font-size:14px;padding:2px 4px;border-radius:4px}
 .ag-up-del:hover{color:#EF4444}
 .ag-empty{font-size:12px;color:var(--muted);text-align:center;padding:20px 0}
+@media(max-width:640px){
+  #agModal{padding:46px 8px 0}
+  .ag-box{width:min(390px,95vw);max-height:calc(100vh - 56px)}
+  .ag-head{padding:11px 13px}
+  .ag-tabs{padding:4px 13px 0}
+  .ag-body{padding:8px 10px}
+  .ag-day{height:24px;font-size:9px}
+  .ag-event-list{max-height:92px}
+  .ag-form-row{flex-direction:column}
+  .ag-time{width:100%}
+}
 
 /* ═══ AI IMPORT MODAL ═══ */
 #aiModal{display:none;position:fixed;inset:0;z-index:60;align-items:center;justify-content:center;background:rgba(0,0,0,.55);backdrop-filter:blur(4px)}
@@ -501,6 +549,29 @@ body.t-light .ag-day.sel{background:#1B2E4B}
 .ql-save-btn:active{transform:scale(.98)}.ql-save-btn:disabled{background:#9CA3AF;cursor:not-allowed}
 .ql-cancel-btn{width:100%;padding:11px;border-radius:12px;border:0;background:transparent;color:#64748B;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;margin-top:6px}
 .ql-spinner{width:17px;height:17px;border:2px solid rgba(255,255,255,.3);border-top-color:white;border-radius:50%;animation:spin .7s linear infinite;display:inline-block}
+
+/* AJUSTES VISUAIS FINAIS */
+.h-row2 > select{
+  padding:8px 34px 8px 14px!important;
+  border-radius:999px!important;
+  border:1px solid var(--line)!important;
+  background:var(--bg3)!important;
+  color:var(--text)!important;
+  font:inherit!important;
+  font-size:12px!important;
+  font-weight:700!important;
+  outline:none!important;
+  min-height:38px!important;
+  appearance:none!important;-webkit-appearance:none!important;-moz-appearance:none!important;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%238A9BB0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E")!important;
+  background-repeat:no-repeat!important;
+  background-position:right 12px center!important;
+  box-shadow:0 2px 10px rgba(27,46,75,.06)!important;
+}
+body.t-light .h-row2 > select{background:#FFFFFF!important;border-color:#D0DAE8!important;color:#1B2E4B!important}
+#kanbanBar{align-items:center;gap:8px}
+#btnQuick svg{display:block}
+
 </style>
 </head>
 <body class="t-navy">
@@ -509,31 +580,41 @@ body.t-light .ag-day.sel{background:#1B2E4B}
   <div class="h-wrap">
     <div class="h-row1">
 
-      <!-- LOGO imovbase -->
+      <!-- LOGO levecrm -->
       <div class="logo">
-        <svg width="36" height="30" viewBox="0 0 36 30" fill="none">
-          <rect x="0" y="13" width="8" height="17" rx="1" fill="#8A9BB0"/>
-          <rect x="1.2" y="16" width="2" height="2.4" rx=".3" fill="white" opacity=".65"/>
-          <rect x="4.5" y="16" width="2" height="2.4" rx=".3" fill="white" opacity=".65"/>
-          <rect x="1.2" y="20.5" width="2" height="2.4" rx=".3" fill="white" opacity=".4"/>
-          <rect x="4.5" y="20.5" width="2" height="2.4" rx=".3" fill="white" opacity=".4"/>
-          <rect x="10" y="3" width="10" height="27" rx="1" fill="#4A90D9"/>
-          <rect x="11.5" y="7" width="2.8" height="3.2" rx=".3" fill="white" opacity=".8"/>
-          <rect x="15.5" y="7" width="2.8" height="3.2" rx=".3" fill="white" opacity=".8"/>
-          <rect x="11.5" y="13" width="2.8" height="3.2" rx=".3" fill="white" opacity=".6"/>
-          <rect x="15.5" y="13" width="2.8" height="3.2" rx=".3" fill="white" opacity=".6"/>
-          <rect x="11.5" y="19" width="2.8" height="3.2" rx=".3" fill="white" opacity=".4"/>
-          <rect x="15.5" y="19" width="2.8" height="3.2" rx=".3" fill="white" opacity=".4"/>
-          <rect x="22" y="8" width="9" height="22" rx="1" fill="#1B2E4B"/>
-          <rect x="23.2" y="12" width="2.3" height="2.8" rx=".3" fill="white" opacity=".7"/>
-          <rect x="27" y="12" width="2.3" height="2.8" rx=".3" fill="white" opacity=".7"/>
-          <rect x="23.2" y="17.5" width="2.3" height="2.8" rx=".3" fill="white" opacity=".5"/>
-          <rect x="27" y="17.5" width="2.3" height="2.8" rx=".3" fill="white" opacity=".5"/>
-          <rect x="0" y="29" width="36" height="1.5" rx=".75" fill="#4A90D9" opacity=".5"/>
+        <svg class="logo-dark" width="46" height="42" viewBox="0 0 46 42" fill="none" aria-hidden="true">
+          <defs>
+            <linearGradient id="lgold2" x1="7" y1="5" x2="28" y2="34" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#E8C861"/>
+              <stop offset="1" stop-color="#C79818"/>
+            </linearGradient>
+          </defs>
+          <path d="M7 7.2C7 5.43 8.43 4 10.2 4H12.4C14.17 4 15.6 5.43 15.6 7.2V30H31.1C32.87 30 34.3 31.43 34.3 33.2V34.8C34.3 36.57 32.87 38 31.1 38H10.2C8.43 38 7 36.57 7 34.8V7.2Z" fill="url(#lgold2)"/>
+          <path d="M21 6.5L32 11.2V29.5H21V6.5Z" fill="url(#lgold2)"/>
+          <rect x="24" y="14" width="3" height="3.5" rx=".45" fill="#173A66" opacity=".95"/>
+          <rect x="28.2" y="14" width="3" height="3.5" rx=".45" fill="#173A66" opacity=".95"/>
+          <rect x="24" y="19.6" width="3" height="3.5" rx=".45" fill="#173A66" opacity=".95"/>
+          <rect x="28.2" y="19.6" width="3" height="3.5" rx=".45" fill="#173A66" opacity=".95"/>
+          <rect x="24" y="25.2" width="3" height="3.5" rx=".45" fill="#173A66" opacity=".95"/>
+        </svg>
+        <svg class="logo-light" width="46" height="42" viewBox="0 0 46 42" fill="none" aria-hidden="true">
+          <defs>
+            <linearGradient id="lblue2" x1="7" y1="5" x2="28" y2="34" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#77B4E8"/>
+              <stop offset="1" stop-color="#2E6FB2"/>
+            </linearGradient>
+          </defs>
+          <path d="M7 7.2C7 5.43 8.43 4 10.2 4H12.4C14.17 4 15.6 5.43 15.6 7.2V30H31.1C32.87 30 34.3 31.43 34.3 33.2V34.8C34.3 36.57 32.87 38 31.1 38H10.2C8.43 38 7 36.57 7 34.8V7.2Z" fill="url(#lblue2)"/>
+          <path d="M21 6.5L32 11.2V29.5H21V6.5Z" fill="url(#lblue2)"/>
+          <rect x="24" y="14" width="3" height="3.5" rx=".45" fill="#FFFFFF" opacity=".92"/>
+          <rect x="28.2" y="14" width="3" height="3.5" rx=".45" fill="#FFFFFF" opacity=".92"/>
+          <rect x="24" y="19.6" width="3" height="3.5" rx=".45" fill="#FFFFFF" opacity=".75"/>
+          <rect x="28.2" y="19.6" width="3" height="3.5" rx=".45" fill="#FFFFFF" opacity=".75"/>
+          <rect x="24" y="25.2" width="3" height="3.5" rx=".45" fill="#FFFFFF" opacity=".6"/>
         </svg>
         <div>
-          <div class="logo-name">imov<b>base</b></div>
-          <div class="logo-tag">CRM Imobiliário</div>
+          <div class="logo-name">leve<b>crm</b></div>
+          <div class="logo-tag">CORRETORES DE IMÓVEIS</div>
         </div>
       </div>
 
@@ -549,7 +630,7 @@ body.t-light .ag-day.sel{background:#1B2E4B}
         <button class="nav-tab active" data-view="kanban">🗂️ Leads</button>
         <button class="nav-tab" data-view="dashboard">📊 Dashboard</button>
         <button class="nav-tab" data-view="admin">⚙️ Admin</button>
-        <button class="nav-tab" id="agendaTabBtn">📅 Agenda <span class="nav-badge" id="agBadge" style="display:none">0</span></button>
+        <button class="nav-tab" id="agendaTabBtn">📅 Agenda <span class="nav-badge" id="agBadge">0</span></button>
       </div>
 
       <div class="nav-sep"></div>
@@ -567,7 +648,7 @@ body.t-light .ag-day.sel{background:#1B2E4B}
         </div>
 
         <button class="btn btn-accent" id="btnNew">+ Novo Lead</button>
-        <button class="btn btn-green" id="btnQuick" title="Lead Rápido">👤</button>
+        <button class="btn btn-green" id="btnQuick" title="Lead Rápido"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm-7 8a7 7 0 0 1 14 0" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
         <button class="btn btn-gold" id="btnInstallApp" title="Instalar app" style="display:none">📱 Instalar app</button>
       </div>
     </div>
@@ -593,8 +674,35 @@ body.t-light .ag-day.sel{background:#1B2E4B}
       </div>
       <button class="btn" id="btnAiImport" style="background:linear-gradient(180deg,#1B2E4B,#0D1E32);color:#4A90D9;border-color:rgba(74,144,217,.3)">🤖 Importar Print</button>
     </div>
+
+    <div id="mobileActions" class="mobile-only">
+      <button class="btn" id="btnNewMobile">+ Novo Lead</button>
+      <button class="btn" id="agendaBtnMobile">📅 Agenda <span class="nav-badge" id="agBadgeMobile">0</span></button>
+      <button class="btn" id="mobileFiltersBtn">⚙️ Filtros</button>
+    </div>
   </div>
 </header>
+
+<div id="mobileFilterModal" class="mobile-only">
+  <div class="mf-sheet">
+    <div class="mf-handle"></div>
+    <div class="mf-title">Filtros</div>
+    <div class="mf-grid">
+      <select id="mfPri"></select>
+      <select id="mfEmp"></select>
+      <select id="mfOrig"></select>
+      <select id="mfResp"></select>
+    </div>
+    <div class="mf-actions">
+      <button class="btn" id="mfToggleLost">Mostrar perdidos</button>
+      <button class="btn" id="mfToggleSb">Mostrar Stand by</button>
+      <button class="btn" id="mfExport">📥 Exportar CSV</button>
+      <button class="btn" id="mfImport">📤 Importar CSV</button>
+      <button class="btn" id="mfAiImport" style="grid-column:1/-1;background:linear-gradient(180deg,#1B2E4B,#0D1E32);color:#4A90D9;border-color:rgba(74,144,217,.3)">🤖 Importar Print</button>
+    </div>
+    <button class="btn mf-close" id="mobileFilterClose">Fechar</button>
+  </div>
+</div>
 
 <!-- ALERT BANNER -->
 <div id="alertBanner">
@@ -774,8 +882,7 @@ body.t-light .ag-day.sel{background:#1B2E4B}
     <div class="ql-sub">Preencha o essencial — complete depois no computador.</div>
     <div class="ql-field"><label class="ql-lbl">Nome *</label><input class="ql-input" id="qlNome" type="text" placeholder="Ex.: João Silva" autocomplete="name"/></div>
     <div class="ql-field"><label class="ql-lbl">Telefone</label><input class="ql-input" id="qlFone" type="tel" placeholder="Ex.: 54 9 9901-3331" inputmode="tel"/></div>
-    <div class="ql-field"><label class="ql-lbl">Empreendimento</label><select class="ql-select" id="qlEmp"></select></div>
-    <div class="ql-field"><label class="ql-lbl">Origem</label><select class="ql-select" id="qlOrig"></select></div>
+    <div class="ql-field"><label class="ql-lbl">Prioridade</label><select class="ql-select" id="qlPrioridade"><option>Baixa</option><option>Média</option><option>Alta</option><option>Urgente</option></select></div>
     <button class="ql-save-btn" id="qlSaveBtn"><span id="qlSaveTxt">✅ Salvar Lead</span></button>
     <button class="ql-cancel-btn" id="qlCancelBtn">Cancelar</button>
   </div>
@@ -847,10 +954,11 @@ body.t-light .ag-day.sel{background:#1B2E4B}
    CONFIG SUPABASE
 ══════════════════════════════════════ */
 const SB_URL='https://lnrbpiklzymblpyrobwx.supabase.co';
-const SB_KEY='sb_publishable_KXVbF3c7RGFXVTtfYmrzzg_dMK04Q9q';
+const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxucmJwaWtsenltYmxweXJvYnd4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA4MjY0MjcsImV4cCI6MjA4NjQwMjQyN30.ybNh5WhAPWgAMW3gLKrxCGFfIl_9oH31Ajv8qqjtelo';
 const TBL='leads';
 const ATT_TBL='lead_attachments';
 const ATT_BKT='lead-attachments';
+const AG_TBL='agenda_eventos';
 
 /* ══════════════════════════════════════
    LISTAS
@@ -1533,13 +1641,8 @@ function aiUse(){
    QUICK LEAD
 ══════════════════════════════════════ */
 function openQuickLead(){
-  const qlEmp=document.getElementById('qlEmp');const qlOrig=document.getElementById('qlOrig');
-  qlEmp.innerHTML=LISTS.empreendimento.map(v=>`<option value="${escH(v)}">${escH(v)}</option>`).join('');
-  qlOrig.innerHTML=LISTS.origem.map(v=>`<option value="${escH(v)}">${escH(v)}</option>`).join('');
-  // Padrões: Outros + Instagram
-  const oi=[...qlEmp.options].findIndex(o=>o.value==='Outros');if(oi>=0)qlEmp.selectedIndex=oi;
-  const ii=[...qlOrig.options].findIndex(o=>o.value==='Instagram');if(ii>=0)qlOrig.selectedIndex=ii;
   document.getElementById('qlNome').value='';document.getElementById('qlFone').value='';
+  document.getElementById('qlPrioridade').value='Baixa';
   document.getElementById('qlSaveTxt').textContent='✅ Salvar Lead';document.getElementById('qlSaveBtn').disabled=false;
   document.getElementById('qlModal').classList.add('open');
   setTimeout(()=>document.getElementById('qlNome').focus(),280);
@@ -1549,9 +1652,10 @@ async function saveQuickLead(){
   const nome=document.getElementById('qlNome').value.trim();
   if(!nome){document.getElementById('qlNome').style.borderColor='#EF4444';setTimeout(()=>document.getElementById('qlNome').style.borderColor='',1500);return;}
   const fone=document.getElementById('qlFone').value.trim();
+  const prioridade=document.getElementById('qlPrioridade').value||'Baixa';
   const btn=document.getElementById('qlSaveBtn');const txt=document.getElementById('qlSaveTxt');
   btn.disabled=true;txt.innerHTML=`<span class="ql-spinner"></span> Salvando…`;
-  const ok=await upsertLead({id:cid(),ordem:orderForTop('NOVO / INICIAL'),data_inicio:todayISO(),proximo_contato:null,nome,telefone:fone.replace(/\D/g,''),empreendimento:document.getElementById('qlEmp').value||'Outros',etapa:'NOVO / INICIAL',prioridade:'Baixa',origem:document.getElementById('qlOrig').value||'Instagram',responsavel:LISTS.responsavel[0]||'Corretor',visita:'Não',motivo_perda:'',observacao:'',criado_em:nowISO(),atualizado_em:nowISO()});
+  const ok=await upsertLead({id:cid(),ordem:orderForTop('NOVO / INICIAL'),data_inicio:todayISO(),proximo_contato:null,nome,telefone:fone.replace(/\D/g,''),empreendimento:'Outros',etapa:'NOVO / INICIAL',prioridade,origem:'Instagram',responsavel:LISTS.responsavel[0]||'Corretor',visita:'Não',motivo_perda:'',observacao:'',criado_em:nowISO(),atualizado_em:nowISO()});
   if(ok){closeQuickLead();showToast(`Lead "${nome}" salvo! ⚡`);switchView('kanban');}
   else{btn.disabled=false;txt.textContent='✅ Salvar Lead';}
 }
@@ -1561,17 +1665,43 @@ async function saveQuickLead(){
 ══════════════════════════════════════ */
 let agYear=new Date().getFullYear();let agMonth=new Date().getMonth();let agSelDay=null;
 const AG_TABS={calendar:true,upcoming:false};
+let AG_CACHE=[];
 
 function agKey(y,m,d){return`${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;}
-function agAll(){try{return JSON.parse(localStorage.getItem('crm_agenda')||'[]');}catch{return[];}}
-function agSave(arr){localStorage.setItem('crm_agenda',JSON.stringify(arr));}
-function agForDay(key){return agAll().filter(e=>e.date===key).sort((a,b)=>a.time.localeCompare(b.time));}
+function agMapRow(r){return{id:String(r.id),date:String(r.data||''),time:String(r.hora||'').slice(0,5),desc:String(r.descricao||''),notify:Number(r.notify||0)};}
+function agAll(){return Array.isArray(AG_CACHE)?AG_CACHE:[];}
+async function agLoad(){
+  try{
+    const d=await sbFetch(`${AG_TBL}?select=id,data,hora,descricao,notify&order=data.asc,hora.asc`);
+    AG_CACHE=(Array.isArray(d)?d:[]).map(agMapRow);
+    return AG_CACHE;
+  }catch(e){
+    console.error('Agenda load error',e);
+    showToast('Erro ao carregar agenda.');
+    AG_CACHE=[];
+    return AG_CACHE;
+  }
+}
+function agForDay(key){return agAll().filter(e=>e.date===key).sort((a,b)=>String(a.time).localeCompare(String(b.time)));}
 function agDaysWithEvts(){return new Set(agAll().map(e=>e.date));}
+function setAgendaDefaultTime(){
+  const n=new Date();
+  const hh=String(n.getHours()).padStart(2,'0');
+  const mm=String(n.getMinutes()).padStart(2,'0');
+  const inp=document.getElementById('agTime');
+  if(inp)inp.value=`${hh}:${mm}`;
+}
 
-function openAgenda(){
+async function openAgenda(){
+  await agLoad();
   agYear=new Date().getFullYear();agMonth=new Date().getMonth();
   const n=new Date();agSelDay=agKey(agYear,agMonth,n.getDate());
-  if('Notification' in window&&Notification.permission==='default')Notification.requestPermission();
+  const notifAsked=localStorage.getItem('crm_notif_asked')==='1';
+  if('Notification' in window&&Notification.permission==='default'&&!notifAsked){
+    localStorage.setItem('crm_notif_asked','1');
+    Notification.requestPermission();
+  }
+  setAgendaDefaultTime();
   switchAgTab('calendar');renderAgenda();renderUpcoming();
   document.getElementById('agModal').classList.add('open');
 }
@@ -1614,18 +1744,34 @@ function renderAgDay(){
   el.innerHTML=evts.map(e=>`<div class="ag-event"><div class="ag-ev-time">${e.time}</div><div class="ag-ev-desc">${escH(e.desc)}</div><button class="ag-ev-del" onclick="agDelete('${e.id}')">×</button></div>`).join('');
 }
 
-function agDelete(id){const evts=agAll().filter(e=>e.id!==id);agSave(evts);renderAgenda();renderUpcoming();}
+async function agDelete(id){
+  try{
+    await sbFetch(`${AG_TBL}?id=eq.${encodeURIComponent(id)}`,{method:'DELETE',prefer:'return=minimal'});
+    AG_CACHE=agAll().filter(e=>e.id!==id);
+    renderAgenda();renderUpcoming();showToast('Compromisso removido.');
+  }catch(e){
+    console.error('Agenda delete error',e);
+    alert('Erro ao excluir compromisso.');
+  }
+}
 
-function agAdd(){
+async function agAdd(){
   const time=document.getElementById('agTime').value;const desc=document.getElementById('agDesc').value.trim();
   if(!time||!desc){alert('Preencha horário e descrição.');return;}
   const key=agSelDay||agKey(new Date().getFullYear(),new Date().getMonth(),new Date().getDate());
   const notify=parseInt(document.getElementById('agNotify').value)||0;
-  const evts=agAll();const id=cid();
-  evts.push({id,date:key,time,desc,notify});agSave(evts);
-  document.getElementById('agTime').value='';document.getElementById('agDesc').value='';
-  renderAgenda();renderUpcoming();showToast('Compromisso adicionado ✓');
-  if(notify>0)scheduleNotif(key,time,desc,notify,id);
+  try{
+    const ins=await sbFetch(AG_TBL,{method:'POST',body:{data:key,hora:time,descricao:desc,notify}});
+    const row=Array.isArray(ins)?ins[0]:ins;
+    if(row)AG_CACHE=[...agAll(),agMapRow(row)].sort((a,b)=>a.date.localeCompare(b.date)||a.time.localeCompare(b.time));
+    setAgendaDefaultTime();document.getElementById('agDesc').value='';
+    renderAgenda();renderUpcoming();showToast('Compromisso adicionado ✓');
+    const id=row?.id?String(row.id):'';
+    if(notify>0&&id)scheduleNotif(key,time,desc,notify,id);
+  }catch(e){
+    console.error('Agenda insert error',e);
+    alert('Erro ao salvar compromisso.');
+  }
 }
 
 function scheduleNotif(dateKey,time,desc,minutesBefore,id){
@@ -1634,10 +1780,9 @@ function scheduleNotif(dateKey,time,desc,minutesBefore,id){
   const evDate=new Date(+parts[0],+parts[1]-1,+parts[2],+h,+m,0,0);
   const notifTime=evDate.getTime()-(minutesBefore*60000);
   const diff=notifTime-Date.now();
-  if(diff>0){setTimeout(()=>{if(agAll().find(e=>e.id===id)){new Notification('📅 imovbase — Lembrete',{body:`${minutesBefore}min: ${desc}`,icon:'https://sanchaikraemer.github.io/crm-senger/favicon.ico'});}},diff);}
-  // na hora
+  if(diff>0){setTimeout(()=>{if(agAll().find(e=>e.id===id)){new Notification('📅 levecrm — Lembrete',{body:`${minutesBefore}min: ${desc}`,icon:'https://sanchaikraemer.github.io/crm-senger/icon-192.png'});}},diff);}
   const diffOnTime=evDate.getTime()-Date.now();
-  if(diffOnTime>0){setTimeout(()=>{if(agAll().find(e=>e.id===id)){new Notification('🔔 imovbase — Agora!',{body:desc,icon:'https://sanchaikraemer.github.io/crm-senger/favicon.ico'});}},diffOnTime);}
+  if(diffOnTime>0){setTimeout(()=>{if(agAll().find(e=>e.id===id)){new Notification('🔔 levecrm — Agora!',{body:desc,icon:'https://sanchaikraemer.github.io/crm-senger/icon-192.png'});}},diffOnTime);}
 }
 
 function renderUpcoming(){
@@ -1645,7 +1790,6 @@ function renderUpcoming(){
   const today=new Date();const todayKey=agKey(today.getFullYear(),today.getMonth(),today.getDate());
   const evts=agAll().filter(e=>e.date>=todayKey).sort((a,b)=>a.date.localeCompare(b.date)||a.time.localeCompare(b.time));
   if(!evts.length){el.innerHTML=`<div class="ag-empty">Nenhum compromisso futuro agendado.</div>`;return;}
-  // Agrupar por dia
   const groups={};evts.forEach(e=>{(groups[e.date]||=[]).push(e);});
   const meses=['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
   const dias=['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
@@ -1662,13 +1806,17 @@ function renderUpcoming(){
 function updateAgendaBadge(){
   const todayKey=agKey(new Date().getFullYear(),new Date().getMonth(),new Date().getDate());
   const c=agForDay(todayKey).length;
-  const b=document.getElementById('agBadge');if(!b)return;
-  if(c>0){b.style.display='inline';b.textContent=c;}else{b.style.display='none';}
+  ['agBadge','agBadgeMobile'].forEach(id=>{
+    const b=document.getElementById(id);if(!b)return;
+    b.style.display='inline-flex';
+    b.textContent=c;
+    b.title = c===1 ? '1 compromisso hoje' : `${c} compromissos hoje`;
+    b.style.background = c>0 ? '#EF4444' : '#94A3B8';
+  });
 }
 
-// Reagendar notificações ao carregar
 function rescheduleAllNotifs(){
-  const evts=agAll();const today=new Date();
+  const evts=agAll();
   evts.forEach(e=>{if(e.notify>0&&e.date&&e.time){scheduleNotif(e.date,e.time,e.desc,e.notify,e.id);}});
 }
 
@@ -1730,7 +1878,8 @@ function switchView(name){
   document.querySelectorAll('.nav-tab[data-view]').forEach(t=>t.classList.remove('active'));
   const v=document.getElementById(`view-${name}`);if(v)v.classList.add('active');
   const t=document.querySelector(`.nav-tab[data-view="${name}"]`);if(t)t.classList.add('active');
-  const bar=document.getElementById('kanbanBar');if(bar)bar.style.display=name==='kanban'?'flex':'none';
+  const bar=document.getElementById('kanbanBar');if(bar)bar.style.display=name==='kanban'?'block':'none';
+  const mob=document.getElementById('mobileActions');if(mob)mob.style.display=name==='kanban'&&window.innerWidth<=640?'grid':'none';
   if(name==='dashboard')renderDashboard();
   if(name==='admin'){renderAdmin('responsaveis');renderAdmin('imoveis');renderAdmin('origens');}
 }
@@ -1739,13 +1888,35 @@ function switchView(name){
    FILTER SELECTS
 ══════════════════════════════════════ */
 function fillSel(id,items,label){const s=document.getElementById(id);s.innerHTML=`<option value="">${label}</option>`+items.map(v=>`<option value="${escH(v)}">${escH(v)}</option>`).join('');}
-function syncFilterSelects(){fillSel('fEmp',LISTS.empreendimento,'Empreendimento');fillSel('fOrig',LISTS.origem,'Origem');fillSel('fResp',LISTS.responsavel,'Responsável');fillSel('fPri',LISTS.prioridade,'Prioridade');}
+function syncFilterSelects(){
+  fillSel('fEmp',LISTS.empreendimento,'Empreendimento');
+  fillSel('fOrig',LISTS.origem,'Origem');
+  fillSel('fResp',LISTS.responsavel,'Responsável');
+  fillSel('fPri',LISTS.prioridade,'Prioridade');
+  fillSel('mfEmp',LISTS.empreendimento,'Empreendimento');
+  fillSel('mfOrig',LISTS.origem,'Origem');
+  fillSel('mfResp',LISTS.responsavel,'Responsável');
+  fillSel('mfPri',LISTS.prioridade,'Prioridade');
+}
+function syncMobileFiltersFromDesktop(){
+  [['fEmp','mfEmp'],['fOrig','mfOrig'],['fResp','mfResp'],['fPri','mfPri']].forEach(([a,b])=>{
+    const sa=document.getElementById(a), sb=document.getElementById(b); if(sa&&sb) sb.value=sa.value;
+  });
+}
+function syncDesktopFiltersFromMobile(){
+  [['mfEmp','fEmp'],['mfOrig','fOrig'],['mfResp','fResp'],['mfPri','fPri']].forEach(([a,b])=>{
+    const sa=document.getElementById(a), sb=document.getElementById(b); if(sa&&sb) sb.value=sa.value;
+  });
+}
+function openMobileFilters(){syncMobileFiltersFromDesktop();document.getElementById('mobileFilterModal').classList.add('open');}
+function closeMobileFilters(){document.getElementById('mobileFilterModal').classList.remove('open');}
+
 
 /* ══════════════════════════════════════
    CSV
 ══════════════════════════════════════ */
 function csvEsc(v){const s=String(v??'');return/["\n,]/.test(s)?`"${s.replace(/"/g,'""')}"`:s;}
-function exportCSV(){const headers=['id','ordem','data_inicio','proximo_contato','nome','telefone','empreendimento','etapa','prioridade','origem','responsavel','visita','motivo_perda','observacao','criado_em','atualizado_em'];const rows=filtered().map(r=>headers.map(h=>csvEsc(r[h])).join(','));const blob=new Blob([[headers.join(','),...rows].join('\n')],{type:'text/csv;charset=utf-8;'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=`imovbase-${todayISO()}.csv`;document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);}
+function exportCSV(){const headers=['id','ordem','data_inicio','proximo_contato','nome','telefone','empreendimento','etapa','prioridade','origem','responsavel','visita','motivo_perda','observacao','criado_em','atualizado_em'];const rows=filtered().map(r=>headers.map(h=>csvEsc(r[h])).join(','));const blob=new Blob([[headers.join(','),...rows].join('\n')],{type:'text/csv;charset=utf-8;'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=`levecrm-${todayISO()}.csv`;document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);}
 async function importCSV(text){const rows=text.split(/\r?\n/).filter(Boolean);if(rows.length<2){alert('CSV inválido.');return;}alert('Formato CSV não reconhecido. Use exportação do próprio sistema.');}
 
 /* ══════════════════════════════════════
@@ -1776,8 +1947,8 @@ function setupPWA(){
   const icon192=new URL('icon-192.png',location.href).href;
   const icon512=new URL('icon-512.png',location.href).href;
   const manifest={
-    name:'imovbase CRM',
-    short_name:'imovbase',
+    name:'levecrm',
+    short_name:'levecrm',
     start_url:base,
     scope:base,
     display:'standalone',
@@ -1859,22 +2030,42 @@ document.addEventListener('click',e=>{
 // Nav
 document.querySelectorAll('.nav-tab[data-view]').forEach(t=>t.addEventListener('click',()=>switchView(t.dataset.view)));
 document.getElementById('agendaTabBtn').addEventListener('click',openAgenda);
+document.getElementById('agendaBtnMobile').addEventListener('click',openAgenda);
+document.getElementById('btnNewMobile').addEventListener('click',openNew);
+document.getElementById('mobileFiltersBtn').addEventListener('click',openMobileFilters);
+document.getElementById('mobileFilterClose').addEventListener('click',closeMobileFilters);
+document.getElementById('mobileFilterModal').addEventListener('click',e=>{if(e.target===e.currentTarget)closeMobileFilters();});
 
 // Alert banner → Dashboard
 document.getElementById('alertBanner').addEventListener('click',()=>switchView('dashboard'));
 
 // More menu
 document.getElementById('moreToggle').addEventListener('click',e=>{e.stopPropagation();document.getElementById('moreWrap').classList.toggle('open');});
-document.getElementById('btnToggleLost').addEventListener('click',()=>{SHOW_LOST=!SHOW_LOST;document.getElementById('moreWrap').classList.remove('open');render();});
-document.getElementById('btnToggleSb').addEventListener('click',()=>{SHOW_SB=!SHOW_SB;document.getElementById('moreWrap').classList.remove('open');render();});
+function refreshFilterButtonLabels(){
+  const lostTxt=SHOW_LOST?'Ocultar perdidos':'Mostrar perdidos';
+  const sbTxt=SHOW_SB?'Ocultar Stand by':'Mostrar Stand by';
+  document.getElementById('btnToggleLost').textContent=lostTxt;
+  document.getElementById('mfToggleLost').textContent=lostTxt;
+  document.getElementById('btnToggleSb').textContent=sbTxt;
+  document.getElementById('mfToggleSb').textContent=sbTxt;
+}
+document.getElementById('btnToggleLost').addEventListener('click',()=>{SHOW_LOST=!SHOW_LOST;document.getElementById('moreWrap').classList.remove('open');refreshFilterButtonLabels();render();});
+document.getElementById('btnToggleSb').addEventListener('click',()=>{SHOW_SB=!SHOW_SB;document.getElementById('moreWrap').classList.remove('open');refreshFilterButtonLabels();render();});
+document.getElementById('mfToggleLost').addEventListener('click',()=>{SHOW_LOST=!SHOW_LOST;refreshFilterButtonLabels();render();});
+document.getElementById('mfToggleSb').addEventListener('click',()=>{SHOW_SB=!SHOW_SB;refreshFilterButtonLabels();render();});
 document.getElementById('btnExport').addEventListener('click',()=>{document.getElementById('moreWrap').classList.remove('open');exportCSV();});
+document.getElementById('mfExport').addEventListener('click',()=>{closeMobileFilters();exportCSV();});
 document.getElementById('btnImport').addEventListener('click',()=>{document.getElementById('moreWrap').classList.remove('open');document.getElementById('csvInput').value='';document.getElementById('csvInput').click();});
+document.getElementById('mfImport').addEventListener('click',()=>{closeMobileFilters();document.getElementById('csvInput').value='';document.getElementById('csvInput').click();});
+document.getElementById('mfAiImport').addEventListener('click',()=>{closeMobileFilters();document.getElementById('btnAiImport').click();});
 document.getElementById('csvInput').addEventListener('change',async e=>{const f=e.target.files?.[0];if(!f)return;await importCSV(await f.text());});
 
 // Search
 document.getElementById('searchQ').addEventListener('input',e=>{document.getElementById('searchClear').classList.toggle('show',!!e.target.value.trim());render();});
 document.getElementById('searchClear').addEventListener('click',()=>{document.getElementById('searchQ').value='';document.getElementById('searchClear').classList.remove('show');render();});
-['fEmp','fOrig','fResp','fPri'].forEach(id=>document.getElementById(id).addEventListener('change',render));
+['fEmp','fOrig','fResp','fPri'].forEach(id=>document.getElementById(id).addEventListener('change',()=>{syncMobileFiltersFromDesktop();render();}));
+['mfEmp','mfOrig','mfResp','mfPri'].forEach(id=>document.getElementById(id).addEventListener('change',()=>{syncDesktopFiltersFromMobile();render();}));
+window.addEventListener('resize',()=>{const mob=document.getElementById('mobileActions');if(mob)mob.style.display=currentView==='kanban'&&window.innerWidth<=640?'grid':'none';if(window.innerWidth>640)closeMobileFilters();});
 
 // New lead
 document.getElementById('btnNew').addEventListener('click',openNew);
@@ -1974,6 +2165,8 @@ document.getElementById('boxPerdidos').addEventListener('click',()=>{SHOW_LOST=!
 ══════════════════════════════════════ */
 loadAdminData();
 syncFilterSelects();
+syncMobileFiltersFromDesktop();
+refreshFilterButtonLabels();
 setupPaste();
 setupPWA();
 registerSW();
@@ -1981,9 +2174,8 @@ applyTheme('t-light');
 updateInstallBtn();
 setInterval(()=>{document.querySelectorAll('.card').forEach(c=>{const id=c.dataset.id;const l=ALL.find(x=>x.id===id);if(!l)return;const nc=nextContact(l);const ncEl=c.querySelector('.chip-nc-neutral,.chip-nc-green,.chip-nc-red');if(ncEl&&nc){ncEl.className=`chip ${nc.cls}`;ncEl.textContent=nc.text;}});},60000);
 setInterval(updateAgendaBadge,60000);
-rescheduleAllNotifs();
-updateAgendaBadge();
-loadAll();
+agLoad().then(()=>{rescheduleAllNotifs();updateAgendaBadge();});
+loadAll().then(()=>{refreshFilterButtonLabels();syncMobileFiltersFromDesktop();const mob=document.getElementById('mobileActions');if(mob)mob.style.display=currentView==='kanban'&&window.innerWidth<=640?'grid':'none';});
 </script>
 </body>
 </html>
