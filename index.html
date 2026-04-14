@@ -114,6 +114,10 @@ body.t-light .btn:hover{background:#F0F4FA}
 /* Quick lead button */
 #btnQuick{background:#FFFFFF;color:#1B2E4B;border:1px solid #D0DAE8;border-radius:12px;padding:8px 12px;font-size:15px;min-width:46px}
 #btnQuick:hover{background:#F0F4FA}
+/* Clean import button */
+#btnAiImport{background:#FFFFFF!important;color:#1B2E4B!important;border:1px solid #D0DAE8!important;box-shadow:0 2px 8px rgba(27,46,75,.06)!important}
+#btnAiImport:hover{background:#F8FAFC!important}
+body.t-navy #btnAiImport,body.t-dark #btnAiImport{background:var(--bg3)!important;color:var(--text)!important;border-color:var(--line)!important;box-shadow:none!important}
 /* Install app */
 #btnInstallApp{border-radius:12px;padding:8px 16px;font-size:12px;min-width:146px;white-space:nowrap}
 body.app-installed #btnInstallApp{display:none!important}
@@ -155,8 +159,8 @@ body.app-installed #btnInstallApp{display:none!important}
 body.t-light .mf-grid select{background:#FFFFFF;border-color:#D0DAE8;color:#1B2E4B}
 
 /* ═══ ACTIONS ROW ═══ */
-.h-row2{display:flex;align-items:center;height:44px;gap:7px;border-top:1px solid var(--line)}
-.search-wrap{position:relative;display:flex;align-items:center;flex:0 1 260px;min-width:0}
+.h-row2{display:flex;align-items:center;min-height:44px;gap:7px;border-top:1px solid var(--line);flex-wrap:wrap;padding:4px 0}
+.search-wrap{position:relative;display:flex;align-items:center;flex:1 1 260px;min-width:220px}
 .search-wrap input{
   width:100%;padding:9px 34px 9px 14px;border-radius:999px;
   border:1px solid var(--line);background:var(--bg3);color:var(--text);
@@ -166,6 +170,9 @@ body.t-light .mf-grid select{background:#FFFFFF;border-color:#D0DAE8;color:#1B2E
 .search-clear{position:absolute;right:8px;background:transparent;border:0;color:var(--muted);cursor:pointer;font-size:16px;line-height:1;display:none}
 .search-clear.show{display:block}
 .filt-panel{display:flex;align-items:center;gap:7px;flex-wrap:nowrap}
+.kanban-actions{display:flex;align-items:center;gap:8px;flex-shrink:0;margin-left:auto}
+.kanban-actions .btn{flex-shrink:0}
+body.t-light .kanban-actions .btn{background:#FFFFFF;border-color:#D0DAE8;color:#1B2E4B}
 .filt-panel select{
   padding:8px 14px;border-radius:999px;border:1px solid var(--line);
   background:var(--bg3);color:var(--text);font:inherit;font-size:12px;font-weight:700;outline:none;
@@ -191,7 +198,8 @@ body.t-light .filt-panel select, body.t-light .h-row2 > select{box-shadow:0 2px 
   .header-actions{margin-left:auto}
   .h-row2{height:auto;padding:8px 0;flex-wrap:wrap}
   .search-wrap{flex:1 1 100%}
-  .h-row2 select,.h-row2 .more-wrap,.h-row2 #btnAiImport{flex:1 1 calc(50% - 6px);min-width:0}
+  .h-row2 select,.h-row2 .more-wrap{flex:1 1 calc(50% - 6px);min-width:0}
+  .kanban-actions{width:100%;margin-left:0;justify-content:flex-end}
   .h-row2 .btn{width:100%;justify-content:center}
   .filt-panel{flex-wrap:wrap}
   .cbox .t{display:none}
@@ -209,7 +217,7 @@ body.t-light .filt-panel select, body.t-light .h-row2 > select{box-shadow:0 2px 
   .nav-tabs{display:none!important}
   .h-row2{overflow-x:hidden;height:auto;padding:10px 0 6px;flex-wrap:wrap;gap:8px}
   .search-wrap{flex:1 1 100%}
-  #fEmp,#fOrig,#fResp,#fPri,#moreWrap,#btnAiImport{display:none!important}
+  #fEmp,#fOrig,#fResp,#fPri,#moreWrap,.kanban-actions{display:none!important}
   #mobileActions{display:grid;grid-template-columns:1.2fr .9fr .8fr;gap:8px;margin:2px 0 4px}
   #mobileActions .btn{width:100%;min-height:44px;justify-content:center;border-radius:14px;font-size:12px;padding:10px 10px}
   #btnNewMobile{background:linear-gradient(180deg,#1E4FA0,#2B6CB0);color:#fff;border-color:#2563EB}
@@ -274,6 +282,23 @@ body.t-light .filt-panel select, body.t-light .h-row2 > select{box-shadow:0 2px 
 .card.p-top::before{background:#D4AF37}
 .card.p-done{background:#E8F6ED;border-color:#A8D8B8}
 .card.p-done::before{background:#3DAA6A}
+body.t-navy .card{border-color:#90A7C3;box-shadow:0 2px 8px rgba(5,15,28,.10)}
+body.t-navy .card.p-low{background:#E8EEF8;border-color:#AFC0D7}
+body.t-navy .card.p-med{background:#E3EBF7;border-color:#9CB5D6}
+body.t-navy .card.p-high{background:#F8F0DD;border-color:#D8BC7A}
+body.t-navy .card.p-top{background:#FFF0BF;border-color:#D4AF37}
+body.t-navy .card.p-done{background:#E6F4EC;border-color:#9FD1B1}
+body.t-dark .card{background:#182231;border-color:#2B3A50;box-shadow:0 2px 10px rgba(0,0,0,.25)}
+body.t-dark .card.p-low{background:#182231;border-color:#31445E}
+body.t-dark .card.p-med{background:#162536;border-color:#3F6C9A}
+body.t-dark .card.p-high{background:#2A2417;border-color:#8E6B2F}
+body.t-dark .card.p-top{background:#33290F;border-color:#B88A17}
+body.t-dark .card.p-done{background:#15261F;border-color:#2E7D57}
+body.t-dark .card-nm{color:#F3F7FC}
+body.t-dark .card-emp{color:#B8C7D9}
+body.t-dark .prio-low{color:#C1CDDB}.t-dark .prio-med{color:#90B4E0}.t-dark .prio-high{color:#E5B96B}.t-dark .prio-top{color:#F3D36A}.t-dark .prio-done{color:#77D29F}
+body.t-dark .chip-dt-soft,body.t-dark .chip-nc-neutral{background:#243246;color:#D9E4F0;border-color:#334860}
+body.t-dark .chip-attach{background:#3A311A;color:#F1D27A;border-color:#705C27}
 /* Card sem contato — fica vermelho se > 7 dias */
 .card.overdue-contact{border-color:#EF4444!important;background:#FEF2F2!important}
 .card.overdue-contact::after{content:'!';position:absolute;top:-6px;right:-6px;width:16px;height:16px;background:#EF4444;color:white;border-radius:50%;font-size:9px;font-weight:800;display:flex;align-items:center;justify-content:center}
@@ -647,8 +672,7 @@ body.t-light .h-row2 > select{background:#FFFFFF!important;border-color:#D0DAE8!
           </div>
         </div>
 
-        <button class="btn btn-accent" id="btnNew">+ Novo Lead</button>
-        <button class="btn btn-green" id="btnQuick" title="Lead Rápido"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm-7 8a7 7 0 0 1 14 0" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+        <button class="btn" id="btnAiImport">🤖 Importar Print</button>
         <button class="btn btn-gold" id="btnInstallApp" title="Instalar app" style="display:none">📱 Instalar app</button>
       </div>
     </div>
@@ -672,7 +696,10 @@ body.t-light .h-row2 > select{background:#FFFFFF!important;border-color:#D0DAE8!
           <button class="btn" id="btnImport">📤 Importar CSV</button>
         </div>
       </div>
-      <button class="btn" id="btnAiImport" style="background:linear-gradient(180deg,#1B2E4B,#0D1E32);color:#4A90D9;border-color:rgba(74,144,217,.3)">🤖 Importar Print</button>
+      <div class="kanban-actions">
+        <button class="btn btn-accent" id="btnNew">+ Novo Lead</button>
+        <button class="btn btn-green" id="btnQuick" title="Lead Rápido"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm-7 8a7 7 0 0 1 14 0" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+      </div>
     </div>
 
     <div id="mobileActions" class="mobile-only">
@@ -831,10 +858,12 @@ body.t-light .h-row2 > select{background:#FFFFFF!important;border-color:#D0DAE8!
             <span class="ag-notify-lbl">Avisar:</span>
             <select class="ag-notify-sel" id="agNotify">
               <option value="0">Não avisar</option>
-              <option value="15" selected>15 min antes</option>
+              <option value="-1" selected>no horario</option>
+              <option value="5">5 min antes</option>
+              <option value="10">10 min antes</option>
+              <option value="15">15 min antes</option>
               <option value="30">30 min antes</option>
               <option value="60">1h antes</option>
-              <option value="120">2h antes</option>
             </select>
           </div>
           <button class="ag-add-btn" id="agAddBtn">Adicionar Compromisso</button>
@@ -1685,11 +1714,8 @@ async function agLoad(){
 function agForDay(key){return agAll().filter(e=>e.date===key).sort((a,b)=>String(a.time).localeCompare(String(b.time)));}
 function agDaysWithEvts(){return new Set(agAll().map(e=>e.date));}
 function setAgendaDefaultTime(){
-  const n=new Date();
-  const hh=String(n.getHours()).padStart(2,'0');
-  const mm=String(n.getMinutes()).padStart(2,'0');
   const inp=document.getElementById('agTime');
-  if(inp)inp.value=`${hh}:${mm}`;
+  if(inp)inp.value='';
 }
 
 async function openAgenda(){
@@ -1759,15 +1785,17 @@ async function agAdd(){
   const time=document.getElementById('agTime').value;const desc=document.getElementById('agDesc').value.trim();
   if(!time||!desc){alert('Preencha horário e descrição.');return;}
   const key=agSelDay||agKey(new Date().getFullYear(),new Date().getMonth(),new Date().getDate());
-  const notify=parseInt(document.getElementById('agNotify').value)||0;
+  const notify=Number(document.getElementById('agNotify').value||0);
   try{
     const ins=await sbFetch(AG_TBL,{method:'POST',body:{data:key,hora:time,descricao:desc,notify}});
     const row=Array.isArray(ins)?ins[0]:ins;
     if(row)AG_CACHE=[...agAll(),agMapRow(row)].sort((a,b)=>a.date.localeCompare(b.date)||a.time.localeCompare(b.time));
     setAgendaDefaultTime();document.getElementById('agDesc').value='';
+    document.getElementById('agNotify').value='-1';
     renderAgenda();renderUpcoming();showToast('Compromisso adicionado ✓');
     const id=row?.id?String(row.id):'';
-    if(notify>0&&id)scheduleNotif(key,time,desc,notify,id);
+    if(notify!==0&&id)scheduleNotif(key,time,desc,notify,id);
+    closeAgenda();
   }catch(e){
     console.error('Agenda insert error',e);
     alert('Erro ao salvar compromisso.');
@@ -1778,11 +1806,14 @@ function scheduleNotif(dateKey,time,desc,minutesBefore,id){
   if(!('Notification' in window)||Notification.permission!=='granted')return;
   const parts=dateKey.split('-');const[h,m]=time.split(':');
   const evDate=new Date(+parts[0],+parts[1]-1,+parts[2],+h,+m,0,0);
+  if(minutesBefore===-1){
+    const diffOnTime=evDate.getTime()-Date.now();
+    if(diffOnTime>0){setTimeout(()=>{if(agAll().find(e=>e.id===id)){new Notification('🔔 levecrm — no horario',{body:desc,icon:'https://sanchaikraemer.github.io/crm-senger/icon-192.png'});}},diffOnTime);}
+    return;
+  }
   const notifTime=evDate.getTime()-(minutesBefore*60000);
   const diff=notifTime-Date.now();
   if(diff>0){setTimeout(()=>{if(agAll().find(e=>e.id===id)){new Notification('📅 levecrm — Lembrete',{body:`${minutesBefore}min: ${desc}`,icon:'https://sanchaikraemer.github.io/crm-senger/icon-192.png'});}},diff);}
-  const diffOnTime=evDate.getTime()-Date.now();
-  if(diffOnTime>0){setTimeout(()=>{if(agAll().find(e=>e.id===id)){new Notification('🔔 levecrm — Agora!',{body:desc,icon:'https://sanchaikraemer.github.io/crm-senger/icon-192.png'});}},diffOnTime);}
 }
 
 function renderUpcoming(){
@@ -1817,7 +1848,7 @@ function updateAgendaBadge(){
 
 function rescheduleAllNotifs(){
   const evts=agAll();
-  evts.forEach(e=>{if(e.notify>0&&e.date&&e.time){scheduleNotif(e.date,e.time,e.desc,e.notify,e.id);}});
+  evts.forEach(e=>{if(e.notify!==0&&e.date&&e.time){scheduleNotif(e.date,e.time,e.desc,e.notify,e.id);}});
 }
 
 /* ══════════════════════════════════════
@@ -1878,10 +1909,11 @@ function switchView(name){
   document.querySelectorAll('.nav-tab[data-view]').forEach(t=>t.classList.remove('active'));
   const v=document.getElementById(`view-${name}`);if(v)v.classList.add('active');
   const t=document.querySelector(`.nav-tab[data-view="${name}"]`);if(t)t.classList.add('active');
-  const bar=document.getElementById('kanbanBar');if(bar)bar.style.display=name==='kanban'?'block':'none';
+  const bar=document.getElementById('kanbanBar');if(bar)bar.style.display=name==='kanban'?'flex':'none';
   const mob=document.getElementById('mobileActions');if(mob)mob.style.display=name==='kanban'&&window.innerWidth<=640?'grid':'none';
   if(name==='dashboard')renderDashboard();
   if(name==='admin'){renderAdmin('responsaveis');renderAdmin('imoveis');renderAdmin('origens');}
+  if(name==='kanban'){render();syncMobileFiltersFromDesktop();refreshFilterButtonLabels();}
 }
 
 /* ══════════════════════════════════════
